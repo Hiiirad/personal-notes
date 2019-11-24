@@ -25,7 +25,7 @@ GO TO STAGE: git add FILE_NAME | git add "*.py" | git add -A | git add --all
 GO TO COMMIT: git commit -m "MESSAGE OF THIS COMMIT"
 ```
 - HEAD: Where we are working on | our last commit
-- Don't need files or folders to be tracked by Git -> (type filenames `[hello.exe]` or file extensions `[*.zip]` line by line)
+- Don't need files or folders to be tracked by Git -> (type filenames `hello.exe` or file extensions `*.zip` line by line)
 ```
 $ touch .gitignore
 ```
