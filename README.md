@@ -10,4 +10,4 @@ I am not going to teach you details of that technology, but I categorize everyth
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change or add.
 
 ## License
-This project is licensed under the GPL-3.0 License - see the [LICENSE.md](./LICENSE) file for details.
+This project is licensed under the GPL-3.0 License - see the [LICENSE](./LICENSE) file for details.
