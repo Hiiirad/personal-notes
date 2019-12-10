@@ -26,7 +26,7 @@ GO TO COMMIT: git commit -m "MESSAGE OF THIS COMMIT"
 ```
 - HEAD: Where we are working on | our last commit
 - Don't need files or folders to be tracked by Git -> (type filenames `hello.exe` or file extensions `*.zip` line by line)
-```
+```bash
 $ touch .gitignore
 ```
 - Log of every changes and commits
@@ -148,15 +148,15 @@ git push origin --tags
 > GPG: GNU Privacy Guard
 
 - List of keys
-```
+```bash
 $ gpg --list-keys
 ```
 - Create a key
-```
+```bash
 $ gpg --gen-key
 ```
 - Show list of secret key
-```
+```bash
 $ gpg --list-secret-keys --keyid-format LONG
 ```
 - Commands for keys
