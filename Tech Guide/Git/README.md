@@ -24,7 +24,15 @@ git help COMMAND
 GO TO STAGE: git add FILE_NAME | git add "*.py" | git add -A | git add --all
 GO TO COMMIT: git commit -m "MESSAGE OF THIS COMMIT"
 ```
+- Add to last commit with new commit message
+```
+git commit --amend -m "NEW MESSAGE"
+```
 - HEAD: Where we are working on | our last commit
+- Skip staging and commit, and add changes from all tracked files. This doesn't add new untracked files.
+```
+git commit -a -m "MESSAGE OF THIS COMMIT"
+```
 - Don't need files or folders to be tracked by Git -> (type filenames `hello.exe` or file extensions `*.zip` line by line)
 ```bash
 $ touch .gitignore
@@ -44,6 +52,18 @@ git diff --staged
 - Undo a staged file to "Changed file"
 ```
 git reset FILE_NAME
+```
+- Reset into staging and move to commit before HEAD
+```
+git reset --soft HEAD^
+```
+- Undo last commit and all changes
+```
+git reset --hard HEAD^
+```
+- Undo last 2 commits and all changes
+```
+git reset --hard HEAD^^
 ```
 - Send a file to its last commit and forget new changes
 ```
