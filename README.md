@@ -6,6 +6,11 @@ I believe technology helps us to think differently in every way. So I think ever
 
 I am not going to teach you details of that technology, but I categorize everything so that you can find what you need quickly.
 
+What i'm working on:
+- [x] Git
+- [x] Vim
+- [ ] Docker
+
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change or add.
 
