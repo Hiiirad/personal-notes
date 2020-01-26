@@ -24,9 +24,9 @@ git help COMMAND
 GO TO STAGE: git add FILE_NAME | git add "*.py" | git add -A | git add --all
 GO TO COMMIT: git commit -m "MESSAGE OF THIS COMMIT"
 ```
-- Add to last commit with new commit message
+- Add changes to the last commit without multiple commits
 ```
-git commit --amend -m "NEW MESSAGE"
+git commit --amend
 ```
 - HEAD: Where we are working on | our last commit
 - Skip staging and commit, and add changes from all tracked files. This doesn't add new untracked files.
