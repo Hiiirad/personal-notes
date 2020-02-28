@@ -120,3 +120,4 @@
 
 ## Extended Chapter
 - Move cursor with mouse instead of arrow keys: `:set mouse=a`
+- Soft text wrapping: `:set wrap linebreak nolist`
