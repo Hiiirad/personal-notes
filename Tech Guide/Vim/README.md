@@ -117,3 +117,6 @@
   - `:set nocp` = To make sure Vim is not in compatible mode
   - Use `:` and choose a character, then press `Ctrl+d` to show a list of commands that start with your chosen character. You can even complete your command with `tab` button if it's unique.
   - It's pretty helpful in `:help` or large files which you need different commands to complete your work.
+
+## Extended Chapter
+- Move cursor with mouse instead of arrow keys: `:set mouse=a`
