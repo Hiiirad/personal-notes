@@ -1,31 +1,31 @@
 # Docker Essentials
 
 - [Docker Essentials](#docker-essentials)
-  * [Part 01 (Introduction)](#part-01--introduction-)
-  * [Part 02 (Docker Overview)](#part-02--docker-overview-)
-    + [Chapter 1 (Docker on Linux)](#chapter-1--docker-on-linux-)
-    + [Chapter 2 (Docker on Windows)](#chapter-2--docker-on-windows-)
-    + [Chapter 3 (Docker on Mac)](#chapter-3--docker-on-mac-)
-  * [Part 03 (Commands)](#part-03--commands-)
-  * [Part 04 (Run)](#part-04--run-)
-  * [Part 05 (Environment Variables)](#part-05--environment-variables-)
-  * [Part 06 (Images)](#part-06--images-)
-  * [Part 07 (CMD vs ENTRYPOINT)](#part-07--cmd-vs-entrypoint-)
-  * [Part 08 (Networking)](#part-08--networking-)
-  * [Part 09 (Storage)](#part-09--storage-)
-  * [Part 10 (Compose)](#part-10--compose-)
-  * [Part 11 (Registry)](#part-11--registry-)
-  * [Part 12 (Engine)](#part-12--engine-)
-  * [Part 13 (Docker Orchestration)](#part-13--docker-orchestration-)
-    + [Chapter 1 (Docker Swarm)](#chapter-1--docker-swarm-)
-    + [Chapter 2 (Kubernetes)](#chapter-2--kubernetes-)
-  * [Part 14 (Conclusion)](#part-14--conclusion-)
-  * [Part 15 (References)](#part-15--references-)
+  - [Part 01 (Introduction)](#part-01-introduction)
+  - [Part 02 (Docker Overview)](#part-02-docker-overview)
+    - [Chapter 1 (Docker on Linux)](#chapter-1-docker-on-linux)
+    - [Chapter 2 (Docker on Windows)](#chapter-2-docker-on-windows)
+    - [Chapter 3 (Docker on Mac)](#chapter-3-docker-on-mac)
+  - [Part 03 (Commands)](#part-03-commands)
+  - [Part 04 (Run)](#part-04-run)
+  - [Part 05 (Environment Variables)](#part-05-environment-variables)
+  - [Part 06 (Images)](#part-06-images)
+  - [Part 07 (CMD vs ENTRYPOINT)](#part-07-cmd-vs-entrypoint)
+  - [Part 08 (Networking)](#part-08-networking)
+  - [Part 09 (Storage)](#part-09-storage)
+  - [Part 10 (Compose)](#part-10-compose)
+  - [Part 11 (Registry)](#part-11-registry)
+  - [Part 12 (Engine)](#part-12-engine)
+  - [Part 13 (Docker Orchestration)](#part-13-docker-orchestration)
+    - [Chapter 1 (Docker Swarm)](#chapter-1-docker-swarm)
+    - [Chapter 2 (Kubernetes)](#chapter-2-kubernetes)
+  - [Part 14 (Conclusion)](#part-14-conclusion)
+  - [Part 15 (References)](#part-15-references)
 
 ## Part 01 (Introduction)
 Why do you need Docker?
 - You don't need to worry about Compatibility/Dependency
-- Short Setup Time/Dependency Resolvement 
+- Short Setup Time/Dependency Resolvement
 - You can easily work with different Dev./Test/Prod. environments
 - Lower computation overhead compare to the traditional virtualization methods
 
@@ -193,7 +193,7 @@ docker run redis:4.0
 ```
 docker run -it SERVICE:TAG
 ```
-- Remove Container After Usage . Sometimes, it’s useful to just start a container to poke around, and then discard it afterwards. The following will start a new container, drop into a shell, and then destroy the container after you exit.
+- Remove Container After Usage. Sometimes, it’s useful just to start a container to poke around, and then discard it afterward. The following will start a new container, drop into a shell, and then destroy the container after you exit.
 ```
 docker run --rm -it  SERVICE:TAG
 ```
@@ -296,7 +296,7 @@ docker push NAME
 
 ## Part 08 (Networking)
 
-- List of network adabtors which docker use to privide inter/intra connections between the containers and outside world (edge network adaptor) `-a`
+- List of network adaptors which docker use to provide inter/intra connections between the containers and outside world (edge network adaptor) `-a`
 ```
 docker network
 docker network ls
