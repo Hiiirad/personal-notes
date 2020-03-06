@@ -56,19 +56,19 @@ Matacharacter|Description|Example
 
 Matacharacter|Description|Example
 -------------|-----------|-------
-`()`|Capture everythong enclosed|`(a|b)`
-`(?:)`|using ?: will disable the capturing group|`(:?a|b)`
-`|`|Or|`cat|dog` means cat or dog
+`()`|Capture everythong enclosed|`(a\|b)`
+`(?:)`|using ?: will disable the capturing group|`(:?a\|b)`
+`\|`|Or|`cat\|dog` means cat or dog
 
 - Character Classes
 
 Matacharacter|Description|Example
 -------------|-----------|-------
-`[]`|A single character|`[abc]`=`[a-c]`=`a|b|c` a, b or c
+`[]`|A single character|`[abc]`=`[a-c]`=`a\|b\|c` a, b or c
 `[^]`|A character except|`[^abc]` everything except a, b or c
 `[-]`|A character in the range|`[a-z]` in range of a to z
 `[^-]`|A character not in the range|`[^a-m]` not in range of a to m
-`[--]`|A character in some ranges|[a-zA-Z] in range of a to z or A to Z
+`[--]`|A character in some ranges|`[a-zA-Z]` in range of a to z or A to Z
 `[:alnum:]`|Alphanumeric characters = `[A-Za-z0-9]`|
 `[:alpha:]`|Alphabetic characters = `[A-Za-z]`|
 `[:blank:]`|Space and tab = `[ \t]`|
@@ -78,7 +78,7 @@ Matacharacter|Description|Example
 `[:lower:]`|Lowercase letters = `[a-z]`|
 `[:upper:]`|Uppercase letters = `[A-Z]`|
 `[:print:]`|Visible characters and the space character = `[\x20-\x7E]`|
-`[:punct:]`|Punctuation characters = ```[][!"#$%&'()*+,./:;<=>?@\^_`{|}~-]```|
+`[:punct:]`|Punctuation characters = ```[][!"#$%&'()*+,./:;<=>?@\^_`{\|}~-]```|
 `[:space:]`|Whitespace characters = `[ \t\r\n\v\f]`|
 `[:xdigit:]`|Hexadecimal digits = `[A-Fa-f0-9]`|
 
