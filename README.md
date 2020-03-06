@@ -9,6 +9,7 @@ I am not going to teach you details of that technology, but I categorize everyth
 What I'm working on:
 - [x] Git
 - [x] Vim
+- [x] Regex
 - [ ] Docker
 - [ ] Kubernetes
 
