@@ -1,10 +1,33 @@
 # Docker Essentials
 
+- [Docker Essentials](#docker-essentials)
+  * [Part 01 (Introduction)](#part-01--introduction-)
+  * [Part 02 (Docker Overview)](#part-02--docker-overview-)
+    + [Chapter 1 (Docker on Linux)](#chapter-1--docker-on-linux-)
+    + [Chapter 2 (Docker on Windows)](#chapter-2--docker-on-windows-)
+    + [Chapter 3 (Docker on Mac)](#chapter-3--docker-on-mac-)
+  * [Part 03 (Commands)](#part-03--commands-)
+  * [Part 04 (Run)](#part-04--run-)
+  * [Part 05 (Environment Variables)](#part-05--environment-variables-)
+  * [Part 06 (Images)](#part-06--images-)
+  * [Part 07 (CMD vs ENTRYPOINT)](#part-07--cmd-vs-entrypoint-)
+  * [Part 08 (Networking)](#part-08--networking-)
+  * [Part 09 (Storage)](#part-09--storage-)
+  * [Part 10 (Compose)](#part-10--compose-)
+  * [Part 11 (Registry)](#part-11--registry-)
+  * [Part 12 (Engine)](#part-12--engine-)
+  * [Part 13 (Docker Orchestration)](#part-13--docker-orchestration-)
+    + [Chapter 1 (Docker Swarm)](#chapter-1--docker-swarm-)
+    + [Chapter 2 (Kubernetes)](#chapter-2--kubernetes-)
+  * [Part 14 (Conclusion)](#part-14--conclusion-)
+  * [Part 15 (References)](#part-15--references-)
+
 ## Part 01 (Introduction)
 Why do you need Docker?
 - You don't need to worry about Compatibility/Dependency
-- Short Setup Time
+- Short Setup Time/Dependency Resolvement 
 - You can easily work with different Dev./Test/Prod. environments
+- Lower computation overhead compare to the traditional virtualization methods
 
 What can it do?
 - Containerize Applications
@@ -13,7 +36,7 @@ What can it do?
 What are containers?
 - Containers are completely isolated environments. They can have their own processes for services, network interface, mounts just like VMs, except they all share the same OS kernel.
 - Containers are not introduced with Docker. They existed for more than 10 years. For instance, LXC, LXD, LXCFS, etc.
-- Docker utilizes LXC containers.
+- Docker utilizes [LXC containers](https://en.wikipedia.org/wiki/LXC).
 
 With docker you'll be able to run each component in a seperate container with its own dependencies and its own libraries. All on same VM/OS but within seperate env./container. -> build docker configuration once
 
@@ -37,7 +60,7 @@ Docker Editions:
 - Enterprise -> Certified and Supported container platform
   - Enterprise Add-ons: Image Management + Image Security + ...
 
-## Part 03 (Docker on Linux)
+### Chapter 1 (Docker on Linux)
 1. Go to [Docker Documentation](https://docs.docker.com) and click on [Get Docker](https://docs.docker.com/install/)
 2. From sidebar menu select your OS/Distribution (_In my case, I use Ubuntu 18.04_)
 3. Make sure to uninstall older versions:
@@ -57,7 +80,7 @@ Docker Editions:
     ```
 5. If you would like to use Docker as a non-root user, you should now consider adding your user to the “docker” group with: `$ sudo usermod -aG docker $USER`
 
-## Part 04 (Docker on Windows)
+### Chapter 2 (Docker on Windows)
 
 - You won't be able to run Windows-based container on Docker host with Linux on it. For that you'll require a docker on a Windows Server.
 - Because they don't have a same kernel.
@@ -94,7 +117,7 @@ We can use Docker on Windows with these 2 options to run a Linux container on a 
 - Nano Server is a headless deployment option for Windows Server which runs at a fraction of size of the full operating system. (Like Alpine image in Linux)
 - Windows Server Core is not as light weight as you might expect it to be.
 
-## Part 05 (Docker on Mac)
+### Chapter 3 (Docker on Mac)
 1. Docker on Mac using Docker Toolbox (Original support for docker on Mac)
    - It's a docker on a Linux VM created using VirtualBox on Mac as with Windows, it has nothing to do with Mac applications or Mac based images or Mac containers. It purely runs Linux containers on MacOS.
    - System Requirements:
@@ -114,7 +137,7 @@ We can use Docker on Windows with these 2 options to run a Linux container on a 
 - Remember, that all of this is to be able to run Linux container on Mac.
 - Up to this point, there are no Mac-based images or containers.
 
-## Part 06 (Commands)
+## Part 03 (Commands)
 - Run = Start a container or run a container from an image. If the image is not present on the host, it will go to _dockerhub_ and pull the image down. (Only the first time) Container will run in fg (foreground) or technically in _attach mode_.
 ```
 docker run SERVICE
@@ -160,7 +183,7 @@ docker run -d SERVICE
 docker attach NAME/ID
 ```
 
-## Part 07 (Run)
+## Part 04 (Run)
 - Run with specific version/tag. Default tag will be latest version
 ```
 docker run SERVICE:TAG
@@ -168,7 +191,11 @@ docker run redis:4.0
 ```
 - Run with STDIN (Standard Input). Docker container doesn't listen to STDIN even though you are attached to its console. If we want to run a container on interactive mode, we should use `-i` (interactive). However, we can't see the application's prompt on the terminal because we haven't attached to the container's terminal. To solve this, we should use `-t` (terminal).
 ```
-docker run -it SERVICE
+docker run -it SERVICE:TAG
+```
+- Remove Container After Usage . Sometimes, it’s useful to just start a container to poke around, and then discard it afterwards. The following will start a new container, drop into a shell, and then destroy the container after you exit.
+```
+docker run --rm -it  SERVICE:TAG
 ```
 - Port Mapping / Port Publishing. Every docker container gets an IP assigned by default. Docker container IP is 172.17.1.2:3000 and Docker host IP is 192.168.1.25 so, you can map their port like below. You can even run multiple instances of your application and map them to different ports on the docker host or you can run your application on a single port and map them to different port. Remember, you cannot map to the same port on the docker host more than once.
 ```
@@ -191,7 +218,7 @@ docker inspect NAME/ID
 docker logs NAME/ID
 ```
 
-## Part 08 (Environment Variables)
+## Part 05 (Environment Variables)
 - An environment variable is a variable whose value is set outside the program, typically through functionality built into the operating system or microservice. An environment variable is made up of a name/value pair, and any number may be created and available for reference at a point in time.
 - Assignments:
   - OS
@@ -207,7 +234,7 @@ docker run -e VARIABLE=value NAME/ID
 - To deploy multiple containers with different Environment Variable, you should run docker command multiple times and set different Environment Variables each time.
 - If you want to fine the environment variable set on a running container, you should simply use `docker inspect NAME/ID` and look for `ENV` under `Config` section.
 
-## Part 09 (Images)
+## Part 06 (Images)
 Create an image:
 1. Create a `Dockerfile`. Sample of Dockerfile (OS: Ubuntu & Update and Install dependencies & Install python dependencies & Copy source code to /opt/ folder & Run the webserver using flask):
 ```
@@ -264,25 +291,29 @@ docker push NAME
     - Skype
   - EVERYTHING :)
 
-## Part 10 (CMD vs ENTRYPOINT)
+## Part 07 (CMD vs ENTRYPOINT)
 
 
-## Part 11 (Networking)
+## Part 08 (Networking)
+
+- List of network adabtors which docker use to privide inter/intra connections between the containers and outside world (edge network adaptor) `-a`
+```
+docker network
+docker network ls
+```
+## Part 09 (Storage)
 
 
-## Part 12 (Storage)
+## Part 10 (Compose)
 
 
-## Part 13 (Compose)
+## Part 11 (Registry)
 
 
-## Part 14 (Registry)
+## Part 12 (Engine)
 
 
-## Part 15 (Engine)
-
-
-## Part 16 (Docker Orchestration)
+## Part 13 (Docker Orchestration)
 
 
 ### Chapter 1 (Docker Swarm)
@@ -291,9 +322,9 @@ docker push NAME
 ### Chapter 2 (Kubernetes)
 
 
-## Part 17 (Conclusion)
+## Part 14 (Conclusion)
 
 
-## Part 18 (References)
+## Part 15 (References)
 
 1. [Docker Documentation Samples](https://docs.docker.com/samples/)
