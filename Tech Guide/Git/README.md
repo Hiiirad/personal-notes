@@ -22,6 +22,17 @@ git init
 ```
 3. It will make a hidden directory `.git`
 4. From this moment everything controlled by git
+5. Configuration:
+   - Git config levels:
+     1. Local (Git default): `--local` -> stored in `.git/config`
+     2. Global: `--global` -> stored in `~/.gitconfig`
+     3. System: `--system` -> stored in `/etc/gitconfig`
+```bash
+git config --global user.email "EMAIL"
+git config --global user.name "USERNAME"
+git config --global core.editor "EDITOR"
+git config --global user.signingkey <gpg-key-id>
+```
 
 ## Useful Commands
 
