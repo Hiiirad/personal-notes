@@ -280,6 +280,14 @@ docker push NAME
   ```
   docker build Dockerfile -t NAME
   ```
+- **Dockerignore**
+  - Sometimes we need to exclude some files and folders before building our container to avoid unnecessarily sending large or sensitive files or directories to the daemon. So we make a file as `.dockerignore`
+  - Think of it as `.gitignore` file for better understanding.
+  - Syntax:
+    1. Lines starting with `#` will be ignored.
+    2. You can use wildcards with `*`
+    3. You can use `?` like wildcards but for only a single character.
+    4. Lines starting with `!` can be used to make exceptions to exclusions. But it must come after that specific ignore files.
 - What can you containerize?
   - Databases
   - Development tools
