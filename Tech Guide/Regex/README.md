@@ -128,6 +128,8 @@ Matacharacter|Description|Example
 
 - HTML Tag: `<([\w]+).*>(.*?)<\/\1>`
 
+- Find URLs in a text/string: `(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])?`
+
 - Extract Links from JavaScript Files: `(https?://)?/?[{}a-z0-9A-Z_\.-]{2,}/[{}/a-z0-9A-Z_\.-]+`
 
 - Latitude and Longitude: `^((\-?|\+?)?\d+(\.\d+)?),\s*((\-?|\+?)?\d+(\.\d+)?)$`
