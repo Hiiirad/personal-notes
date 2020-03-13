@@ -9,18 +9,20 @@
   - [Part 03 (Commands)](#part-03-commands)
   - [Part 04 (Run)](#part-04-run)
   - [Part 05 (Environment Variables)](#part-05-environment-variables)
-  - [Part 06 (Images)](#part-06-images)
-  - [Part 07 (CMD vs ENTRYPOINT)](#part-07-cmd-vs-entrypoint)
-  - [Part 08 (Networking)](#part-08-networking)
-  - [Part 09 (Storage)](#part-09-storage)
-  - [Part 10 (Compose)](#part-10-compose)
-  - [Part 11 (Registry)](#part-11-registry)
-  - [Part 12 (Engine)](#part-12-engine)
-  - [Part 13 (Docker Orchestration)](#part-13-docker-orchestration)
+  - [Part 06 (Create an Image Using Commit)](#part-06-Create-an-Image-Using-Commit)
+  - [Part 07 (Create an Image Using Dockerfile)](#part-07-Create-an-Image-Using-Dockerfile)
+  - [Part 08 (CMD vs ENTRYPOINT)](#part-08-cmd-vs-entrypoint)
+  - [Part 09 (Networking)](#part-08-networking)
+  - [Part 10 (Storage)](#part-10-storage)
+  - [Part 11 (Compose)](#part-11-compose)
+  - [Part 12 (Registry)](#part-12-registry)
+  - [Part 13 (Engine)](#part-13-engine)
+  - [Part 14 (Docker Orchestration)](#part-14-docker-orchestration)
     - [Chapter 1 (Docker Swarm)](#chapter-1-docker-swarm)
     - [Chapter 2 (Kubernetes)](#chapter-2-kubernetes)
-  - [Part 14 (Conclusion)](#part-14-conclusion)
-  - [Part 15 (References)](#part-15-references)
+  - [Part 15 (Conclusion)](#part-15-conclusion)
+  - [Part 16 (Terminology)](#part-16-Terminology)
+  - [Part 17 (References)](#part-17-references)
 
 ## Part 01 (Introduction)
 Why do you need Docker?
@@ -234,7 +236,35 @@ docker run -e VARIABLE=value NAME/ID
 - To deploy multiple containers with different Environment Variable, you should run docker command multiple times and set different Environment Variables each time.
 - If you want to fine the environment variable set on a running container, you should simply use `docker inspect NAME/ID` and look for `ENV` under `Config` section.
 
-## Part 06 (Images)
+## Part 06 (Create an Image Using Commit)
+
+Let’s start by running an interactive shell in a ubuntu container:
+
+```
+docker container run -ti ubuntu bash
+```
+To customize things a little bit we will install a package called [figlet](figlet.org) in this container.
+
+```
+apt-get update
+apt-get install -y figlet
+figlet "hello docker"
+```
+
+You should see the words “hello docker” printed out in large ascii characters on the screen.
+
+Now let us pretend this new figlet application is quite useful and you want to share it with the rest of your team. You could tell them to do exactly what you did above and install figlet in to their own container, which is simple enough in this example. But if this was a real world application where you had just installed several packages and run through a number of configuration steps the process could get cumbersome and become quite error prone. Instead, it would be easier to create an image you can share with your team.
+
+To start, we need to get the ID of this container using the ```docker container ls -a``` command.
+
+Now, to create an image we need to “commit” this container. Commit creates an image locally on the system running the Docker engine. Run the following command, using the container ID you retrieved, in order to commit the container and create an image out of it.
+```
+docker container commit CONTAINER_ID
+```
+Once it has been commited, we can see the newly created image in the list of available images.
+
+## Part 07 (Create an Image Using Dockerfile)
+
 Create an image:
 1. Create a `Dockerfile`. Sample of Dockerfile (OS: Ubuntu & Update and Install dependencies & Install python dependencies & Copy source code to /opt/ folder & Run the webserver using flask):
 ```
@@ -299,29 +329,35 @@ docker push NAME
     - Skype
   - EVERYTHING :)
 
-## Part 07 (CMD vs ENTRYPOINT)
+A wise man once said:
+
+>Give a sysadmin an image and their app will be up-to-date for a day, give a sysadmin a Dockerfile and their app will always be up-to-date.
+
+Hence, creating images for the complex applications is prefered to use Dockerfiles rather than commiting into local volume and manipulating the result. 
+
+## Part 08 (CMD vs ENTRYPOINT)
 
 
-## Part 08 (Networking)
+## Part 09 (Networking)
 
 - List of network adaptors which docker use to provide inter/intra connections between the containers and outside world (edge network adaptor) `-a`
 ```
 docker network
 docker network ls
 ```
-## Part 09 (Storage)
+## Part 10 (Storage)
 
 
-## Part 10 (Compose)
+## Part 11 (Compose)
 
 
-## Part 11 (Registry)
+## Part 12 (Registry)
 
 
-## Part 12 (Engine)
+## Part 13 (Engine)
 
 
-## Part 13 (Docker Orchestration)
+## Part 14 (Docker Orchestration)
 
 
 ### Chapter 1 (Docker Swarm)
@@ -330,9 +366,18 @@ docker network ls
 ### Chapter 2 (Kubernetes)
 
 
-## Part 14 (Conclusion)
+## Part 15 (Conclusion)
 
+## Part 16 (Terminology)
 
-## Part 15 (References)
+- **Images**: The file system and configuration of our application which are used to create containers.
+- **Containers**: Running instances of Docker images.
+- **Registry**: A server side application that stores and lets you download Docker images. 
+- **Docker Hub**: A registry of Docker images.
+- **Layers**: A Docker image is built up from a series of layers. Each layer represents an instruction in the image’s Dockerfile. Each layer except the last one is read-only.
+- **Dockerfile**:  A text file that contains all the commands, in order, needed to build a given image.
+
+## Part 17s (References)
 
 1. [Docker Documentation Samples](https://docs.docker.com/samples/)
+2. [Play with Docker](https://training.play-with-docker.com/)
