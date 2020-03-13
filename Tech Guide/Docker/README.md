@@ -377,7 +377,7 @@ docker network ls
 - **Layers**: A Docker image is built up from a series of layers. Each layer represents an instruction in the image’s Dockerfile. Each layer except the last one is read-only.
 - **Dockerfile**:  A text file that contains all the commands, in order, needed to build a given image.
 
-## Part 17s (References)
+## Part 17 (References)
 
 1. [Docker Documentation Samples](https://docs.docker.com/samples/)
 2. [Play with Docker](https://training.play-with-docker.com/)
