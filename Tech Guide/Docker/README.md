@@ -359,6 +359,7 @@ docker network ls
 
 ## Part 14 (Docker Orchestration)
 
+In many applications, running a single service in a single machine will do the job, But production applications are usually much more complex and the single server model will not work to due to vaious reasons like container creation delay, ensuring [high availability](https://en.wikipedia.org/wiki/High_availability) and the ability to scale. For production applications IT users and app teams need more sophisticated tools. Docker supplies two such tools: Docker Swarm and Kubernetes. 
 
 ### Chapter 1 (Docker Swarm)
 
