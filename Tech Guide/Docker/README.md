@@ -363,6 +363,22 @@ In many applications, running a single service in a single machine will do the j
 
 ### Chapter 1 (Docker Swarm)
 
+Swarms can be just a single node, but that is unusual as you would have no high availability capabilities and you would severely limit your scalability into one single node.
+Initializing Docker Swarm Mode is easy as exxecuting command below:
+```
+docker swarm init --advertise-addr $(hostname -i)
+```
+In the output, you'll see ```docker swarm join --token SWMTKN-1-************************ <an internal IP>:<Port>``` which you use to join workers nodes to the swarm architecture.
+
+You are also given a second command docker ```swarm join-token manager``` for adding additional managers.
+
+- **add a worker**
+
+  - Copy the ```docker swarm join...``` command from your manager’s output and paste it in the 2nd terminal window on your screen. 
+
+- **Show Swarm Members**
+  - ```docker node ls```
+
 
 ### Chapter 2 (Kubernetes)
 
