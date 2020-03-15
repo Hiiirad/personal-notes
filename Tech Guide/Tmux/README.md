@@ -35,7 +35,7 @@ There is a useful theme for showing windows name, date, etc. at the bottom of th
 - **Window:** A single screen within Tmux, similar to tabs in terminal applications. At any given time, a client will attach to a single window.
 - **Pane:** A portion of a window running a single process, e.g., Vim, zsh, man, etc. Panes can be oriented either vertically or horizontally and resized as needed.
 
-<img src="https://github.com/alifzl/personal-notes/blob/master/Tech%20Guide/Tmux/images/tmux%20terminology.png"
+<img src="./images/tmux%20terminology.png"
      alt="tmux terminology"
      style="float: center;" />
 
@@ -48,9 +48,9 @@ There is a useful theme for showing windows name, date, etc. at the bottom of th
 
 - **Section 02 (Session Management)**
     - Figure out which sessions are running: ```tmux ls```
+    - Create a new session: ```tmux new -s <session_name>```
     - Connect (attach) to a existing Tmux session: ```tmux attach -t <session_name>```
     - Exit (detach) a currently running session: ```[prefix] + d```
-    - Create a new session: ```tmux new -s <session_name>```
     - Rename an existing session: ```tmux rename-session -t <previous_session_name> <new_session_name>```
     
 - **Section 03 (Session Transmition)**
@@ -62,6 +62,7 @@ There is a useful theme for showing windows name, date, etc. at the bottom of th
     - Split pane vertically: `[prefix] + %`
     - Split pane horizontally: `[prefix] + "`
     - Switch between panes: `[prefix] + ARROWKEYS`
+    - Switch the pane layout `[prefix] + o`
     - Zoom to pane and zoom back to normal size: `[prefix] + z`
     - Resize current pane height: `[prefix] + Ctrl + UP/DOWN`
     - Resize current pane width: `[prefix] + Ctrl + LEFT/RIGHT`
