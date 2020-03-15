@@ -12,7 +12,7 @@
   - [Part 06 (Docker Image)](#part-06-docker-image)
     - [Chapter 1 (Create an Image Using Commit)](#chapter-1-create-an-image-using-commit)
     - [Chapter 2 (Create an Image Using Dockerfile)](#chapter-2-create-an-image-using-dockerfile)
-  - [Chapter 3 (Transfer Image to an Offline Server)](#chapter-3-transfer-image-to-an-offline-server)
+    - [Chapter 3 (Transfer Image to an Offline Server)](#chapter-3-transfer-image-to-an-offline-server)
   - [Part 07 (CMD vs ENTRYPOINT)](#part-07-cmd-vs-entrypoint)
   - [Part 08 (Networking)](#part-08-networking)
   - [Part 09 (Storage)](#part-09-storage)
