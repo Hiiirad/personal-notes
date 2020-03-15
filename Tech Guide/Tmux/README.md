@@ -44,6 +44,7 @@ There is a useful theme for showing windows name, date, etc. at the bottom of th
 - **Section 01 (First Rule of Tmux, what is prefix?)**
     - It is **`ctrl+b`** combination of keyboard strokes. </br>
     It's the magic word, used to start an interaction with Tmux server (a.k.a it is the way of calling Tmux server)
+    - You can see all of Tmux powers and capabilities: `[prefix] + ?`
 
 - **Section 02 (Session Management)**
     - Figure out which sessions are running: ```tmux ls```
@@ -51,7 +52,6 @@ There is a useful theme for showing windows name, date, etc. at the bottom of th
     - Exit (detach) a currently running session: ```[prefix] + d```
     - Create a new session: ```tmux new -s <session_name>```
     - Rename an existing session: ```tmux rename-session -t <previous_session_name> <new_session_name>```
-    
     
 - **Section 03 (Session Transmition)**
     - Switch the attached client to the previous session: `[prefix] + (`
