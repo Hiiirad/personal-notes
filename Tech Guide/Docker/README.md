@@ -9,10 +9,10 @@
   - [Part 03 (Commands)](#part-03-commands)
   - [Part 04 (Run)](#part-04-run)
   - [Part 05 (Environment Variables)](#part-05-environment-variables)
-  - [Part 06 (Create an Image Using Commit)](#part-06-Create-an-Image-Using-Commit)
-  - [Part 07 (Create an Image Using Dockerfile)](#part-07-Create-an-Image-Using-Dockerfile)
+  - [Part 06 (Create an Image Using Commit)](#part-06-create-an-image-using-commit)
+  - [Part 07 (Create an Image Using Dockerfile)](#part-07-create-an-image-using-dockerfile)
   - [Part 08 (CMD vs ENTRYPOINT)](#part-08-cmd-vs-entrypoint)
-  - [Part 09 (Networking)](#part-08-networking)
+  - [Part 09 (Networking)](#part-09-networking)
   - [Part 10 (Storage)](#part-10-storage)
   - [Part 11 (Compose)](#part-11-compose)
   - [Part 12 (Registry)](#part-12-registry)
@@ -21,7 +21,7 @@
     - [Chapter 1 (Docker Swarm)](#chapter-1-docker-swarm)
     - [Chapter 2 (Kubernetes)](#chapter-2-kubernetes)
   - [Part 15 (Conclusion)](#part-15-conclusion)
-  - [Part 16 (Terminology)](#part-16-Terminology)
+  - [Part 16 (Terminology)](#part-16-terminology)
   - [Part 17 (References)](#part-17-references)
 
 ## Part 01 (Introduction)
@@ -238,31 +238,35 @@ docker run -e VARIABLE=value NAME/ID
 
 ## Part 06 (Create an Image Using Commit)
 
-Let’s start by running an interactive shell in a ubuntu container:
+Let’s start running an interactive shell in a ubuntu container:
 
-```
+```bash
 docker container run -ti ubuntu bash
 ```
-To customize things a little bit we will install a package called [figlet](figlet.org) in this container.
+To customize things a little bit, we will install a package called [figlet](figlet.org) in this container.
 
-```
+```bash
 apt-get update
 apt-get install -y figlet
 figlet "hello docker"
 ```
 
-You should see the words “hello docker” printed out in large ascii characters on the screen.
+You should see the words “hello docker” printed out in large ASCII characters on the screen.
 
-Now let us pretend this new figlet application is quite useful and you want to share it with the rest of your team. You could tell them to do exactly what you did above and install figlet in to their own container, which is simple enough in this example. But if this was a real world application where you had just installed several packages and run through a number of configuration steps the process could get cumbersome and become quite error prone. Instead, it would be easier to create an image you can share with your team.
 
-To start, we need to get the ID of this container using the ```docker container ls -a``` command.
+Now let us pretend this new figlet application is quite useful, and you want to share it with the rest of your team. You could tell them to do exactly what you did above and install figlet into their container, which is simple enough in this example. But if this was a real-world application where you had just installed several packages and run through many configuration steps, the process could get cumbersome and become entirely error-prone. Instead, it would be easier to create an image you can share with your team.
 
-Now, to create an image we need to “commit” this container. Commit creates an image locally on the system running the Docker engine. Run the following command, using the container ID you retrieved, in order to commit the container and create an image out of it.
+To start, we need to get the ID of this container using this command:
+```bash
+docker container ls -a
 ```
+
+Now, to create an image, we need to “commit” this container. Commit creates an image locally on the system running the Docker engine. Run the following command, using the container ID you retrieved, to commit the container and create an image out of it.
+
+```bash
 docker container commit CONTAINER_ID
 ```
-Once it has been commited, we can see the newly created image in the list of available images.
-
+Once it has committed, we can see the newly created image in the list of available images.
 ## Part 07 (Create an Image Using Dockerfile)
 
 Create an image:
@@ -331,9 +335,9 @@ docker push NAME
 
 A wise man once said:
 
->Give a sysadmin an image and their app will be up-to-date for a day, give a sysadmin a Dockerfile and their app will always be up-to-date.
+> Give a sysadmin an image and their app will be up-to-date for a day, give a sysadmin a Dockerfile and their app will always be up-to-date.
 
-Hence, creating images for the complex applications is prefered to use Dockerfiles rather than commiting into local volume and manipulating the result. 
+Hence, creating images for the complex applications is preferred to use Dockerfiles rather than committing into local volume and manipulating the result. 
 
 ## Part 08 (CMD vs ENTRYPOINT)
 
@@ -363,18 +367,22 @@ In many applications, running a single service in a single machine will do the j
 
 ### Chapter 1 (Docker Swarm)
 
-Swarms can be just a single node, but that is unusual as you would have no high availability capabilities and you would severely limit your scalability into one single node.
-Initializing Docker Swarm Mode is easy as exxecuting command below:
-```
+Swarms can be just a single node, but that is unusual as you would have no high availability capabilities, and you would severely limit your scalability into one single node.
+Initializing Docker Swarm Mode is easy as executing command below:
+```bash
 docker swarm init --advertise-addr $(hostname -i)
 ```
-In the output, you'll see ```docker swarm join --token SWMTKN-1-************************ <an internal IP>:<Port>``` which you use to join workers nodes to the swarm architecture.
+In the output, you'll see
+```bash
+docker swarm join --token SWMTKN-1-********* <Internal IP>:<Port>
+```
+which you use to join worker's nodes to the swarm architecture.
 
-You are also given a second command docker ```swarm join-token manager``` for adding additional managers.
+You are also given a second command docker for adding additional managers: ```swarm join-token manager``` 
 
-- **add a worker**
+- **Add a worker**
 
-  - Copy the ```docker swarm join...``` command from your manager’s output and paste it in the 2nd terminal window on your screen. 
+  - Copy the ```docker swarm join...``` command from your manager’s output and paste it in the second terminal window on your screen. 
 
 - **Show Swarm Members**
   - ```docker node ls```
@@ -387,11 +395,11 @@ You are also given a second command docker ```swarm join-token manager``` for ad
 
 ## Part 16 (Terminology)
 
-- **Images**: The file system and configuration of our application which are used to create containers.
+- **Images**: The file system and configuration of our application which used to create containers.
 - **Containers**: Running instances of Docker images.
-- **Registry**: A server side application that stores and lets you download Docker images. 
+- **Registry**: A server-side application that stores and lets you download Docker images. 
 - **Docker Hub**: A registry of Docker images.
-- **Layers**: A Docker image is built up from a series of layers. Each layer represents an instruction in the image’s Dockerfile. Each layer except the last one is read-only.
+- **Layers**: A Docker image built up from a series of layers. Each layer represents an instruction in the image’s Dockerfile. Each layer except the last one is read-only.
 - **Dockerfile**:  A text file that contains all the commands, in order, needed to build a given image.
 
 ## Part 17 (References)
