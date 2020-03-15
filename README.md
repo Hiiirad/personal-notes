@@ -7,15 +7,19 @@ I believe technology helps us to think differently in every way. So I believe ev
 I am not going to teach you details of that technology, but I categorize everything so that you can find what you need quickly.
 
 What I'm working on:
-- [x] Git
-- [x] Vim
-- [x] Regex
-- [x] Tmux
-- [ ] Docker
+- [x] [Git](Tech%20Guide/Git/README.md)
+- [x] [Vim](Tech%20Guide/Vim/README.md)
+- [x] [Regex](Tech%20Guide/Regex/README.md)
+- [x] [Tmux](Tech%20Guide/Tmux/README.md)
+- [ ] [Docker](Tech%20Guide/Docker/README.md)
 - [ ] Kubernetes
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change or add.
+- Don't change this file.
+- Please break your PR into different commits.
+- Write good commit messages.
+- If you forked this repository and want to change or add something, make sure to update it before your a new PR using `git pull`.
 
 ## License
 This project is licensed under the GPL-3.0 License - see the [LICENSE](./LICENSE) file for details.
