@@ -4,7 +4,7 @@
 
 Tmux abbreviated from [**Terminal Multiplexer**](https://en.wikipedia.org/wiki/Tmux) 
 - **Concept:**
-    - Within one terminal window, you can open multiple windows and split-views. (called**panes**)
+    - Within one terminal window, you can open multiple windows and split-views. (called **panes**)
     - Each pane will contain its own, independently running terminal instance.
     - It allows you to have multiple terminal commands and applications running visually next to each other without any need to open multiple terminal emulator windows.
     - Tmux keeps these windows and panes in a session. You can exit a session at any point. Which is called **detaching**
