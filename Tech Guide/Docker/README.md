@@ -9,10 +9,10 @@
   - [Part 03 (Commands)](#part-03-commands)
   - [Part 04 (Run)](#part-04-run)
   - [Part 05 (Environment Variables)](#part-05-environment-variables)
-  - [Part 06 (Docker Image)](#part-06-Docker-Image)
+  - [Part 06 (Docker Image)](#part-06-docker-image)
     - [Chapter 1 (Create an Image Using Commit)](#chapter-1-create-an-image-using-commit)
     - [Chapter 2 (Create an Image Using Dockerfile)](#chapter-2-create-an-image-using-dockerfile)
-    - [Chapter 3 (Transfer Image to an Offline Server)](#chapter-3-transfer-image-to-an-offline-server)
+  - [Chapter 3 (Transfer Image to an Offline Server)](#chapter-3-transfer-image-to-an-offline-server)
   - [Part 07 (CMD vs ENTRYPOINT)](#part-07-cmd-vs-entrypoint)
   - [Part 08 (Networking)](#part-08-networking)
   - [Part 09 (Storage)](#part-09-storage)
@@ -349,14 +349,13 @@ Hence, creating images for the complex applications is preferred to use Dockerfi
 
 You can easily export a docker image into the raw tar format.
 
-1. ```docker save SERVICE:TAG > arbitrary_name.tar```
-2. move the .tar file to the offline machine which have docker runtime.
-3. ```docker import arbitrary_name.tar```
-4. you can see the result in ```docker image ls```
+1. ```docker save SERVICE:TAG > ARBITRARY_NAME.tar```
+2. Move the .tar file to the offline machine which have docker runtime.
+3. ```docker import ARBITRARY_NAME.tar```
+4. You can see the result in ```docker image ls```
 
-But let's have a deeper look inside by decompressing the tar file. Based on the number of layers which your docker image have, you'll see them with their representive digest string.
-More importantly, there are two files called _manifest.json_ and _repositories_ which indicate the parent docker image, Repo tags and the layer precedence. 
-
+But let's have a deeper look inside by decompressing the tar file. Based on the number of layers that your docker image has, you'll see them with their representative digest string.
+More importantly, there are two files called _manifest.json_ and _repositories_, which indicate the parent docker image, Repo tags, and the layer precedence.
 
 ## Part 07 (CMD vs ENTRYPOINT)
 
