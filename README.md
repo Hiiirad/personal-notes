@@ -19,7 +19,7 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 - Don't change this file.
 - Please break your PR into different commits.
 - Write good commit messages.
-- If you forked this repository and want to change or add something, make sure to update it before your a new PR using `git pull`.
+- If you forked this repository and want to change or add something, make sure to update it before your new PR, using `git pull`.
 
 ## License
 This project is licensed under the GPL-3.0 License - see the [LICENSE](./LICENSE) file for details.
