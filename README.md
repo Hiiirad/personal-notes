@@ -10,6 +10,7 @@ What I'm working on:
 - [x] Git
 - [x] Vim
 - [x] Regex
+- [ ] Tmux
 - [ ] Docker
 - [ ] Kubernetes
 
