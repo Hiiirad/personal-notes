@@ -15,6 +15,8 @@
     - [Chapter 3 (Transfer Image to an Offline Server)](#chapter-3-transfer-image-to-an-offline-server)
   - [Part 07 (CMD vs ENTRYPOINT)](#part-07-cmd-vs-entrypoint)
   - [Part 08 (Networking)](#part-08-networking)
+    - [Chapter 1 (Creating Network Between Containers Using Links)](#chapter-1-Creating-Network-Between-Containers-Using-Links)
+    - [Chapter 2 (Creating Network Between Containers Using Networks)](#chapter-2-Creating-Network-Between-Containers-Using-Networks)
   - [Part 09 (Storage)](#part-09-storage)
   - [Part 10 (Compose)](#part-10-compose)
   - [Part 11 (Registry)](#part-11-registry)
@@ -397,6 +399,43 @@ docker run --entrypoint NEW_COMMAND SERVICE PARAMETER
 docker network
 docker network ls
 ```
+
+### Chapter 1 (Creating Network Between Containers Using Links)
+
+The key aspect when creating a link is the name of the container. Let's start with runninng a redis server container:
+
+```
+docker run -d --name my-redis-db redis  
+```
+To connect to a source container you use the `--link ` option when launching a new container.<br>The container name refers to the source container we defined in the previous step while the alias defines the friendly name of the host.
+
+For an example, we bring up a _redis_ container which is linked to our _my-redis-db_ container. We've defined the alias as _my-redis-client-app_.
+
+```
+docker run -it --link redis-db:redis --name my-redis-client-app redis sh
+```
+
+After doing so, we can launch a _redis CLI_ service in the _my-redis-client-app_ container by calling our _my-redis-db_'s host name:
+
+```
+redis-cli -h my-redis-db
+```
+and now you can start usinig the redis db from another container.
+
+
+
+When a link is created, Docker will do two things:
+
+1. Docker will set some environment variables based on the linked to the container. These environment variables give you a way to reference information such as Ports and IP addresses via known names.<br> You can output all the environment variables with the env command. For example:<br>
+  `docker run -it --link redis-db:redis --name my-redis-client-app redis env`
+
+2. Secondly, Docker will update the HOSTS file of the container with an entry for our source container with three names,<br> _the original_, _the alias_ and the _hash-id_. You can output the containers host entry using cat /etc/hosts <br>
+  `docker run -it --link redis-db:redis --name my-redis-client-app redis cat /etc/hosts`  
+
+### Chapter 2 (Creating Network Between Containers Using Networks)
+
+
+
 ## Part 09 (Storage)
 
 
