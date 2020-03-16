@@ -15,8 +15,8 @@
     - [Chapter 3 (Transfer Image to an Offline Server)](#chapter-3-transfer-image-to-an-offline-server)
   - [Part 07 (CMD vs ENTRYPOINT)](#part-07-cmd-vs-entrypoint)
   - [Part 08 (Networking)](#part-08-networking)
-    - [Chapter 1 (Creating Network Between Containers Using Links)](#chapter-1-Creating-Network-Between-Containers-Using-Links)
-    - [Chapter 2 (Creating Network Between Containers Using Networks)](#chapter-2-Creating-Network-Between-Containers-Using-Networks)
+    - [Chapter 1 (Creating Network Between Containers Using Links)](#chapter-1-creating-network-between-containers-using-links)
+    - [Chapter 2 (Creating Network Between Containers Using Networks)](#chapter-2-creating-network-between-containers-using-networks)
   - [Part 09 (Storage)](#part-09-storage)
   - [Part 10 (Compose)](#part-10-compose)
   - [Part 11 (Registry)](#part-11-registry)
@@ -347,7 +347,7 @@ A wise man once said:
 Hence, creating images for the complex applications is preferred to use Dockerfiles rather than committing into local volume and manipulating the result. 
 
 
-## Chapter 3 (Transfer Image to an Offline Server)
+### Chapter 3 (Transfer Image to an Offline Server)
 
 You can easily export a docker image into the raw tar format.
 
@@ -361,46 +361,78 @@ More importantly, there are two files called _manifest.json_ and _repositories_,
 
 ## Part 07 (CMD vs ENTRYPOINT)
 
+Who defines what process runs within the container? If you look at the Dockerfile for popular Docker images like NGINX, you will see an instruction called CMD, which stands for Command that defines the program that will run within the container. When it starts for the NGINX image, it is the `CMD["nginx"]` command, and for the MySQL image, it is the `CMD["mysqld"]` command.
+
+We need to tell Docker to look for a process explicitly; otherwise, the Docker exits. So, this is why we need to keep our Docker up and running with `CMD`.
+
+The old way to run a command when we start a Docker was something like, `docker run ubuntu [COMMAND]` and after the command finished, the Docker exits. This is a good way, but we need a permanent solution to do this. So we need a solution to overrides the default command specified within the image.
+
+We can add the command(s) to our dockerfile in 2 formats:
+  1. Shell form: `CMD command parameter`
+  2. JSON form: `CMD ["command", "parameter"]`
+- When you specify in a JSON array format, the first element in the array should be executable.
+
+This was a good solution, but we hardcoded our command and its parameter, and it isn't a promising solution for us. Here it comes `ENTRYPOINT` which can solve this problem.
+
+We can use `ENTRYPOINT ["COMMAND"]` instead of `CMD COMMAND PARAMETER` in dockerfile so that we can run this `docker run SERVICE PARAMETER` instead of `docker run SERVICE COMMAND PARAMETER`.
+
+Now, what if we don't give a parameter when we use `ENTRYPOINT`?! We need to add a default value whenever we don't want to provide the program specific value. We do this with both `ENTRYPOINT` and `CMD`. To use both of them, there's only one condition. You have to write these commands only in **JSON format**. For example:
+
+```
+FROM Ubuntu
+.
+.
+.
+ENTRYPOINT ["sleep"]
+CMD ["5"]
+```
+
+You can even modify the `ENTRYPOINT` during runtime using this command:
+```bash
+docker run --entrypoint NEW_COMMAND SERVICE PARAMETER
+```
 
 ## Part 08 (Networking)
 
 - List of network adaptors which docker use to provide inter/intra connections between the containers and outside world (edge network adaptor) `-a`
-```
+```bash
 docker network
 docker network ls
 ```
 
 ### Chapter 1 (Creating Network Between Containers Using Links)
 
-The key aspect when creating a link is the name of the container. Let's start with runninng a redis server container:
+The key aspect when creating a link is the name of the container. Let's start with running a Redis server container:
 
+```bash
+docker run -d --name MY-REDIS-DB REDIS  
 ```
-docker run -d --name my-redis-db redis  
-```
-To connect to a source container you use the `--link ` option when launching a new container.<br>The container name refers to the source container we defined in the previous step while the alias defines the friendly name of the host.
+To connect to a source container, you use the `--link` option when launching a new container.<br>The container name refers to the source container we defined in the previous step while the alias defines the friendly name of the host.
 
-For an example, we bring up a _redis_ container which is linked to our _my-redis-db_ container. We've defined the alias as _my-redis-client-app_.
+For example, we bring up a _redis_ container, which linked to our _my-redis-db_ container. We've defined the alias as _my-redis-client-app_.
 
-```
-docker run -it --link redis-db:redis --name my-redis-client-app redis sh
+```bash
+docker run -it --link REDIS-DB:REDIS --name MY-REDIS-CLIENT-APP redis sh
 ```
 
-After doing so, we can launch a _redis CLI_ service in the _my-redis-client-app_ container by calling our _my-redis-db_'s host name:
+After doing so, we can launch a _redis CLI_ service in the _my-redis-client-app_ container by calling our _my-redis-db_'s hostname:
 
+```bash
+redis-cli -h MY-REDIS-DB
 ```
-redis-cli -h my-redis-db
+and now you can start using the Redis-DB from another container.
+
+When a link created, Docker will do two things:
+
+1. Docker will set some environment variables based on the link to the container. These environment variables give you a way to reference information such as Ports and IP addresses via known names.<br> You can output all the environment variables with the env command. For example:<br>
+```bash
+docker run -it --link REDIS-DB:REDIS --name MY-REDIS-CLIENT-APP redis env
 ```
-and now you can start usinig the redis db from another container.
 
-
-
-When a link is created, Docker will do two things:
-
-1. Docker will set some environment variables based on the linked to the container. These environment variables give you a way to reference information such as Ports and IP addresses via known names.<br> You can output all the environment variables with the env command. For example:<br>
-  `docker run -it --link redis-db:redis --name my-redis-client-app redis env`
-
-2. Secondly, Docker will update the HOSTS file of the container with an entry for our source container with three names,<br> _the original_, _the alias_ and the _hash-id_. You can output the containers host entry using cat /etc/hosts <br>
-  `docker run -it --link redis-db:redis --name my-redis-client-app redis cat /etc/hosts`  
+2. Secondly, Docker will update the HOSTS file of the container with an entry for our source container with three names,<br> _the original_, _the alias_, and the _hash-id_. You can output the containers host entry using cat /etc/hosts <br>
+```bash
+docker run -it --link REDIS-DB:REDIS --name MY-REDIS-CLIENT-APP redis cat /etc/hosts
+```  
 
 ### Chapter 2 (Creating Network Between Containers Using Networks)
 
@@ -420,7 +452,7 @@ When a link is created, Docker will do two things:
 
 ## Part 13 (Docker Orchestration)
 
-In many applications, running a single service in a single machine will do the job, But production applications are usually much more complex and the single server model will not work to due to vaious reasons like container creation delay, ensuring [high availability](https://en.wikipedia.org/wiki/High_availability) and the ability to scale. For production applications IT users and app teams need more sophisticated tools. Docker supplies two such tools: Docker Swarm and Kubernetes. 
+In many applications, running a single service in a single machine will do the job, But production applications are usually much more complex and the single server model will not work to due to vaious reasons like container creation delay, ensuring [High Availability or HA](https://en.wikipedia.org/wiki/High_availability) and the ability to scale. For production applications IT users and app teams need more sophisticated tools. Docker supplies two such tools: Docker Swarm and Kubernetes. 
 
 ### Chapter 1 (Docker Swarm)
 
