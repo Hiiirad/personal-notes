@@ -345,7 +345,7 @@ A wise man once said:
 Hence, creating images for the complex applications is preferred to use Dockerfiles rather than committing into local volume and manipulating the result. 
 
 
-## Chapter 3 (Transfer Image to an Offline Server)
+### Chapter 3 (Transfer Image to an Offline Server)
 
 You can easily export a docker image into the raw tar format.
 
