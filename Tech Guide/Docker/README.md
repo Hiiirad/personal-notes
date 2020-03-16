@@ -436,31 +436,31 @@ docker run -it --link REDIS-DB:REDIS --name MY-REDIS-CLIENT-APP redis cat /etc/h
 
 ### Chapter 2 (Creating Network Between Containers Using Networks)
 
-The first step is to create a network using the CLI. This network will allow us to attach multiple containers which will be able to discover each other.
+The first step is to create a network using the CLI. This network will allow us to attach multiple containers that will be able to discover each other.
 ```bash
 docker network create NETWORK_NAME
 docker network create BACKEND-NETWORK
 ```
-When we launch new containers, we can use the `--net` attribute to assign which network they should be connected to.
+When we launch new containers, we can use the `--net` attribute to assign which network they should connect.
 ```bash
 docker run -d --name=CONTAINER_NAME --net=NETWORK_NAME SERVICE:[TAG]
 docker run -d --name=my-redis-container --net=BACKEND-NETWORK redis
 ```
-Unlike using links, docker network behave like traditional networks where nodes can be attached/detached.
+Unlike using links, Docker network behaves like traditional networks where nodes can be attached/detached.
 The first thing you'll notice is that Docker no longer assigns environment variables or updates the hosts file of containers. see [here](#chapter-1-creating-network-between-containers-using-links).
 
-Instead, the way containers can comunicate via an _Embedded DNS Server_ in Docker. This DNS server is assigned to all containers via the IP _127.0.0.11_ and set in the _resolv.conf_ file.
+Instead, the way containers can communicate via an _Embedded DNS Server_ in Docker. This DNS server is assigned to all containers via the IP _127.0.0.11_ and set in the _resolv.conf_ file which located at `/etc/resolv.conf`.
 ```bash
 docker run --net=BACKEND-NETWORK alpine cat /etc/resolv.conf
 ```
 When containers attempt to access other containers via a well-known name, such as _my-redis-container_, the DNS server will return the IP address of the correct Container. 
 
-Docker supports multiple networks and containers being attached to more than one network at a time. For instance:
+Docker supports multiple networks and containers attached to more than one network at a time. For instance:
 
 ```bash
 docker network create FRONTEND-NETWORK
 ```
-Using the connect command it is possible to attach existing containers to the network.
+Using the connect command, it is possible to attach existing containers to the network.
 ```bash
 docker network connect FRONTEND-NETWORK REDIS
 docker run -d -p 3000:3000 --net=FRONTEND-NETWORK CENTOS/NODEJS-4-CENTOS7
