@@ -359,11 +359,41 @@ More importantly, there are two files called _manifest.json_ and _repositories_,
 
 ## Part 07 (CMD vs ENTRYPOINT)
 
+Who defines what process runs within the container? If you look at the Dockerfile for popular Docker images like NGINX, you will see an instruction called CMD, which stands for Command that defines the program that will run within the container. When it starts for the NGINX image, it is the `CMD["nginx"]` command, and for the MySQL image, it is the `CMD["mysqld"]` command.
+
+We need to tell Docker to look for a process explicitly; otherwise, the Docker exits. So, this is why we need to keep our Docker up and running with `CMD`.
+
+The old way to run a command when we start a Docker was something like, `docker run ubuntu [COMMAND]` and after the command finished, the Docker exits. This is a good way, but we need a permanent solution to do this. So we need a solution to overrides the default command specified within the image.
+
+We can add the command(s) to our dockerfile in 2 formats:
+  1. Shell form: `CMD command parameter`
+  2. JSON form: `CMD ["command", "parameter"]`
+- When you specify in a JSON array format, the first element in the array should be executable.
+
+This was a good solution, but we hardcoded our command and its parameter, and it isn't a promising solution for us. Here it comes `ENTRYPOINT` which can solve this problem.
+
+We can use `ENTRYPOINT ["COMMAND"]` instead of `CMD COMMAND PARAMETER` in dockerfile so that we can run this `docker run SERVICE PARAMETER` instead of `docker run SERVICE COMMAND PARAMETER`.
+
+Now, what if we don't give a parameter when we use `ENTRYPOINT`?! We need to add a default value whenever we don't want to provide the program specific value. We do this with both `ENTRYPOINT` and `CMD`. To use both of them, there's only one condition. You have to write these commands only in **JSON format**. For example:
+
+```
+FROM Ubuntu
+.
+.
+.
+ENTRYPOINT ["sleep"]
+CMD ["5"]
+```
+
+You can even modify the `ENTRYPOINT` during runtime using this command:
+```bash
+docker run --entrypoint NEW_COMMAND SERVICE PARAMETER
+```
 
 ## Part 08 (Networking)
 
 - List of network adaptors which docker use to provide inter/intra connections between the containers and outside world (edge network adaptor) `-a`
-```
+```bash
 docker network
 docker network ls
 ```
@@ -381,7 +411,7 @@ docker network ls
 
 ## Part 13 (Docker Orchestration)
 
-In many applications, running a single service in a single machine will do the job, But production applications are usually much more complex and the single server model will not work to due to vaious reasons like container creation delay, ensuring [high availability](https://en.wikipedia.org/wiki/High_availability) and the ability to scale. For production applications IT users and app teams need more sophisticated tools. Docker supplies two such tools: Docker Swarm and Kubernetes. 
+In many applications, running a single service in a single machine will do the job, But production applications are usually much more complex and the single server model will not work to due to vaious reasons like container creation delay, ensuring [High Availability or HA](https://en.wikipedia.org/wiki/High_availability) and the ability to scale. For production applications IT users and app teams need more sophisticated tools. Docker supplies two such tools: Docker Swarm and Kubernetes. 
 
 ### Chapter 1 (Docker Swarm)
 
