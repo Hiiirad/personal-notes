@@ -432,7 +432,7 @@ docker inspect NAME/ID
 **Embedded DNS:**
 
 - Containers can reach each other using their names. But is it a good way for containers to communicate with their IP addresses? Well, NO. because there is no guarantee for their IP addresses to be the same after the system reboots. The right way to do it is to use the container name. All containers in a Docker host can resolve each other with the name of the container. Docker has a built-in DNS server that helps the containers to resolve each other using the container name.
-- Note that the built-in DNS server IP address is **127.0.0.11**
+- The built-in DNS server IP address is **127.0.0.11**
 
 **Some advanced concept:**<br>
 So how does Docker implement networking? What's the technology behind it? Like how the containers isolated within the host?<br>
