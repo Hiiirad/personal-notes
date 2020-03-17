@@ -512,8 +512,8 @@ We're going to talk about Docker storage drivers and file systems. We're going t
 
 Let's start with how Docker stores data on the local file system. When you install Docker on a system, it creates this folder structure:
 
-<!-- ![Docker Structure](Images/storage-diagram.png) -->
-<img src="Images/storage-diagram.png" width="350" height="350">
+![Docker Structure](Images/storage-diagram.png)
+<!-- <img src="Images/storage-diagram.png" width="350" height="350"> -->
 
 You have multiple folders/directories under `/var/lib/docker/` called aufs, containers, image, and volume, etc. This is where Docker stores all its data by default. By data, I mean files related to images and containers running on the Docker host. For example, all files related to containers are stored under the containers folder, and the files related to images are stored under the image folder. Any volumes created by the Docker containers are created under the volumes folder.
 
@@ -524,8 +524,8 @@ When you run a container based on an image using the Docker run command, Docker 
 
 If I were to log in to the newly created container and create a new file called `temp.txt` it would create that file in the container layer, which is read and write. We just said that the files in the image layer are read-only, meaning you cannot edit anything in those layers. Let's take an example of our application code since we developed our code into the image. The code is part of the image layer and is read-only. After running a container, what if I wish to modify the source code to say test a change.
 
-<!-- ![Copy on Write](Images/copy-on-write.png) -->
-<img src="Images/copy-on-write.png" width="504" height="360">
+![Copy on Write](Images/copy-on-write.png)
+<!-- <img src="Images/copy-on-write.png" width="504" height="360"> -->
 
 Remember, the same image layer may be shared between multiple containers created from this image, so does it mean that I cannot modify this file inside the container?<br>
 No, I can still modify this file, but before I save the modified file Docker automatically creates a copy of the file in the read/write layer, and I will then be modifying a different version of the file in the read-write layer. All future modifications will be done on this copy of the file in the read-write. This is called **copy-on-write** mechanism. The image layer being read-only means that the files in these layers will not be modified in the image itself, so the image will remain the same all the time until you rebuild the image using the Docker build command.
@@ -556,8 +556,8 @@ One final point note before I finish this part, using the `-v` is an old style. 
 ```bash
 docker run --mount type=bind,source=/data/mysql,target=/var/lib/mysql mysql
 ```
-<!-- ![Volume Diagram](Images/storage-volumes.png) -->
-<img src="Images/storage-volumes.png" width="612" height="432">
+![Volume Diagram](Images/storage-volumes.png)
+<!-- <img src="Images/storage-volumes.png" width="612" height="432"> -->
 
 So, who is responsible for doing all these operations?<br>
 Maintaining the layered architecture, creating a writable layer moving files across layers to enable copy and write, etc. it's the storage drivers, so Docker uses storage drivers to enable layered architecture. Some of the common storage drivers are:
