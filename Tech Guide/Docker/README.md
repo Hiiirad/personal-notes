@@ -437,12 +437,19 @@ docker inspect NAME/ID
 
 - Containers can reach each other using their names. But is it a good way for containers to communicate with their IP addresses? Well, NO. because there is no guarantee for their IP addresses to be the same after the system reboots. The right way to do it is to use the container name. All containers in a Docker host can resolve each other with the name of the container. Docker has a built-in DNS server that helps the containers to resolve each other using the container name.
 - The built-in DNS server IP address is **127.0.0.11**
+- You can modify it here: `/etc/resolv.conf`
 
 **Some advanced concept:**<br>
 So how does Docker implement networking? What's the technology behind it? Like how the containers isolated within the host?<br>
 Docker uses network namespaces that create a separate namespace for each container. It then uses virtual Ethernetpairs to connect containers together.
 
 ### Chapter 1 (Creating Network Between Containers Using Links)
+
+> Note: Using links like what I'm going to tell you is going to be deprecated, and the support may be removed in the future by the Docker support team. This is because, as we will see in some time, advanced and newer concepts in Docker Swarm and networking, support better ways of achieving what we are going to do here with links. But I'm going to tell you about it so that you can understand the concept of it.
+
+Link is a command line option which can be used to link containers together.
+
+What this is, in fact doing is it creates an entry into the `/etc/hosts` file on the container and assigns an internal IP to it.
 
 The key aspect when creating a link is the name of the container. Let's start with running a Redis server container:
 
@@ -454,7 +461,7 @@ To connect to a source container, you use the `--link` option when launching a n
 For example, we bring up a _redis_ container, which linked to our _my-redis-db_ container. We've defined the alias as _my-redis-client-app_.
 
 ```bash
-docker run -it --link REDIS-DB:REDIS --name MY-REDIS-CLIENT-APP redis sh
+docker run -it --link MY-REDIS-DB:REDIS --name MY-REDIS-CLIENT-APP redis sh
 ```
 
 After doing so, we can launch a _redis CLI_ service in the _my-redis-client-app_ container by calling our _my-redis-db_'s hostname:
@@ -491,7 +498,8 @@ docker run -d --name=my-redis-container --net=BACKEND-NETWORK redis
 Unlike using links, Docker network behaves like traditional networks where nodes can be attached/detached.
 The first thing you'll notice is that Docker no longer assigns environment variables or updates the hosts file of containers. see [here](#chapter-1-creating-network-between-containers-using-links).
 
-Instead, the way containers can communicate via an _Embedded DNS Server_ in Docker. This DNS server is assigned to all containers via the IP _127.0.0.11_ and set in the _resolv.conf_ file which located at `/etc/resolv.conf`.
+Instead, the way containers can communicate via an **Embedded DNS Server** in Docker. 
+
 ```bash
 docker run --net=BACKEND-NETWORK alpine cat /etc/resolv.conf
 ```
@@ -576,7 +584,79 @@ The selection of the storage driver depends on the underlying OS being used. For
 
 
 ## Part 10 (Compose)
+> In this section, we're going to work with YAML file (.yml or .yaml extension). It's essential to understand YAML before start reading this part.
 
+If we needed to setup a complex application running multiple services, a better way to it is to use Docker Compose. With Docker compose, we could create a configuration file in YAML format called **`docker-compose.yml`** and put together the different services and the options specific to this to running them in this file. Then we could simply run `docker-compose up` command to bring up the entire application stack. This is easier to implement run and maintain as all changes always stored in the Docker compose configuration file. However, this is all only applicable to running containers on a single Docker host.
+
+Let's look at a better example. I'm going to use the same application that everyone uses to demonstrate Docker. It's a comprehensive yet straightforward application developed by Docker to explain the various features available in running an application stack on Docker. So let's first get familiarized with the app.
+
+This is a sample voting application which provides an interface for a user to vote and another interface to show the results. the application consists of various components such as the voting app which is a web application developed in **Python** to provide the user with an interface to choose between two options a cat and a dog. when you make a selection the vote is stored in **Redis** (In this case, servers as a database in memory). This vote is then processed by the worker which is an application written in **.NET**. The worker application takes the new vote and updates the persistent database which is a **PostgreSQL** that has simply a table with a number of vote for each category cats and dogs. in this case it increments the number of votes for cats as our vote for cats. finally the result of the vote is displayed in a web interface which is another web application developed in **Node.js**. This resulting application reads the count of votes from the PostgreSQL database and display it to user. so that is the architecture and dataflow of this simple voting application stack. as you can see this application is built with a combination of different services, different development tools and multiple different development platforms such as Python, Node.js etc. This sample application will be used to showcase how easy it is to setup an entire application stack consisting of diverse components in Docker.
+
+![Voting App](Images/voting-application.png)
+
+Some points if we want to run these services with `docker run` command:
+- There are no links between containers, and obviously, they can't think for themselves to guess how they should get, process, and send data.
+- You can review links from [here](#chapter-1-creating-network-between-containers-using-links).
+- You can see some details of containers at `/etc/hosts`.
+
+Let's create **docker-compose.yml** for our voting-app from these `docker run` commands:
+
+```bash
+docker run -d --name=redis redis
+docker run -d --name=db postgres:9.4
+docker run -d --name=vote -p 5000:80 --link redis:redis voting-app
+docker run -d --name=result -p 5001:80 --link db:db result-app
+docker run -d --name=worker --link db:db --link redis:redis worker
+```
+We start by creating a dictionary of container names. We will use the same we used in the Docker run commands. So we take all the names and create a key with each of them. Then under each item, we specify which image to use. The key is the image, and the value is the name of the image to use. Next, inspect the commands and see what the other options used are. We publish ports. So let's move those ports under the respective containers. So we create a property called ports and lists all the ports that you would like to publish under that. Finally, we are left with links, so whichever container requires a link created properly under it called links and provides an array of links such as Redis or DB.
+```yaml
+redis:
+  image: redis
+db:
+  image: postgres:9.4
+vote:
+  image: voting-app
+  ports:
+    - 5000:80
+  links:
+    - redis
+result:
+  image: result-app
+  ports:
+    - 5001:80
+  links:
+    - db
+worker:
+  image: worker
+  links:
+    - redis
+    - db
+```
+Now that we wrote our docker-compose.yml file, bringing up the stack is simple. From the `docker-compose up` command, you can bring up the entire application stack.
+
+When we looked at the example of the voting application, we assumed that all images are already built. Out of the five different components, two of them Redis and Postgres images we know are already available on Docker hub. There are official images from Redis and Postgres, but the remaining three are our applications. They don't need to be already built and available in a Docker registry. If we would like to instruct Docker compose to run a Docker build instead of trying to pull an image, we can replace the image line with a build line and specify the location of a directory that contains the application code and a Dockerfile with instructions to build the Docker image. 
+In this example, for the voting app, I have all the application code in a folder named `/vote`, which contains all application code and a Dockerfile. This time when you run the `docker-compose up` command, it will first build the images, give a temporary name for it and then use those images to run containers using the options you specified before. Similarly, use the build option to build the two other services from the respective folders.
+
+<!-- 2 yaml files -->
+
+We will now look at different versions of the Docker compose file. This is important because you might see Docker compose files in different formats at different places and wonder why it looks so different. Docker-compose evolved over time and now supports a lot more options than it did in the beginning. For example, this is the trimmed down version of the Docker compose file we used earlier.
+
+<!-- version 1 -->
+
+This is the original version of the Docker-compose file known as version 1. this had several limitations. For example, if you wanted to deploy containers on a different network other than the default Bridge network, there was no way of specifying that in this version of the file. Also, say you have a dependency or start-up order of some kind, for example, your database container must come up first and only then the voting application should be started. There was no way you could specify that in version 1 of the Docker compose file. Support for these came in version 2. with version 2 and up, the format of the file also changed a little bit. You no longer specify your stack information directly, as you did before. It is all encapsulated in a **Services** section, so create a property called services in the root of the file and then move all the services underneath that. You will still use the same `docker-compose up` command to bring up your application stack. But how does Docker-compose know what version of the file you're using?<br>
+You're free to use version 1 or version 2, depending on your needs. So how does the Docker compose know what format you are using?<br>
+For version 2 and up, you must specify the version of the Docker-compose file you are intending to use by specifying the version at the top of the file. In this case, `version:2`.
+
+<!-- version 2 -->
+
+Another difference is with networking. In version 1, Docker-compose attaches all the containers it runs to the default bridged network and then use links to enable communication between the containers as we did before. With version 2, Docker-compose automatically creates a dedicated bridged network for this application and then attaches all containers to that new network. All containers are then able to communicate with each other using each other's service name. So you basically don't need to use links in version 2 of Docker-compose. You can get rid of all the links you mentioned in version 1 when you convert a file from version 1 to version 2, and finally, version 2 also introduces it depends on the feature. If you wish to specify a start-up order, for instance, say the voting web application is dependent on the Redis service, so you need to ensure that Redis container is started first and only then the voting web application must be started. We could add a depends on the property to the voting application and indicate that it is dependent on Redis. Then comes version 3, which is the latest as of today.
+
+<!-- version 3 -->
+
+Version 3 is similar to version 2 in the structure, meaning it has a version specification at the top and a Services section under which you put all your services, just like in version2. Make sure to specify the version number as 3 at the top. Version 3 comes with support for Docker swarm, which we will see later on. Some options were removed and added to see details on those you can refer to the [documentation](https://docs.docker.com/compose/compose-file/). We will see version 3 in much detail later when we discuss Docker stacks. Let us talk about networks in Docker-compose. Getting back to our application so far, we have been just deploying all containers on the default bridged network.
+Let us say we modify the architecture a little bit to contain the traffic from the different sources. For example, we would like to separate the user-generated traffic from the applications of internal traffic. So we create a front-end network dedicated to traffic from users and a back-end network dedicated to traffic within the application. We then connect the user-facing applications, which are the voting app and the result-app to the front-end network and all the components to an internal back-end network. So back in our Docker compose file note that I have actually stripped out the port section for simplicity sake. They're just not shown here. The first thing we need to do if we were to use networks is to define the networks we are going to use. In our case, we have two networks front end and back end. So, create a new property called networks at the root level adjacent to the services in the Docker compose file and add a map of networks we are planning to use. Then under each service, create a network property and provide a list of networks that service must be attached to. In case of Redis and DB, it's only the back-end network. In case of the front-end applications such as at the voting app and the result-app, they require to be attached to both a front-end and back-end Network. You must also add a section for worker container to be added to the back-end network. I have just omitted that in this slide.
+
+<!-- Diagram of front-end and back-end -->
 
 ## Part 11 (Registry)
 
