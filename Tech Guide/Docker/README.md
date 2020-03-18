@@ -394,11 +394,53 @@ docker run --entrypoint NEW_COMMAND SERVICE PARAMETER
 
 ## Part 08 (Networking)
 
-- List of network adaptors which docker use to provide inter/intra connections between the containers and outside world (edge network adaptor) `-a`
+When you install Docker, it creates 3 networks automatically:
+1. **Bridge**: is the default network a container gets attached to.
 ```bash
+docker run SERVICE
+docker run ubuntu
+```
+2. **None**:
+```bash
+docker run SERVICE --network=none
+docker run ubuntu --network=none
+```
+3. **Host**:
+```bash
+docker run SERVICE --network=host
+docker run ubuntu --network=host
+```
+
+![Network](Images/network-diagram.png)
+
+Let's dig into these three networks:
+
+- **Bridge** is a private internal network created by Docker on the host. All containers attached to this network by default, and they get an internal IP address usually in the range of **172.17.0.0/16**. The Docker itself gets 172.17.0.1 as the default gateway of other containers, and its name is `Docker0`. The containers can access each other using internal IP if required. To access any of these containers from the outside world, map the ports of these containers to ports on the Docker host as we have seen before [HERE](#part-04-run). Another way to access the containers externally is to associate the container to the **HOST** network. This takes out any network isolation between the Docker host and the Docker container. It means when you want to run a web server on port 5000 in a web app container, it is automatically accessible on the same port externally without requiring any port mapping as the web container uses the host's network. This would also mean that unlike before, you will now not be able to run multiple web containers on the same host on the same port as the ports are now common to all containers in the host network. With the **None** network, the containers are not attached to any network and don't have any access to the external network or other containers. They run in an isolated network.
+- What if we wish to isolate the containers within the Docker host. For example, the first two web containers on internal network 172 and the second two containers on a different internal network like 10. by default, Docker only creates one internal bridge network. We could create our own internal network using this command:
+
+```bash
+docker network create --driver bridge --subnet IP/SUBNET NETWORK_NAME
+docker network create --driver bridge --subnet 10.0.0.0/24 test_network
+
 docker network
 docker network ls
 ```
+
+So how do we see the network settings, the IP addresses, Mac Addresses, etc. assigned to an existing container?
+```bash
+docker inspect NAME/ID
+```
+
+![User Defined Network + DNS](Images/user-defined-network-dns.png)
+
+**Embedded DNS:**
+
+- Containers can reach each other using their names. But is it a good way for containers to communicate with their IP addresses? Well, NO. because there is no guarantee for their IP addresses to be the same after the system reboots. The right way to do it is to use the container name. All containers in a Docker host can resolve each other with the name of the container. Docker has a built-in DNS server that helps the containers to resolve each other using the container name.
+- The built-in DNS server IP address is **127.0.0.11**
+
+**Some advanced concept:**<br>
+So how does Docker implement networking? What's the technology behind it? Like how the containers isolated within the host?<br>
+Docker uses network namespaces that create a separate namespace for each container. It then uses virtual Ethernetpairs to connect containers together.
 
 ### Chapter 1 (Creating Network Between Containers Using Links)
 
@@ -436,31 +478,31 @@ docker run -it --link REDIS-DB:REDIS --name MY-REDIS-CLIENT-APP redis cat /etc/h
 
 ### Chapter 2 (Creating Network Between Containers Using Networks)
 
-The first step is to create a network using the CLI. This network will allow us to attach multiple containers which will be able to discover each other.
+The first step is to create a network using the CLI. This network will allow us to attach multiple containers that will be able to discover each other.
 ```bash
 docker network create NETWORK_NAME
 docker network create BACKEND-NETWORK
 ```
-When we launch new containers, we can use the `--net` attribute to assign which network they should be connected to.
+When we launch new containers, we can use the `--net` attribute to assign which network they should connect.
 ```bash
 docker run -d --name=CONTAINER_NAME --net=NETWORK_NAME SERVICE:[TAG]
 docker run -d --name=my-redis-container --net=BACKEND-NETWORK redis
 ```
-Unlike using links, docker network behave like traditional networks where nodes can be attached/detached.
+Unlike using links, Docker network behaves like traditional networks where nodes can be attached/detached.
 The first thing you'll notice is that Docker no longer assigns environment variables or updates the hosts file of containers. see [here](#chapter-1-creating-network-between-containers-using-links).
 
-Instead, the way containers can comunicate via an _Embedded DNS Server_ in Docker. This DNS server is assigned to all containers via the IP _127.0.0.11_ and set in the _resolv.conf_ file.
+Instead, the way containers can communicate via an _Embedded DNS Server_ in Docker. This DNS server is assigned to all containers via the IP _127.0.0.11_ and set in the _resolv.conf_ file which located at `/etc/resolv.conf`.
 ```bash
 docker run --net=BACKEND-NETWORK alpine cat /etc/resolv.conf
 ```
 When containers attempt to access other containers via a well-known name, such as _my-redis-container_, the DNS server will return the IP address of the correct Container. 
 
-Docker supports multiple networks and containers being attached to more than one network at a time. For instance:
+Docker supports multiple networks and containers attached to more than one network at a time. For instance:
 
 ```bash
 docker network create FRONTEND-NETWORK
 ```
-Using the connect command it is possible to attach existing containers to the network.
+Using the connect command, it is possible to attach existing containers to the network.
 ```bash
 docker network connect FRONTEND-NETWORK REDIS
 docker run -d -p 3000:3000 --net=FRONTEND-NETWORK CENTOS/NODEJS-4-CENTOS7
@@ -468,6 +510,69 @@ docker run -d -p 3000:3000 --net=FRONTEND-NETWORK CENTOS/NODEJS-4-CENTOS7
 We just created a separate network with a _Node.js_ application that communicates with our existing _Redis_ instance which you can test it using `curl localhost:3000`
 
 ## Part 09 (Storage)
+> This part (Storage) is an advanced topic. You can skip it if you want to learn the basics.
+
+We're going to talk about Docker storage drivers and file systems. We're going to see where and how Docker stores data and how it manages file systems of the container.
+
+Let's start with how Docker stores data on the local file system. When you install Docker on a system, it creates this folder structure:
+
+![Docker Structure](Images/storage-diagram.png)
+<!-- <img src="Images/storage-diagram.png" width="350" height="350"> -->
+
+You have multiple folders/directories under `/var/lib/docker/` called aufs, containers, image, and volume, etc. This is where Docker stores all its data by default. By data, I mean files related to images and containers running on the Docker host. For example, all files related to containers are stored under the containers folder, and the files related to images are stored under the image folder. Any volumes created by the Docker containers are created under the volumes folder.
+
+Let's understand where Docker stores its files, and in what format?<br>
+First, we need to understand Dockers layered architecture. Let's review [Layered Architecture](#chapter-2-create-an-image-using-dockerfile). So, I'm going to explain this part with an example, let's say we have two dockerfile and we want to build two docker container based on them. Both of them have the same OS, specific updates, dependencies, and some programs to install for initialization. But the rest of the lines in dockerfile are different. When Docker finishes the first container, it won't build the same layers from the second dockerfile; instead, it uses those layers from the cache to save space and time. Once the build completes, you cannot modify the contents of these layers, and so they are read-only, and you can only modify them by initiating a new build.
+
+When you run a container based on an image using the Docker run command, Docker creates a container based off of these layers and creates a new writable layer on top of the image layer. The writable layer is used to store data created by the container, such as log files written by the applications, any temporary files generated by the container, or just any file modified by the user on that container. The life of this layer, though, is only as long as the container is alive. When the container destroyed this layer, and all of the changes stored in it will be destroyed. Remember that the same image layer is shared by all containers created using this image.
+
+If I were to log in to the newly created container and create a new file called `temp.txt` it would create that file in the container layer, which is read and write. We just said that the files in the image layer are read-only, meaning you cannot edit anything in those layers. Let's take an example of our application code since we developed our code into the image. The code is part of the image layer and is read-only. After running a container, what if I wish to modify the source code to say test a change.
+
+![Copy on Write](Images/copy-on-write.png)
+<!-- <img src="Images/copy-on-write.png" width="504" height="360"> -->
+
+Remember, the same image layer may be shared between multiple containers created from this image, so does it mean that I cannot modify this file inside the container?<br>
+No, I can still modify this file, but before I save the modified file Docker automatically creates a copy of the file in the read/write layer, and I will then be modifying a different version of the file in the read-write layer. All future modifications will be done on this copy of the file in the read-write. This is called **copy-on-write** mechanism. The image layer being read-only means that the files in these layers will not be modified in the image itself, so the image will remain the same all the time until you rebuild the image using the Docker build command.
+
+What happens when we get rid of the container?<br>
+All of the data stored in the container layer also gets deleted. The change we made to the `app.py` and the new `temp.txt` file we created, we'll also get removed.
+
+So what if we wish to persist this data?<br>
+For example, if we were working with our database, and we would like to preserve the data created by the container, we could add a persistent volume to the container. To do this, first, create a volume using the `docker volume create` command, so when I run the `docker volume create data_volume` command, it creates a folder called `data_volume` under the `/var/lib/docker/volumes/` directory. Then when I run the Docker container using the `docker run` command, I could mount this volume inside the Docker containers read-write layer using the `-v` option like this:
+
+```bash
+docker run -v FOLDER_NAME:SERVICE_LOCATION IMAGE_NAME
+docker run -v data_volume:/var/lib/mysql mysql
+```
+
+This will create a new container and mount the data volume we created into `/var/lib/mysql` folder inside the container. So all data are written by the database is, in fact, stored on the volume created on the Docker host. Even if the container is destroyed, the data is still active.<br>
+Now, what if you didn't run the `docker volume create` command to create the volume before the `docker run command`?<br>
+For example, if I run the `docker run command` to create a new instance of MySQL container with the volume `data_volume2` which I have not created yet, Docker will automatically create a volume named `data_volume2` and mounted to the container. You should be able to see all these volumes if you list the contents of the `/var/lib/docker/volumes` folder. This is called **volume mounting**. As we are mounting a volume created by Docker under the `/var/lib/docker/volumes` folder, but what if we had our data already at another location?<br>
+For example, let's say we have some external storage on the Docker host at `/data`, and we would like to store database data on that volume and not in the default `/var/lib/docker/volumes` folder?<br>
+In that case, we would run a container using the command `docker run -v`, but in this case, we will provide the complete path to the folder we would like to mount. That is `/data/mysql`, and so it will create a container and mount the folder to the container. This is called **bind mounting**.<br>
+So there are two types of mounts:
+1. **Volume mounting**
+2. **Bind mounting**
+
+Volume-mount mounts a volume from the volumes directory, and bind-mount mounts a directory from any location on the Docker host.<br>
+One final point note before I finish this part, using the `-v` is an old style. The new way is to use `--mount` option. The `--mount` is the preferred way as it is more verbose, so you have to specify each parameter in a `key=value` format. For example, the previous command can be written with the `--mount` option as this using the type source and target options. The type, in this case, is bind. The source is the location on my host, and the target is the location on my container.
+
+```bash
+docker run --mount type=bind,source=/data/mysql,target=/var/lib/mysql mysql
+```
+![Volume Diagram](Images/storage-volumes.png)
+<!-- <img src="Images/storage-volumes.png" width="612" height="432"> -->
+
+So, who is responsible for doing all these operations?<br>
+Maintaining the layered architecture, creating a writable layer moving files across layers to enable copy and write, etc. it's the storage drivers, so Docker uses storage drivers to enable layered architecture. Some of the common storage drivers are:
+- AUFS
+- ZFS
+- BTRFS
+- Device Mapper
+- Overlay
+- Overlay2
+
+The selection of the storage driver depends on the underlying OS being used. For example, in Ubuntu, the default storage driver is **AUFS**, whereas this storage driver is not available on other operating systems like Fedora or CentOS. In that case, device-mapper may be a better option. Docker will choose the best storage driver available automatically based on the operating system. The different storage drivers also provide different performance and stability characteristics. So you may want to choose one that fits the needs of your application and your organization. If you would like to read more on any of these storage drivers, read this document about [select a storage driver](https://docs.docker.com/storage/storagedriver/select-storage-driver/).
 
 
 ## Part 10 (Compose)
