@@ -19,6 +19,9 @@
     - [Chapter 2 (Creating Network Between Containers Using Networks)](#chapter-2-creating-network-between-containers-using-networks)
   - [Part 09 (Storage)](#part-09-storage)
   - [Part 10 (Compose)](#part-10-compose)
+    - [Chapter 1 (Docker-Compose Introduction Using an Example)](#chapter-1-docker-compose-introduction-using-an-example)
+    - [Chapter 2 (Docker-Compose Management Commands)](#chapter-2-docker-compose-management-commands)
+    - [Chapter 3 (Docker-Compose Scale Up)](#chapter-3-docker-compose-scale-up))
   - [Part 11 (Registry)](#part-11-registry)
   - [Part 12 (Engine)](#part-12-engine)
   - [Part 13 (Docker Orchestration)](#part-13-docker-orchestration)
@@ -576,6 +579,87 @@ The selection of the storage driver depends on the underlying OS being used. For
 
 
 ## Part 10 (Compose)
+
+Docker Compose is a tool for defining and running multi-container Docker applications. With Compose, you use a _YAML_ file to configure your application's services. Then, with a single command, you create and start all the services from your configuration. Generally it's been called _docker-compose.yml_ file. 
+
+The format of the file is based on YAML (Yet Another Markup Language).
+```YAML
+container_name:
+  property: value
+    - or options
+```
+
+### Chapter 1 (Docker-Compose Introduction Using an Example)
+
+There is a comprehensive documnet in docker documentation, explaining the structure of an standard dockerfile [here](https://docs.docker.com/compose/compose-file/),  
+But, for a case study example, let's suppose that we have a _Node.js_ application which requires connecting to _Redis_. To start, we need to define our _docker-compose.yml_ file to launch the _Node.js_ application.
+
+```YAML
+web:
+  build: .
+```
+This will define a container called _**web**_, which is based on the build of the current directory which the _docker-compose.yml_ file exists.
+Docker Compose supports all of the properties which can be defined using docker run. So for creating link between _Redis_ and _Node.js_ containers we can use previous ways of doing so. also port exposing syntax works as before.
+
+```YAML
+web:
+  build: .
+
+  ports:
+    - "3000"
+    - "8000"
+
+  links:
+    - redis
+```
+Furthermore, for adding another container within the existing one in our _docker-compose.yml_ file, we can simply add it in a new indentation level.
+The final docker compose file would be something like below:
+
+```YAML
+web:
+  build: .
+
+  ports:
+    - "3000"
+    - "8000"
+
+  links:
+    - redis
+
+redis:
+  image: redis:alpine
+```
+
+After all, you can start your application using:
+```bash
+docker-compose up -d
+```
+The `-d` argument states to run the containers in the background, similar to when used with `docker run`.
+
+### Chapter 2 (Docker-Compose Management Commands)
+
+Not only can Docker Compose manage starting containers but it also provides a way manage all the containers using a single command.
+
+- to see the details of the launched containers you can use `docker-compose ps`
+- to access all the logs via a single stream you use `docker-compose logs`
+- to stop a set of containers you can use the command `docker-compose stop`
+- To remove all the containers use the command `docker-compose rm`
+
+### Chapter 3 (Docker-Compose Scale Up)
+
+As Docker Compose understands how to launch your application containers, it can also be used to scale the number of containers running.
+
+The scale option allows you to specify the service and then the number of instances you want. If the number is greater than the instances already running then, it will launch additional containers. If the number is less, then it will stop the unrequired containers.
+
+- Scale Up the number of _web_ containers you previously creatd by using the command below:
+  ```bash
+  docker-compose scale CONTAINER_NAME=NUMBER_OF_INSTANCES
+  docker-compose scale WEB=3
+  ```
+- Scale Down using:
+  ```bash
+  docker-compose scale WEB=1
+  ```
 
 
 ## Part 11 (Registry)
