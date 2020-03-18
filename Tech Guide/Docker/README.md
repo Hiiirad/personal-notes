@@ -411,6 +411,8 @@ docker run SERVICE --network=host
 docker run ubuntu --network=host
 ```
 
+![Network](Images/network-diagram.png)
+
 Let's dig into these three networks:
 
 - **Bridge** is a private internal network created by Docker on the host. All containers attached to this network by default, and they get an internal IP address usually in the range of **172.17.0.0/16**. The Docker itself gets 172.17.0.1 as the default gateway of other containers, and its name is `Docker0`. The containers can access each other using internal IP if required. To access any of these containers from the outside world, map the ports of these containers to ports on the Docker host as we have seen before [HERE](#part-04-run). Another way to access the containers externally is to associate the container to the **HOST** network. This takes out any network isolation between the Docker host and the Docker container. It means when you want to run a web server on port 5000 in a web app container, it is automatically accessible on the same port externally without requiring any port mapping as the web container uses the host's network. This would also mean that unlike before, you will now not be able to run multiple web containers on the same host on the same port as the ports are now common to all containers in the host network. With the **None** network, the containers are not attached to any network and don't have any access to the external network or other containers. They run in an isolated network.
@@ -418,7 +420,7 @@ Let's dig into these three networks:
 
 ```bash
 docker network create --driver bridge --subnet IP/SUBNET NETWORK_NAME
-docker network create --driver bridge --subnet 10.0.0.0/24 TEST_NETWORK
+docker network create --driver bridge --subnet 10.0.0.0/24 test_network
 
 docker network
 docker network ls
@@ -428,6 +430,8 @@ So how do we see the network settings, the IP addresses, Mac Addresses, etc. ass
 ```bash
 docker inspect NAME/ID
 ```
+
+![User Defined Network + DNS](Images/user-defined-network-dns.png)
 
 **Embedded DNS:**
 
