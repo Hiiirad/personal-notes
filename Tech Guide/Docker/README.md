@@ -148,84 +148,93 @@ We can use Docker on Windows with these 2 options to run a Linux container on a 
 
 ## Part 03 (Commands)
 - Run = Start a container or run a container from an image. If the image is not present on the host, it will go to _dockerhub_ and pull the image down. (Only the first time) Container will run in fg (foreground) or technically in _attach mode_.
-```
-docker run SERVICE
-```
+  ```
+  docker run SERVICE
+  ```
 - List of containers with basic informations. If you want to see the list of all containers (availabe, stopped and exited) use `-a`
-```
-docker ps
-docker ps -a
-```
+  ```
+  docker ps
+  docker ps -a
+  ```
 - Stop a container using container ID or NAME
-```
-docker stop ID/NAME
-```
+  ```
+  docker stop ID/NAME
+  ```
 - Remove a container using ID or NAME only for stopped or exited containers
-```
-docker rm ID/NAME
-```
+  ```
+  docker rm ID/NAME
+  ```
 - List of images and their sizes
-```
-docker images
-```
+  ```
+  docker images
+  ```
 - Remove an image. You must ensure that no containers are running off of that image before attempting to remove the image. You must stop and delete all dependant containers to be able to delete an image.
-```
-docker rmi NAME
-```
-- Pull/Download an image when it couldn't find one locally. It only pulls an image without running it.
-```
-docker pull NAME
-```
-**Unlike VMs, containers are not meant to host an OS (operating system). Containers are meant to run a specific task or process such as to host an instance of a web server or an application server or a database or simply to carry some kind of computation or analysis tasks, once the task is complete, the container exits. The container only lives as long as the process inside it is alive.**
-- Append a command (Execute a command when we run the container)
-```
-docker run SERVICE COMMAND
-docker run ubuntu sleep 5
-```
+  ```
+  docker rmi NAME
+  ```
+  - Pull/Download an image when it couldn't find one locally. It only pulls an image without running it.
+  ```
+  docker pull NAME
+  ```
+  **Unlike VMs, containers are not meant to host an OS (operating system). Containers are meant to run a specific task or process such as to host an instance of a web server or an application server or a database or simply to carry some kind of computation or analysis tasks, once the task is complete, the container exits. The container only lives as long as the process inside it is alive.**
+  - Append a command (Execute a command when we run the container)
+  ```
+  docker run SERVICE COMMAND
+  docker run ubuntu sleep 5
+  ```
 - Execute a command (for a running container)
-```
-docker exec NAME/ID COMMAND
-```
+  ```
+  docker exec NAME/ID COMMAND
+  ```
 - Run a container (Attach and Detach) -> Detach means don't show output of command and work in bg (background) using `-d`. Using attach command will bring your output to fg (foreground)
-```
-docker run -d SERVICE
-docker attach NAME/ID
-```
+  ```
+  docker run -d SERVICE
+  docker attach NAME/ID
+  ```
 
 ## Part 04 (Run)
 - Run with specific version/tag. Default tag will be latest version
-```
-docker run SERVICE:TAG
-docker run redis:4.0
-```
+  ```
+  docker run SERVICE:TAG
+  docker run redis:4.0
+  ```
 - Run with STDIN (Standard Input). Docker container doesn't listen to STDIN even though you are attached to its console. If we want to run a container on interactive mode, we should use `-i` (interactive). However, we can't see the application's prompt on the terminal because we haven't attached to the container's terminal. To solve this, we should use `-t` (terminal).
-```
-docker run -it SERVICE:TAG
-```
+  ```
+  docker run -it SERVICE:TAG
+  ```
 - Remove Container After Usage. Sometimes, it’s useful just to start a container to poke around, and then discard it afterward. The following will start a new container, drop into a shell, and then destroy the container after you exit.
-```
-docker run --rm -it  SERVICE:TAG
-```
+  ```
+  docker run --rm -it  SERVICE:TAG
+  ```
 - Port Mapping / Port Publishing. Every docker container gets an IP assigned by default. Docker container IP is 172.17.1.2:3000 and Docker host IP is 192.168.1.25 so, you can map their port like below. You can even run multiple instances of your application and map them to different ports on the docker host or you can run your application on a single port and map them to different port. Remember, you cannot map to the same port on the docker host more than once.
-```
-docker run -p USER_PORT:CONTAINER_PORT SERVICE
-docker run -p 80:3000 redis
-docker run -p 443:3001 redis
-docker run -p 8080:3001 redis
-```
+  ```
+  docker run -p USER_PORT:CONTAINER_PORT SERVICE
+  docker run -p 80:3000 redis
+  docker run -p 443:3001 redis
+  docker run -p 8080:3001 redis
+  ```
 - Volume Mapping. The docker container has its own isolated filesystem and any changes to any files happen within the container. Sometimes we need a persistent data, so we need o map a directory outside the container on the docker host to a directory inside the container. We use `-v` (Volume) option. `DIR_HOST` is a directory outside docker host which docker mount it inside docker host which we call it `DIR_CONTAINER`.
-```
-docker run -v DIR_HOST:DIR_CONTAINER SERVICE
-docker run -v /opt/sql/data:/var/lib/mysql mysql
-```
+  ```
+  docker run -v DIR_HOST:DIR_CONTAINER SERVICE
+  docker run -v /opt/sql/data:/var/lib/mysql mysql
+  ```
 - Inspect Container. If you would like to see additional details about a specific container use inspect command. It will give you more information than `docker ps` command. This command will give you all details of a container in a JSON format.
-```
-docker inspect NAME/ID
-```
-- Container Logs. See logs of a container runs in the background (detached mode).
-```
-docker logs NAME/ID
-```
+  ```
+  docker inspect NAME/ID
+  ```
+  - Container Logs. See logs of a container runs in the background (detached mode).
+  ```
+  docker logs NAME/ID
+  ```
+- Container Live Statistics. Launches a terminal window which refreshes itself with live data from the container, indicating 3 main runtime metrics, such as CPU usage, memory and Network I/O consumption
+  ```bash
+  docker stats CONTAINER
+  ```
+  The built-in Docker allows you to provide multiple names/ids and display their stats within a single window if you have more than one running.
+  ```bash
+  docker ps -q | xargs docker stats
+  ```
+
 
 ## Part 05 (Environment Variables)
 - An environment variable is a variable whose value is set outside the program, typically through functionality built into the operating system or microservice. An environment variable is made up of a name/value pair, and any number may be created and available for reference at a point in time.
@@ -818,6 +827,8 @@ You are also given a second command docker for adding additional managers: ```sw
 - **Docker Hub**: A registry of Docker images.
 - **Layers**: A Docker image built up from a series of layers. Each layer represents an instruction in the image’s Dockerfile. Each layer except the last one is read-only.
 - **Dockerfile**:  A text file that contains all the commands, in order, needed to build a given image.
+- **Node**: An instance of the Docker Engine connected to the Swarm. Nodes are either managers or workers. Managers schedules which containers to run where. Workers execute the tasks. By default, Managers are also workers.
+
 
 ## Part 16 (References)
 
