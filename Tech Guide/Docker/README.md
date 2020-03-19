@@ -19,6 +19,9 @@
     - [Chapter 2 (Creating Network Between Containers Using Networks)](#chapter-2-creating-network-between-containers-using-networks)
   - [Part 09 (Storage)](#part-09-storage)
   - [Part 10 (Compose)](#part-10-compose)
+    - [Chapter 1 (Docker-Compose Introduction Using an Example)](#chapter-1-docker-compose-introduction-using-an-example)
+    - [Chapter 2 (Docker-Compose Management Commands)](#chapter-2-docker-compose-management-commands)
+    - [Chapter 3 (Docker-Compose Scale Up)](#chapter-3-docker-compose-scale-up)
   - [Part 11 (Registry)](#part-11-registry)
   - [Part 12 (Engine)](#part-12-engine)
   - [Part 13 (Docker Orchestration)](#part-13-docker-orchestration)
@@ -590,6 +593,8 @@ If we needed to setup a complex application running multiple services, a better 
 
 Let's look at a better example. I'm going to use the same application that everyone uses to demonstrate Docker. It's a comprehensive yet straightforward application developed by Docker to explain the various features available in running an application stack on Docker. So let's first get familiarized with the app.
 
+### Chapter 1 (Docker-Compose Introduction Using an Example)
+
 This is a sample voting application which provides an interface for a user to vote and another interface to show the results. the application consists of various components such as the voting app which is a web application developed in **Python** to provide the user with an interface to choose between two options a cat and a dog. when you make a selection the vote is stored in **Redis** (In this case, servers as a database in memory). This vote is then processed by the worker which is an application written in **.NET**. The worker application takes the new vote and updates the persistent database which is a **PostgreSQL** that has simply a table with a number of vote for each category cats and dogs. in this case it increments the number of votes for cats as our vote for cats. finally the result of the vote is displayed in a web interface which is another web application developed in **Node.js**. This resulting application reads the count of votes from the PostgreSQL database and display it to user. so that is the architecture and dataflow of this simple voting application stack. as you can see this application is built with a combination of different services, different development tools and multiple different development platforms such as Python, Node.js etc. This sample application will be used to showcase how easy it is to setup an entire application stack consisting of diverse components in Docker.
 
 ![Voting App](Images/voting-application.png)
@@ -741,6 +746,31 @@ networks:
   front-end:
   back-end:
 ```
+
+### Chapter 2 (Docker-Compose Management Commands)
+
+Not only can Docker-Compose manage starting containers, but it also provides a way to manage all the containers using a single command.
+
+- To see the details of the launched containers you can use `docker-compose ps`
+- To access all the logs via a single stream you use `docker-compose logs`
+- To stop a set of containers you can use the command `docker-compose stop`
+- To remove all the containers use the command `docker-compose rm`
+
+### Chapter 3 (Docker-Compose Scale Up)
+
+As Docker-Compose understands how to launch your application containers, it can also be used to scale the number of containers running.
+
+The scale option allows you to specify the service and then the number of instances you want. If the number is greater than the instances already running then, it will launch additional containers. If the number is less, then it will stop the unrequired containers.
+
+- Scale Up the number of _web_ containers you previously creatd by using the command below:
+  ```bash
+  docker-compose scale CONTAINER_NAME=NUMBER_OF_INSTANCES
+  docker-compose scale WEB=3
+  ```
+- Scale Down using:
+  ```bash
+  docker-compose scale WEB=1
+  ```
 
 ## Part 11 (Registry)
 
