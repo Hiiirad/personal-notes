@@ -637,26 +637,110 @@ Now that we wrote our docker-compose.yml file, bringing up the stack is simple. 
 When we looked at the example of the voting application, we assumed that all images are already built. Out of the five different components, two of them Redis and Postgres images we know are already available on Docker hub. There are official images from Redis and Postgres, but the remaining three are our applications. They don't need to be already built and available in a Docker registry. If we would like to instruct Docker compose to run a Docker build instead of trying to pull an image, we can replace the image line with a build line and specify the location of a directory that contains the application code and a Dockerfile with instructions to build the Docker image. 
 In this example, for the voting app, I have all the application code in a folder named `/vote`, which contains all application code and a Dockerfile. This time when you run the `docker-compose up` command, it will first build the images, give a temporary name for it and then use those images to run containers using the options you specified before. Similarly, use the build option to build the two other services from the respective folders.
 
-<!-- 2 yaml files -->
+```yaml
+redis:
+  image: redis
+db:
+  image: postgres:9.4
+vote:
+  image: ./vote
+  ports:
+    - 5000:80
+  links:
+    - redis
+result:
+  image: ./result
+  ports:
+    - 5001:80
+  links:
+    - db
+worker:
+  image: ./worker
+  links:
+    - redis
+    - db
+```
 
-We will now look at different versions of the Docker compose file. This is important because you might see Docker compose files in different formats at different places and wonder why it looks so different. Docker-compose evolved over time and now supports a lot more options than it did in the beginning. For example, this is the trimmed down version of the Docker compose file we used earlier.
+We will now look at different versions of the Docker compose file. This is important because you might see Docker compose files in different formats at different places and wonder why it looks so different. Docker-compose evolved over time and now supports a lot more options than it did in the beginning. For example, this is the trimmed down version of the Docker compose file we used earlier:
 
-<!-- version 1 -->
+```yaml
+redis:
+  image: redis
+db:
+  image: postgres:9.4
+vote:
+  image: voting-app
+  ports:
+    - 5000:80
+  links:
+    - redis
+```
 
 This is the original version of the Docker-compose file known as version 1. this had several limitations. For example, if you wanted to deploy containers on a different network other than the default Bridge network, there was no way of specifying that in this version of the file. Also, say you have a dependency or start-up order of some kind, for example, your database container must come up first and only then the voting application should be started. There was no way you could specify that in version 1 of the Docker compose file. Support for these came in version 2. with version 2 and up, the format of the file also changed a little bit. You no longer specify your stack information directly, as you did before. It is all encapsulated in a **Services** section, so create a property called services in the root of the file and then move all the services underneath that. You will still use the same `docker-compose up` command to bring up your application stack. But how does Docker-compose know what version of the file you're using?<br>
 You're free to use version 1 or version 2, depending on your needs. So how does the Docker compose know what format you are using?<br>
 For version 2 and up, you must specify the version of the Docker-compose file you are intending to use by specifying the version at the top of the file. In this case, `version:2`.
 
-<!-- version 2 -->
+```yaml
+version: 2
+services:
+  redis:
+    image: redis
+  db:
+    image: postgres:9.4
+  vote:
+    image: voting-app
+    ports:
+      - 5000:80
+    depends_on:
+      - redis
+```
 
 Another difference is with networking. In version 1, Docker-compose attaches all the containers it runs to the default bridged network and then use links to enable communication between the containers as we did before. With version 2, Docker-compose automatically creates a dedicated bridged network for this application and then attaches all containers to that new network. All containers are then able to communicate with each other using each other's service name. So you basically don't need to use links in version 2 of Docker-compose. You can get rid of all the links you mentioned in version 1 when you convert a file from version 1 to version 2, and finally, version 2 also introduces it depends on the feature. If you wish to specify a start-up order, for instance, say the voting web application is dependent on the Redis service, so you need to ensure that Redis container is started first and only then the voting web application must be started. We could add a depends on the property to the voting application and indicate that it is dependent on Redis. Then comes version 3, which is the latest as of today.
 
-<!-- version 3 -->
+```yaml
+version: 3
+services:
+  redis:
+    image: redis
+  db:
+    image: postgres:9.4
+  vote:
+    image: voting-app
+    ports:
+      - 5000:80
+```
 
 Version 3 is similar to version 2 in the structure, meaning it has a version specification at the top and a Services section under which you put all your services, just like in version2. Make sure to specify the version number as 3 at the top. Version 3 comes with support for Docker swarm, which we will see later on. Some options were removed and added to see details on those you can refer to the [documentation](https://docs.docker.com/compose/compose-file/). We will see version 3 in much detail later when we discuss Docker stacks. Let us talk about networks in Docker-compose. Getting back to our application so far, we have been just deploying all containers on the default bridged network.
 Let us say we modify the architecture a little bit to contain the traffic from the different sources. For example, we would like to separate the user-generated traffic from the applications of internal traffic. So we create a front-end network dedicated to traffic from users and a back-end network dedicated to traffic within the application. We then connect the user-facing applications, which are the voting app and the result-app to the front-end network and all the components to an internal back-end network. So back in our Docker compose file note that I have actually stripped out the port section for simplicity sake. They're just not shown here. The first thing we need to do if we were to use networks is to define the networks we are going to use. In our case, we have two networks front end and back end. So, create a new property called networks at the root level adjacent to the services in the Docker compose file and add a map of networks we are planning to use. Then under each service, create a network property and provide a list of networks that service must be attached to. In case of Redis and DB, it's only the back-end network. In case of the front-end applications such as at the voting app and the result-app, they require to be attached to both a front-end and back-end Network. You must also add a section for worker container to be added to the back-end network. I have just omitted that in this slide.
 
-<!-- Diagram of front-end and back-end -->
+![Front-End Back-End Diagram](Images/front-back-diagram.png)
+
+```yaml
+version: 2
+services:
+  redis:
+    image: redis
+    networks:
+      - back-end
+  db:
+    image: postgres:9.4
+    networks:
+      - front-end
+      - back-end
+  vote:
+    image: voting-app
+    networks:
+      - front-end
+      - back-end
+  result:
+    image: result
+    networks:
+      - front-end
+      - back-end
+networks:
+  front-end:
+  back-end:
+```
 
 ## Part 11 (Registry)
 
