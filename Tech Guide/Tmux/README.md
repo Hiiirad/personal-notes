@@ -67,7 +67,7 @@ There is a useful theme for showing windows name, date, etc. at the bottom of th
     - Resize current pane height: `[prefix] + Ctrl + UP/DOWN`
     - Resize current pane width: `[prefix] + Ctrl + LEFT/RIGHT`
     - Show time in current pane: `[prefix] + t`
-    - Activate/Deactivate synchrnize panes: `[prefix] + :setw synchronize-panes on/off`
+    - Activate/Deactivate synchronize panes: `[prefix] + :setw synchronize-panes on/off`
     - Scroll up or down: `[prefix] + PAGEUP/PAGEDOWN`
     - Search: `[prefix] + s`
     - Close current pane: `[prefix] + x` or `exit`
