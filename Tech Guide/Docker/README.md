@@ -34,20 +34,20 @@
 ## Part 01 (Introduction)
 Why do you need Docker?
 - You don't need to worry about Compatibility/Dependency
-- Short Setup Time/Dependency Resolvement
+- Short Setup Time/Dependency
 - You can easily work with different Dev./Test/Prod. environments
 - Lower computation overhead compare to the traditional virtualization methods
 
 What can it do?
 - Containerize Applications
-- Run each service with its own dependencies in seperate containers
+- Run each service with its own dependencies in separate containers
 
 What are containers?
 - Containers are completely isolated environments. They can have their own processes for services, network interface, mounts just like VMs, except they all share the same OS kernel.
 - Containers are not introduced with Docker. They existed for more than 10 years. For instance, LXC, LXD, LXCFS, etc.
 - Docker utilizes [LXC containers](https://en.wikipedia.org/wiki/LXC).
 
-With docker you'll be able to run each component in a seperate container with its own dependencies and its own libraries. All on same VM/OS but within seperate env./container. -> build docker configuration once
+With docker you'll be able to run each component in a separate container with its own dependencies and its own libraries. All on same VM/OS but within separate env./container. -> build docker configuration once
 
 Public Docker Repository = [DockerHub](https://hub.docker.com)
 
@@ -116,7 +116,7 @@ We can use Docker on Windows with these 2 options to run a Linux container on a 
      - Windows Server 2016
      - Nano Server
 - VirtualBox and Hyper-V cannot coexist on the same Windows host. So if you started with docker toolbox with VirtualBox and if you plan to migrate to Hyper-V, remember you cannot have both solutions at the same time. There is a migration guide available on docker documentation page on [how to migrate from VirtualBox to Hyper-V](https://docs.docker.com/docker-for-windows/docker-toolbox/).
-- When you install docker desktop for Windows, the default option is to work with Linux containers. But if you would like to run Windows containers then you must **explicitly** confiure docker for Windows to switch to using Windows containers.
+- When you install docker desktop for Windows, the default option is to work with Linux containers. But if you would like to run Windows containers then you must **explicitly** configure docker for Windows to switch to using Windows containers.
 - Microsoft announced Windows Server 2016 support Windows containers for the first time. You can now packaged applications, Windows applications into Windows docker containers and run them on Windows docker host using docker desktop for windows. Now you can create Windows-based images and run Windows containers on a Windows server just like how you would run Linux containers on a Linux system.
 - Unlike in Linux there are two types of containers in Windows:
   1. Windows Server container which works exactly like Linux containers where the OS kernel is shared with the underlying operating system to allow better security boundary between containers and to a lot of kernels with different versions and configurations to coexist.
@@ -151,7 +151,7 @@ We can use Docker on Windows with these 2 options to run a Linux container on a 
   ```
   docker run SERVICE
   ```
-- List of containers with basic informations. If you want to see the list of all containers (availabe, stopped and exited) use `-a`
+- List of containers with basic information. If you want to see the list of all containers (available, stopped and exited) use `-a`
   ```
   docker ps
   docker ps -a
@@ -242,7 +242,7 @@ We can use Docker on Windows with these 2 options to run a Linux container on a 
   - OS
     - Unix (Terminal): `export VARIABLE=value`
     - Windows (Command Prompt or cmd): `SET VARIABLE=value`
-  - Programmming Languages
+  - Programming Languages
     - Python3: `var = os.environ.get('VARIABLE') = value`
     - C++: `DATATYPE VARIABLE=value; putenv(VARIABLE);`
 
@@ -769,9 +769,9 @@ Not only can Docker-Compose manage starting containers, but it also provides a w
 
 As Docker-Compose understands how to launch your application containers, it can also be used to scale the number of containers running.
 
-The scale option allows you to specify the service and then the number of instances you want. If the number is greater than the instances already running then, it will launch additional containers. If the number is less, then it will stop the unrequired containers.
+The scale option allows you to specify the service and then the number of instances you want. If the number is greater than the instances already running then, it will launch additional containers. If the number is less, then it will stop the inessential containers.
 
-- Scale Up the number of _web_ containers you previously creatd by using the command below:
+- Scale Up the number of _web_ containers you previously created by using the command below:
   ```bash
   docker-compose scale CONTAINER_NAME=NUMBER_OF_INSTANCES
   docker-compose scale WEB=3
@@ -866,7 +866,7 @@ By default, there is no restriction as to how much of a resource a container can
 
 ## Part 13 (Docker Orchestration)
 
-In many applications, running a single service in a single machine will do the job, But production applications are usually much more complex and the single server model will not work to due to vaious reasons like container creation delay, ensuring [High Availability or HA](https://en.wikipedia.org/wiki/High_availability) and the ability to scale. For production applications IT users and app teams need more sophisticated tools. Docker supplies two such tools: Docker Swarm and Kubernetes. 
+In many applications, running a single service in a single machine will do the job, But production applications are usually much more complex and the single server model will not work to due to various reasons like container creation delay, ensuring [High Availability or HA](https://en.wikipedia.org/wiki/High_availability) and the ability to scale. For production applications IT users and app teams need more sophisticated tools. Docker supplies two such tools: Docker Swarm and Kubernetes. 
 
 ### Chapter 1 (Docker Swarm)
 
