@@ -783,6 +783,53 @@ The scale option allows you to specify the service and then the number of instan
 
 ## Part 11 (Registry)
 
+What is a registry?<br>
+It's the central repository of all Docker images.
+
+Let's make things more clear with an example:
+
+```bash
+docker run nginx
+```
+When you say `nginx`, it's actually `nginx/nginx`. The first `nginx` stands for the user or account name. So if you don't provide an account or a repository name, it assumes that it is the same as the given name, which in this case is `nginx`. The usernames are usually your Dockerhub account name, or if it is an organization, then it's the name of the organization. if you were to create your account and create your repositories or images under it, then you would use a similar pattern.<br>
+Now, where are these images stored and pulled from?<br>
+since we have not specified the location where these images are to be pulled from, it is assumed to be on Dockers default registry Dockerhub. The DNS name for which is `docker.io`. The registry is where all the images are stored, for example, `docker.io/nginx/nginx`. Whenever you create a new image or update an existing image, you push it to the registry, and every time anyone deploys this application, it is pulled from that registry. There are many other popular registries as well; for example, Google's registry is `gcr.io` where a lot of Kubernetes related images are stored. Like the ones used for performing end-to-end tests on the cluster, which located at `gcr.io/kubernetes-e2e-test-images/dnsutils`. These are all publicly accessible images that anyone can download and access. When you have applications built in-house that shouldn't be made available to the public, hosting an internal private registry may be a good solution. Many cloud service providers such as AWS, Azure, GCP provide a private registry by default when you open an account with them. On any of these solutions, a Dockerhub or Google registry or your internal private registry, you may choose to make a repository private so that it can only be accessed using a set of credentials. From Docker's perspective to run a container using an image from a private registry, you first log in to your private registry using the Docker login command.
+
+```bash
+docker login PRIVATE-REGISTRY-ADDRESS
+```
+
+input your credentials once successful run the application using private registry as part of the image name. like this:
+
+```bash
+dcoker run PRIVATE-REGISTRY-ADDRESS/APPS/INTERNAL-APP
+```
+
+Now, if you did not log in to the private registry, it will come back, saying that the image cannot be found. So remember to always log in before pulling or pushing to a private registry. We said that cloud providers like AWS or GCP provide a private registry when you create an account with them. But what if you are running your application on-premise and don't have a private registry. How do you deploy your own private registry within your organization? The Docker registry is another application and is available as a Docker image. The name of the image is **registry**, and it exposes the API on port 5000.
+
+```bash
+dcoker run -d -p 5000:5000 --name registry registry:2
+```
+
+Now that you have your custom registry running at port 5000 on this Docker host. how do you push your own image to it?<br>
+Use the `docker image tag` command to tag the image with a private registry URL in it.
+
+```bash
+docker image tag MY-IMAGE localhost:5000/MY-IMAGE
+```
+
+In this case, since it's running on the same Docker host, I can use `localhost:5000`, followed by the image name. I can then push my image to my local private registry using the command `docker push` and the new image name with the Docker registry information in it.
+
+```bash
+docker push localhost:5000/MY-IMAGE
+```
+
+Now, I can pull my image from anywhere within this network using the localhost if you're on the same host or the IP or domain name of my Docker host.
+
+```bash
+docker pull localhost:5000/MY-IMAGE
+docker pull IP:5000/MY-IMAGE
+```
 
 ## Part 12 (Engine)
 
