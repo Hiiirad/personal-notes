@@ -832,7 +832,37 @@ docker pull IP:5000/MY-IMAGE
 ```
 
 ## Part 12 (Engine)
+> This part is an advanced topic. You can skip it if you want to learn the basics because we're going to look at Docker's architecture in detail.
 
+We're going to find out about how it actually runs an application in isolated containers and how it works.
+
+Docker engine, as we have learned before, is simply referred to as a host with Docker installed on it. When you install Docker on a Linux host, you're actually installing three different components the Docker demon, the rest API server, and the Docker CLI.
+
+![Docker Engine](Images/docker-engine.png)
+
+1. The Docker daemon is a background process that manages Docker objects such as images, containers, volumes, and networks.
+2. The Docker REST API server is the API interface that programs can use to talk to the daemon and provide instructions. You could create your own tools using this REST API.
+3. The Docker CLI is nothing but the command-line interface that we've been using until now to perform actions such as running a container, stopping containers, destroying images, etc. it uses the REST API to interact with the Docker demon.
+- Something to note here is that the Docker CLI need not necessarily be on the same host. It could be on another system like a laptop and can still work with a remote Docker engine. Use the `-H` option on the Docker command and specify the remote Docker engine address and a port, as shown here:
+
+![Docker Engine - Laptop](Images/docker-engine-laptop.png)
+
+For example, to run a container based on NGINX on a remote Docker host run the command `docker -H=IP:PORT run NGINX`. Now let's try to understand how exactly our applications containerized in Docker.<br>
+Docker uses namespaces to isolate workspace. Process IDs, network, inter-process communication, mounts, and Unix time-sharing systems are created in their own namespace, thereby providing isolation between containers.
+
+![Docker Engine - PID](Images/docker-engine-namespace.png)
+
+Let's take a look at one of the namespace isolation techniques "process ID namespaces". Whenever a Linux system boots up, it starts with just one process with a process ID of one (PID=1). This is the root process and kicks off all the other processes in the system. By the time the system boots up completely, we have a handful of processors running. This can be seen by running the `ps` command to list all the running processes. The process IDs are unique, and two processes cannot have the same process ID. Now, if we were to create a container that is basically like a child system within the current system, the child system needs to think that it is an independent system on its own. It has its own set of processes originating from a root process with a process ID of one. But we know that there is no hard isolation between the containers and the underlying host. So the processes running inside the container or, in fact, processes running on the underlying host and so two processes cannot have the same process ID of one. This is where namespaces come into play. With process ID namespaces, each process can have multiple process IDs associated with it. For example, when the processes start in the container, it's actually just another set of processes on the base Linux system, and it gets the next available process ID. In this case, 5 and 6. however, they also get another process ID starting with `PID=1` in the container namespace, which is only visible inside the container. So the container thinks that it has its own root process tree and so it is an independent system.
+
+![Docker Engine - PID](Images/docker-engine-pid.png)
+
+So how does that relate to an actual system? How do you see this on a host?<br>
+Let's say I want to run an NGINX server as a container. We know that the NGINX container runs an NGINX service. If we were to list all the services inside the Docker container, we see that the NGINX service was running with a process ID of one. This is the process ID of the service inside of the container namespace. If we list the services on the Docker host, we will see the same service but with a different process ID. That indicates that all processes are running on the same host but separated into their own containers using namespaces. So we learned that the underlying Docker host, as well as the containers, share the same system resources such as CPU and memory.
+
+![Docker Engine - CGroups](Images/docker-engine-cgroups.png)
+
+How much of the resources dedicated to the host and the containers? How does Docker manage and share the resources between the containers?<br>
+By default, there is no restriction as to how much of a resource a container can use. And hence a container may end up utilizing all of the resources on the underlying host. But there is a way to restrict the amount of CPU or memory a container can use. Docker uses **cgroups** or control groups to restrict the number of hardware resources allocated to each container. This can be done by providing the `--cpus` option to the `docker run` command providing a value of 0.5 will ensure that the container does not take up more than 50% of the host CPU at any given time. The same goes for memory setting a value of 100m to the --memory option limits the amount of memory the container can use to a hundred megabytes. If you want to read more about resource constraints (CPU, Memory, GPU), [read here](https://docs.docker.com/config/containers/resource_constraints/).
 
 ## Part 13 (Docker Orchestration)
 
@@ -873,7 +903,7 @@ You are also given a second command docker for adding additional managers: ```sw
 - **Registry**: A server-side application that stores and lets you download Docker images. 
 - **Docker Hub**: A registry of Docker images.
 - **Layers**: A Docker image built up from a series of layers. Each layer represents an instruction in the image’s Dockerfile. Each layer except the last one is read-only.
-- **Dockerfile**:  A text file that contains all the commands, in order, needed to build a given image.
+- **Dockerfile**: A text file that contains all the commands, in order, needed to build a given image.
 - **Node**: An instance of the Docker Engine connected to the Swarm. Nodes are either managers or workers. Managers schedules which containers to run where. Workers execute the tasks. By default, Managers are also workers.
 
 
