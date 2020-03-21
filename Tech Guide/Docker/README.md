@@ -808,7 +808,7 @@ dcoker run PRIVATE-REGISTRY-ADDRESS/APPS/INTERNAL-APP
 Now, if you did not log in to the private registry, it will come back, saying that the image cannot be found. So remember to always log in before pulling or pushing to a private registry. We said that cloud providers like AWS or GCP provide a private registry when you create an account with them. But what if you are running your application on-premise and don't have a private registry. How do you deploy your own private registry within your organization? The Docker registry is another application and is available as a Docker image. The name of the image is **registry**, and it exposes the API on port 5000.
 
 ```bash
-dcoker run -d -p 5000:5000 --name registry registry:2
+docker run -d -p 5000:5000 --name registry registry:2
 ```
 
 Now that you have your custom registry running at port 5000 on this Docker host. how do you push your own image to it?<br>
@@ -836,19 +836,25 @@ docker pull IP:5000/MY-IMAGE
 
 We're going to find out about how it actually runs an application in isolated containers and how it works.
 
-Docker engine, as we have learned before, is simply referred to as a host with Docker installed on it. When you install Docker on a Linux host, you're actually installing three different components the Docker demon, the rest API server, and the Docker CLI.
+Docker engine, as we have learned before, is simply referred to as a host with Docker installed on it. When you install Docker on a Linux host, you're actually installing three different components the **Docker daemon**, the **Rest API** server, and the **Docker CLI**.
 
 ![Docker Engine](Images/docker-engine.png)
 
-1. The Docker daemon is a background process that manages Docker objects such as images, containers, volumes, and networks.
-2. The Docker REST API server is the API interface that programs can use to talk to the daemon and provide instructions. You could create your own tools using this REST API.
-3. The Docker CLI is nothing but the command-line interface that we've been using until now to perform actions such as running a container, stopping containers, destroying images, etc. it uses the REST API to interact with the Docker demon.
+1. **The Docker daemon** is a background process that manages Docker objects such as images, containers, volumes, and networks.
+2. **The Docker REST API server** is the API interface that programs can use to talk to the daemon and provide instructions. You could create your own tools using this REST API.
+3. **The Docker CLI** is nothing but the command-line interface that we've been using until now to perform actions such as running a container, stopping containers, destroying images, etc. it uses the REST API to interact with the Docker demon.
 - Something to note here is that the Docker CLI need not necessarily be on the same host. It could be on another system like a laptop and can still work with a remote Docker engine. Use the `-H` option on the Docker command and specify the remote Docker engine address and a port, as shown here:
 
 ![Docker Engine - Laptop](Images/docker-engine-laptop.png)
 
-For example, to run a container based on NGINX on a remote Docker host run the command `docker -H=IP:PORT run NGINX`. Now let's try to understand how exactly our applications containerized in Docker.<br>
-Docker uses namespaces to isolate workspace. Process IDs, network, inter-process communication, mounts, and Unix time-sharing systems are created in their own namespace, thereby providing isolation between containers.
+For example, to run a container based on NGINX on a remote Docker host run the command:
+
+```bash
+docker -H=IP:PORT run NGINX
+```
+
+Now, let's try to understand how exactly our applications containerized in Docker.<br>
+Docker uses namespaces to isolate workspace. **Process IDs**, **network**, **inter-process communication**, **mounts**, and **Unix time-sharing systems** are created in their own namespace, thereby providing isolation between containers.
 
 ![Docker Engine - PID](Images/docker-engine-namespace.png)
 
@@ -862,7 +868,12 @@ Let's say I want to run an NGINX server as a container. We know that the NGINX c
 ![Docker Engine - CGroups](Images/docker-engine-cgroups.png)
 
 How much of the resources dedicated to the host and the containers? How does Docker manage and share the resources between the containers?<br>
-By default, there is no restriction as to how much of a resource a container can use. And hence a container may end up utilizing all of the resources on the underlying host. But there is a way to restrict the amount of CPU or memory a container can use. Docker uses **cgroups** or control groups to restrict the number of hardware resources allocated to each container. This can be done by providing the `--cpus` option to the `docker run` command providing a value of 0.5 will ensure that the container does not take up more than 50% of the host CPU at any given time. The same goes for memory setting a value of 100m to the --memory option limits the amount of memory the container can use to a hundred megabytes. If you want to read more about resource constraints (CPU, Memory, GPU), [read here](https://docs.docker.com/config/containers/resource_constraints/).
+By default, there is no restriction as to how much of a resource a container can use. And hence a container may end up utilizing all of the resources on the underlying host. But there is a way to restrict the amount of CPU or memory a container can use. Docker uses **cgroups** or control groups to restrict the number of hardware resources allocated to each container. This can be done by providing the `--cpus` option to the `docker run` command providing a value of 0.5 will ensure that the container does not take up more than 50% of the host CPU at any given time. The same goes for memory setting a value of 100m to the `--memory` option limits the amount of memory the container can use to a hundred megabytes. If you want to read more about resource constraints (CPU, Memory, GPU), [read here](https://docs.docker.com/config/containers/resource_constraints/).
+
+```bash
+docker run --cpus=0.5 SERVICE
+docker run --memory=100m SERVICE
+```
 
 ## Part 13 (Docker Orchestration)
 
