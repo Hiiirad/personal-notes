@@ -53,7 +53,7 @@ There is a useful theme for showing windows name, date, etc. at the bottom of th
     - Exit (detach) a currently running session: ```[prefix] + d```
     - Rename an existing session: ```tmux rename-session -t <previous_session_name> <new_session_name>```
     
-- **Section 03 (Session Transmition)**
+- **Section 03 (Session Transmission)**
     - Switch the attached client to the previous session: `[prefix] + (`
     - Switch the attached client to the next session: `[prefix] + )`
     - Select a new session for the attached client interactively: `[prefix] + s`
