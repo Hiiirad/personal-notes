@@ -898,26 +898,27 @@ The container orchestration solution easily allows you to deploy hundreds or tho
 
 ### Chapter 1 (Docker Swarm)
 
-Swarms can be just a single node, but that is unusual as you would have no high availability capabilities, and you would severely limit your scalability into one single node.
-Initializing Docker Swarm Mode is easy as executing command below:
+Docker Swarm has many concepts to cover and requires its course, but we try to take a quick look at some of the basic details so you can get a brief idea of what it is. With Docker Swarm, you could now combine multiple Docker machines into a single cluster. Docker Swarm takes care of distributing your services or your application instances into separate hosts for high availability and load balancing across different systems and hardware. To set up a Docker Swarm, you must first have hosts or multiple hosts with Docker installed on them. Then you must designate one host to be the manager or the master or the Swarm manager as it is called and others as slaves or workers. Once you're done with that run, the `docker swarm init` command on the Swarm manager, and that initialize the Swarm manager. The output also provides the command to be run on the workers. So copy the command and run it on the worker nodes to join the manager.
+
 ```bash
+docker swarm init
 docker swarm init --advertise-addr $(hostname -i)
+
+docker swarm join-token manager
+docker swarm join-token worker
+
+docker swarm join --token <token> <Internal IP>:<Port>
 ```
-In the output, you'll see
+
+After joining the Swarm, the workers also referred to as **nodes**, and you're now ready to create services and deploy them on the Swarm cluster. So let's get into some more details. As you already know, to run an instance of my webserver, I run the `docker run command` and specify the name of the image I wish to run. This creates a new container instance of my application and serves my webserver. Now that we have learned how to create a Swarm cluster, how do I utilize my cluster to run multiple instances of my webserver? Now one way to do this would be to run the `docker run command` on each worker node, but that's not ideal as I might have to log in to each node and run this command, and there could be hundreds of nodes. I have to set up load balancing myself, a large monitor the state of each instance myself, and if instances were to fail, I'd have to restart them myself. So it's going to be an impossible task. That is where Docker Swarm orchestration consent. Docker Swarm Orchestrator does all of this for us. So far, we've only set up this one cluster, but we haven't seen orchestration in action. The key component of Swarm orchestration is the Docker service.<br>
+Docker services are one or more instances of a single application or service that runs across to saw the nodes in the Swarm cluster. For example, in this case, I could create a Docker service to run multiple instances of my webserver application across worker nodes in my Swarm cluster. For this around the `docker service create` command on the manager node and specify my image name there. Which is my web server in this case and use the option replicas to specify the number of instances of my webserver I would like to run across the cluster. Since I specified three replicas and I get three instances of my webserver distributed across the different worker nodes.
+
 ```bash
-docker swarm join --token SWMTKN-1-********* <Internal IP>:<Port>
+docker service create --replicas=NUMBER SERVICE-NAME
 ```
-which you use to join worker's nodes to the swarm architecture.
 
-You are also given a second command docker for adding additional managers: ```swarm join-token manager``` 
-
-- **Add a worker**
-
-  - Copy the ```docker swarm join...``` command from your manager’s output and paste it in the second terminal window on your screen. 
-
-- **Show Swarm Members**
-  - ```docker node ls```
-
+To view a list of nodes in the swarm run `docker node ls` from a manager node. Remember, the Docker service command must be run on the manager node and not on the worker node. The `docker service create` command is similar to the `docker run` command in terms of the options passed, such as the `-e` or `--env` for the environment variable. The `-p` for publishing ports, the `--network` option to attach a container to a network, etc. well that's a high-level introduction to Docker Swarm, there's a lot more to know, such as configuring multiple managers, overlay networks, etc.
+I make a different course for Docker Swarm in the future.
 
 ### Chapter 2 (Kubernetes)
 
