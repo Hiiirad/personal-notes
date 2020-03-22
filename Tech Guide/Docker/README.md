@@ -877,7 +877,24 @@ docker run --memory=100m SERVICE
 
 ## Part 13 (Docker Orchestration)
 
-In many applications, running a single service in a single machine will do the job, But production applications are usually much more complex and the single server model will not work to due to various reasons like container creation delay, ensuring [High Availability or HA](https://en.wikipedia.org/wiki/High_availability) and the ability to scale. For production applications IT users and app teams need more sophisticated tools. Docker supplies two such tools: Docker Swarm and Kubernetes. 
+Let's understand what container orchestration is. So far, in this course, we've seen that with Docker, you can run a single instance of the application with a simple `docker run` command. In this case, to run a node.js based application, you're on the `docker run nodejs` command, but that's just one instance of your application on one Docker host. What happens when the number of users increases, and that instance is no longer able to handle the load?<br>
+You deploy additional instances of your application by running the `docker run` command multiple times. So, that's something you have to do yourself. You have to keep a close watch on the load and performance of your application and deploy additional instances yourself. And not just that, you have to keep a close watch on the health of these applications. And if a container was to fail, you should be able to detect that and run the `docker run` command again to deploy another instance of that application. What about the health of the Docker host itself? What if the host crashes and is inaccessible? The containers hosted on that host become inaccessible too. So what do you do to solve these issues? You need a dedicated engineer who can sit and monitor the state performance and health of the containers and take necessary actions to remediate the situation. But when you have large applications deployed with tens of thousands of containers, that's not a practical approach. So you can build your scripts, and that helps you tackle these issues to some extent.<br>
+Container orchestration is just a solution for that. It is a solution that consists of a set of tools and scripts that can help host containers in a production environment. Typically a container orchestration solution consists of multiple Docker hosts that can host containers that way even if one fails the application is still accessible through the others.
+
+```bash
+docker service create --replicas=100 nodejs
+```
+
+The container orchestration solution easily allows you to deploy hundreds or thousands of instances of your application with a single command to provide [High Availability or HA](https://en.wikipedia.org/wiki/High_availability). Some orchestration solutions can help you automatically scale up the number of instances when users increase and scale down the number of instances when the demand decreases. Some solutions can even help you in automatically adding additional hosts to support the user load, and not just clustering and scaling the container orchestration solutions also provide support for advanced networking between these containers across different hosts. As well as load balancing user requests across a different house, they also provide support for sharing storage between the hosts as well as support for configuration management and security within the cluster. there are multiple container orchestration solutions available today:
+- Docker Swarm from Docker
+- Kubernetes from Google
+- Mesos from Apache
+
+**Docker Swarm** is easy to set up and get started. It lacks some of the advanced auto-scaling features required for complex production-grade applications.
+
+**Mesos**, on the other hand, is quite difficult to set up and get started. But supports many advanced features.
+
+**Kubernetes**, arguably the most popular of it all, is a bit difficult to set up and get started but provides many options to customize deployments and has support for many different vendors. Kubernetes supports on all public cloud service providers like GCP, Azure, and AWS, and the Kubernetes project is one of the top-ranked projects on Github.
 
 ### Chapter 1 (Docker Swarm)
 
