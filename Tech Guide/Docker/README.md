@@ -27,9 +27,8 @@
   - [Part 13 (Docker Orchestration)](#part-13-docker-orchestration)
     - [Chapter 1 (Docker Swarm)](#chapter-1-docker-swarm)
     - [Chapter 2 (Kubernetes)](#chapter-2-kubernetes)
-  - [Part 14 (Conclusion)](#part-14-conclusion)
-  - [Part 15 (Terminology)](#part-15-terminology)
-  - [Part 16 (References)](#part-16-references)
+  - [Part 14 (Terminology)](#part-14-terminology)
+  - [Part 15 (References)](#part-15-references)
 
 ## Part 01 (Introduction)
 Why do you need Docker?
@@ -922,10 +921,67 @@ I make a different course for Docker Swarm in the future.
 
 ### Chapter 2 (Kubernetes)
 
+> Let's get into a brief introduction to basic Kubernetes concepts. Kubernetes requires its course, ultimately, on different methods.
 
-## Part 14 (Conclusion)
+With Docker, you were able to run a single instance of an application using the Docker CLI by running the `docker run` command, which is excellent. Running an application has never been so easy before managing with Kubernetes using the **Kubernetes CLI** known as **kube control** or **kubectl**. You can run a thousand instances of the same application with a single command.
 
-## Part 15 (Terminology)
+```bash
+kubectl run --replicas=1000 WEB-SERVER
+```
+
+Kubernetes can scale it up to two thousand with another command.
+
+```bash
+kubectl scale --replicas=2000 WEB-SERVER
+```
+
+Kubernetes can be configured to do this automatically so that instances and the infrastructure itself can scale up and down based on user load. Kubernetes can upgrade these 2000 instances of the application in a rolling upgrade fashion one at a time with a single command.
+
+```bash
+kubectl rolling-upgrade WEB-SERVER --image=WEB-SERVER:2
+```
+
+If something goes wrong, it can help you rollback these images with a single command.
+
+```bash
+kubectl rolling-update WEB-SERVER --rollback
+```
+
+Kubernetes can help you test new features of your application by only upgrading a percentage of these instances through A/B testing methods. The Kubernetes open architecture provides support for numerous different network and storage vendors. Any network or storage brand that you can think of has a plugin for Kubernetes. Kubernetes supports a variety of authentication and authorization mechanisms. All major cloud service providers have native support for Kubernetes. So what's the relation between Docker and Kubernetes?<br>
+Well, Kubernetes uses Docker host to host applications in the form of Docker containers. Well, it need not be Docker all the time. Kubernetes supports alternatives to Dockers as well, such as **Rocket** or a **Cryo**, but let's take a quick look at the Kubernetes architecture.<br>
+a Kubernetes cluster consists of a set of nodes. A node is a machine physical or virtual on which the Kubernetes software a set of tools are installed. A node is a worker machine, and that is where containers will be launched by Kubernetes.
+
+![Kubernetes Nodes](Images/kubernetes-node.png)
+
+But what if the node on which the application is running fails? Well, obviously, our application goes down. So you need to have more than one node. A cluster is a set of grouped nodes. This way, even if one node fails, you have your application still accessible from the other nodes.
+
+![Kubernetes Cluster](Images/kubernetes-cluster.png)
+
+Now we have a cluster, but who is responsible for managing this cluster? Where is the information about the members of the cluster stored? And how are the nodes monitored when a node fails? How do you move the workload of the failed nodes to another worker node?<br>
+That's where the master comes in. The master is a note with the Kubernetes control plane components installed. The master watches over the notes are in the cluster and is responsible for the actual orchestration of containers on the worker nodes.
+
+![Kubernetes Master](Images/kubernetes-master.png)
+
+When you install Kubernetes on a system, you're installing the following components an **API server**, and **etcd server**, a **kubelet** service, **container runtime** engine like Docker, and a bunch of **controllers** and the **scheduler**.
+
+![Kubernetes Components](Images/kubernetes-components.png)
+
+- The **API server** acts as the front end for Kubernetes. The users' management devices, command-line interfaces, all talk to the API server to interact with the Kubernetes cluster.
+- The **etcd** be a key-value store. The etcd is a distributed, reliable key-value store used by Kubernetes to store all data used to manage the cluster. Think of it this way, when you have multiple nodes and multiple masters in your cluster etcd, stores all that information on all the nodes in the cluster in a distributed manner. Etcd is responsible for implementing locks within the cluster to ensure there are no conflicts between the masters.
+- The **scheduler** is responsible for distributing work or containers across multiple nodes. It looks for newly created containers and assigns them to nodes.
+- The **controllers** are the brain behind orchestration. They're responsible for noticing and responding when notes containers or endpoints go down. The controllers make decisions to bring up new containers in such cases.
+- The **container runtime** is the underlying software that is used to run containers. In our case, it happens to be Docker. 
+- The **kubelet** is the agent that runs on each node in the cluster. The agent is responsible for making sure that the containers are running on the nodes as expected.
+
+Finally, we also need to learn a little bit about one of the command-line utilities known as the kube command-line tool or the kube control tool or **kubectl** as it is also called. The kube control tool is the Kubernetes CLI, which is used to deploy and manage applications on a Kubernetes cluster to get cluster related information to get the status with the nodes in the cluster and many other things. The `kubectl run APPLICATION` command is used to deploy an application on the cluster. The `kubectl cluster-info` command is used to view information about the cluster, and the `kubectl get nodes` command is used to list all the nodes part of the cluster. so to run hundreds of instances of your application across hundreds of nodes all I need is a single Kubernetes command like this:
+
+```bash
+kubectl run MY-APP --image=MY-APP --replicas=500
+```
+
+Well that's all we have for now—a quick introduction to Kubernetes and this architecture. You can find a complete course on this repository.
+
+## Part 14 (Terminology)
 
 - **Images**: The file system and configuration of our application which used to create containers.
 - **Containers**: Running instances of Docker images.
@@ -936,7 +992,7 @@ I make a different course for Docker Swarm in the future.
 - **Node**: An instance of the Docker Engine connected to the Swarm. Nodes are either managers or workers. Managers schedules which containers to run where. Workers execute the tasks. By default, Managers are also workers.
 
 
-## Part 16 (References)
+## Part 15 (References)
 
 1. [Docker Documentation Samples](https://docs.docker.com/samples/)
 2. [Play with Docker](https://training.play-with-docker.com/)
