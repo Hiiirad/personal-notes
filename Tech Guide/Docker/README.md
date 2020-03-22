@@ -355,7 +355,7 @@ A wise man once said:
 
 > Give a sysadmin an image and their app will be up-to-date for a day, give a sysadmin a Dockerfile and their app will always be up-to-date.
 
-Hence, creating images for the complex applications is preferred to use Dockerfiles rather than committing into local volume and manipulating the result. 
+Hence, creating images for the complex applications is preferred to use Dockerfiles rather than committing into local volume and manipulating the result.
 
 
 ### Chapter 3 (Transfer Image to an Offline Server)
@@ -465,7 +465,7 @@ What this is, in fact doing is it creates an entry into the `/etc/hosts` file on
 The key aspect when creating a link is the name of the container. Let's start with running a Redis server container:
 
 ```bash
-docker run -d --name MY-REDIS-DB REDIS  
+docker run -d --name MY-REDIS-DB REDIS 
 ```
 To connect to a source container, you use the `--link` option when launching a new container.<br>The container name refers to the source container we defined in the previous step while the alias defines the friendly name of the host.
 
@@ -492,7 +492,7 @@ docker run -it --link REDIS-DB:REDIS --name MY-REDIS-CLIENT-APP redis env
 2. Secondly, Docker will update the HOSTS file of the container with an entry for our source container with three names,<br> _the original_, _the alias_, and the _hash-id_. You can output the containers host entry using cat /etc/hosts <br>
 ```bash
 docker run -it --link REDIS-DB:REDIS --name MY-REDIS-CLIENT-APP redis cat /etc/hosts
-```  
+``` 
 
 ### Chapter 2 (Creating Network Between Containers Using Networks)
 
@@ -509,12 +509,12 @@ docker run -d --name=my-redis-container --net=BACKEND-NETWORK redis
 Unlike using links, Docker network behaves like traditional networks where nodes can be attached/detached.
 The first thing you'll notice is that Docker no longer assigns environment variables or updates the hosts file of containers. see [here](#chapter-1-creating-network-between-containers-using-links).
 
-Instead, the way containers can communicate via an **Embedded DNS Server** in Docker. 
+Instead, the way containers can communicate via an **Embedded DNS Server** in Docker.
 
 ```bash
 docker run --net=BACKEND-NETWORK alpine cat /etc/resolv.conf
 ```
-When containers attempt to access other containers via a well-known name, such as _my-redis-container_, the DNS server will return the IP address of the correct Container. 
+When containers attempt to access other containers via a well-known name, such as _my-redis-container_, the DNS server will return the IP address of the correct Container.
 
 Docker supports multiple networks and containers attached to more than one network at a time. For instance:
 
@@ -647,7 +647,7 @@ worker:
 ```
 Now that we wrote our docker-compose.yml file, bringing up the stack is simple. From the `docker-compose up` command, you can bring up the entire application stack.
 
-When we looked at the example of the voting application, we assumed that all images are already built. Out of the five different components, two of them Redis and Postgres images we know are already available on Docker hub. There are official images from Redis and Postgres, but the remaining three are our applications. They don't need to be already built and available in a Docker registry. If we would like to instruct Docker compose to run a Docker build instead of trying to pull an image, we can replace the image line with a build line and specify the location of a directory that contains the application code and a Dockerfile with instructions to build the Docker image. 
+When we looked at the example of the voting application, we assumed that all images are already built. Out of the five different components, two of them Redis and Postgres images we know are already available on Docker hub. There are official images from Redis and Postgres, but the remaining three are our applications. They don't need to be already built and available in a Docker registry. If we would like to instruct Docker compose to run a Docker build instead of trying to pull an image, we can replace the image line with a build line and specify the location of a directory that contains the application code and a Dockerfile with instructions to build the Docker image.
 In this example, for the voting app, I have all the application code in a folder named `/vote`, which contains all application code and a Dockerfile. This time when you run the `docker-compose up` command, it will first build the images, give a temporary name for it and then use those images to run containers using the options you specified before. Similarly, use the build option to build the two other services from the respective folders.
 
 ```yaml
@@ -970,7 +970,7 @@ When you install Kubernetes on a system, you're installing the following compone
 - The **etcd** be a key-value store. The etcd is a distributed, reliable key-value store used by Kubernetes to store all data used to manage the cluster. Think of it this way, when you have multiple nodes and multiple masters in your cluster etcd, stores all that information on all the nodes in the cluster in a distributed manner. Etcd is responsible for implementing locks within the cluster to ensure there are no conflicts between the masters.
 - The **scheduler** is responsible for distributing work or containers across multiple nodes. It looks for newly created containers and assigns them to nodes.
 - The **controllers** are the brain behind orchestration. They're responsible for noticing and responding when notes containers or endpoints go down. The controllers make decisions to bring up new containers in such cases.
-- The **container runtime** is the underlying software that is used to run containers. In our case, it happens to be Docker. 
+- The **container runtime** is the underlying software that is used to run containers. In our case, it happens to be Docker.
 - The **kubelet** is the agent that runs on each node in the cluster. The agent is responsible for making sure that the containers are running on the nodes as expected.
 
 Finally, we also need to learn a little bit about one of the command-line utilities known as the kube command-line tool or the kube control tool or **kubectl** as it is also called. The kube control tool is the Kubernetes CLI, which is used to deploy and manage applications on a Kubernetes cluster to get cluster related information to get the status with the nodes in the cluster and many other things. The `kubectl run APPLICATION` command is used to deploy an application on the cluster. The `kubectl cluster-info` command is used to view information about the cluster, and the `kubectl get nodes` command is used to list all the nodes part of the cluster. so to run hundreds of instances of your application across hundreds of nodes all I need is a single Kubernetes command like this:
@@ -985,7 +985,7 @@ Well that's all we have for now—a quick introduction to Kubernetes and this ar
 
 - **Images**: The file system and configuration of our application which used to create containers.
 - **Containers**: Running instances of Docker images.
-- **Registry**: A server-side application that stores and lets you download Docker images. 
+- **Registry**: A server-side application that stores and lets you download Docker images.
 - **Docker Hub**: A registry of Docker images.
 - **Layers**: A Docker image built up from a series of layers. Each layer represents an instruction in the image’s Dockerfile. Each layer except the last one is read-only.
 - **Dockerfile**: A text file that contains all the commands, in order, needed to build a given image.
