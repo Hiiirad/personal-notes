@@ -18,6 +18,7 @@
 - `:q!` = [quit] without save
 - `:qw` = [quit] with save
 - `:w` = [write] save
+- `:x` = `:wq` = Write and Exit
 
 ## Chapter 1
 - `a` = [append] -> start from a character 
