@@ -105,7 +105,7 @@ the variable value.
   VAR1=27
   VAR2=$VAR1
   ```
-- The backtick (`\``) allows you to assign the output of a shell command
+- The backtick or **\`** allows you to assign the output of a shell command
 to a variable. You must surround the entire command line command with
 backtick characters:
   ```bash
