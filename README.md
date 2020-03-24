@@ -14,7 +14,7 @@ What I'm working on:
 - [x] [Docker](Tech%20Guide/Docker/README.md)
 - [ ] Docker Swarm
 - [ ] Kubernetes
-- [ ] Shell Scripting
+- [ ] [Shell Scripting](Tech%20Guide/Shell-Scripting/README.md)
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change or add.
