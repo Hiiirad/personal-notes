@@ -180,3 +180,27 @@ backtick characters:
   echo 'The value of var1 is $VAR1'
   # OUTPUT: The value of var1 is $VAR1
   ```
+
+## Part 04 (Special Characters)
+
+Wildcards:
+- `*` : Matches any string or group of characters
+- `?` : Matches any single character
+- `[]` : Matches any one of the enclosed characters
+- `!` or `^` : Not
+```bash
+ls a*
+ls u*.c
+ls a*b*c
+
+ls a?b
+ls ????
+ls x??y
+
+ls [abc]*
+ls [0-9]?[k-z]
+
+ls /bin/[!a-o]
+ls /bin/[^p-z]
+ls /bin/[!c-e]??
+```
