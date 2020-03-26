@@ -90,6 +90,11 @@ Shell Scripting is an interpreter and cross-platform programming language.
 - Initialization Files: (Executed for login and interactive shell)
   - `/etc/bashrc` : System-wide functions and aliases for bash
   - `~/.bashrc` : User-specific initialization files
+- Shell input and outputs:
+  - Standard input = STDIN = 0
+  - Standard output = STDOUT = 1
+  - Standard error = STDERR = 2
+- Shell variables can contain different sizes based on your system. You can see your system's limitations with `xargs --show-limits` command.
 
 ## Part 02 (Shell Script Basics)
 
@@ -105,8 +110,6 @@ Shell Scripting is an interpreter and cross-platform programming language.
   #!/bin/sh
   ```
 - It's recommended that you put `.sh` extension at the end of your script file.
-- Variables are **case-sensitive**.
-- It's recommended that you set your variables in **UPPERCASE** letters.
 - Values are assigned to user variables using an equal sign. **No
 spaces** can appear between the variable, the equal sign, and the
 value.
@@ -114,6 +117,15 @@ value.
 the variable value.
 
 ## Part 03 (Variables)
+
+- Rules of variables:
+  - Variables are **case-sensitive**.
+  - Variables cannot contain spaces.
+  - Variables cannot start with a number.
+  - Variables cannot contain special characters.
+  - No spaces should be on either side of `=`
+  - It's recommended that you set your variables in **UPPERCASE** letters.
+  - If you want to create a variable and variable was already defined, the old value is overwritten with the new value.
 - Using variable value preceded by a dollar sign or `$`
   ```bash
   VAR1=27
@@ -129,8 +141,10 @@ backtick characters:
   echo `date`
   ```
 - There are two types of environment variables in the bash shell:
-  - **Global Variable**: Global variables, which are called environment variables, are visible from the shell session, and any child processes that the shell spawns.
+  - **Global/Environmental Variable**: Global variables, which are called environment variables, are visible from the shell session, and any child processes that the shell spawns.
   - **Local Variable**: Local variables are only available in the shell that creates them. This makes global environment variables useful in applications that spawn child processes that require information from the parent process.
+- After login into the system, a copy of the shell is given to the user.
+- The environment is maintained all the time until the user logs off.
 - You can see all variables (Global + Local) with `set` command.
 - You can see Global variables with `env` or `printenv` command.
 - The method used to create a global environment variable is to create a local environment variable, then export it to the global environment. This is done by using the `export` command:
@@ -139,6 +153,9 @@ backtick characters:
   export VAR1
   ```
 - Exported variables and their values are copied into a subshell's environment, where they may be accessed and changed. However, such changes have no effect on the variables in the parent shell.
+- A subshell is a new shell that is executed by the login shell to run the desired program.
+- A subshell does not know local variables that were assigned values by the parent shell.
+- The subshell cannot change the value of a variable in the parent shell.
 - You can remove variables by using `unset` command.
   ```bash
   VAR1=testing
@@ -147,3 +164,12 @@ backtick characters:
   ```
   - When referencing the environment variable in the unset command, remember **not to use the dollar sign or `$` before variable name**.
   - If you’re in a child process and unset a global environment variable, it only applies to the child process. The global environment variable is still available in the parent process.
+- Single Quote vs Double Quote:
+  - Using double quotes to show a string of characters allow any variables in the quotes to be resolved.
+  ```bash
+  VAR1=test
+  echo "The value of var1 is $VAR1"
+  # OUTPUT: The value of var1 is test
+  echo 'The value of var1 is $VAR1'
+  # OUTPUT: The value of var1 is $VAR1
+  ```
