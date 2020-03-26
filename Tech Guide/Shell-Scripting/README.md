@@ -95,6 +95,13 @@ Shell Scripting is an interpreter and cross-platform programming language.
   - Standard output = STDOUT = 1
   - Standard error = STDERR = 2
 - Shell variables can contain different sizes based on your system. You can see your system's limitations with `xargs --show-limits` command.
+- Useful syntax for grep (print line(s) for matching a pattern):
+  - `-E` or `--extended-regexp` or `egrep`
+  - `-F` or `--fixed-strings` or `fgrep`
+  - `-i` or `--ignore-case`
+  - `-l` or `--files-with-matches`
+  - `-r` or `--recursive`
+  - `-v` or `--invert-case`
 
 ## Part 02 (Shell Script Basics)
 
