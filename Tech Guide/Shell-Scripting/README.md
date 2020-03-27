@@ -95,6 +95,7 @@ Shell Scripting is an interpreter and cross-platform programming language.
   - Standard output = STDOUT = 1
   - Standard error = STDERR = 2
 - Shell variables can contain different sizes based on your system. You can see your system's limitations with `xargs --show-limits` command.
+- The first prompt you see when you open a shell called primary shell, 1 which you can see with `echo $PS1` command and the secondary shell that you see called primary shell 2, which you can see with `echo $PS2`. (You can see PS2 when you use inline input redirection + You can change them in your shell configuration file)
 - Useful syntax for grep (print line(s) for matching a pattern):
   - `-E` or `--extended-regexp` or `egrep`
   - `-F` or `--fixed-strings` or `fgrep`
@@ -203,4 +204,47 @@ ls [0-9]?[k-z]
 ls /bin/[!a-o]
 ls /bin/[^p-z]
 ls /bin/[!c-e]??
+```
+
+## Part 05 (Redirection)
+
+- Output
+  - `>` : Creating a new file or **overwriting** the existing file
+    ```bash
+    COMMAND > OUTPUT_FILE
+    date > output.txt
+    ```
+  - `>>` : Creating a new file or **appending** to the existing file
+    ```bash
+    COMMAND >> OUTPUT_FILE
+    who >> output.txt
+    ```
+- Input
+  - `<` : Input redirection takes the content of a file and redirects it to a command.
+    ```bash
+    COMMAND < INPUT_FILE
+    wc -l < /etc/passwd
+    cat < /etc/services
+    ```
+  - `<<` : The inline input redirection method allows you to specify the data for input redirection on the command line instead of in a file. Besides this symbol, you must specify a text marker that delineates the beginning and end of the data used for input.
+    ```bash
+    COMMAND << MARKER
+    DATA
+    MARKER
+
+    wc << EOF
+    Hello
+    line 2
+    good-bye
+    EOF
+    ```
+- Example (Write a script which uses inline input redirection to append some lines a an existing file in your home directory):
+```bash
+#!/bin/bash
+cat >> TESTFILE << EOF
+Hello $USER
+We're learning shell scripting
+let's get some advance stuff
+see you later
+EOF
 ```
