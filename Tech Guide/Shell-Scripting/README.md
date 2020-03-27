@@ -248,3 +248,78 @@ let's get some advance stuff
 see you later
 EOF
 ```
+
+## Part 06 (Mathematics)
+
+There are three different ways to perform mathematical operations in your shell scripts:
+
+1. `expr` (NOT RECOMMENDED)
+   - Pay attention to the space between operands and operator.
+    ```bash
+    expr 1 + 4
+    # Output: 5
+    expr 2+3
+    # Output: 2+3
+    ```
+   - Operands for this command: `+  -  *  /  %  <  <=  =  !=  >=  >`
+   - `expr` command only supports integer numbers. It doesn't support float numbers.
+    ```bash
+    expr 5 / 2
+    # Output: 2
+    ```
+   - When you use these operands, you should escape these characters.
+    ```bash
+    expr 5 * 2
+    # Output: expr: syntax error
+    expr 5 \* 2
+    # Output: 10
+    ```
+   - Example:
+    ```bash
+    #!/bin/bash
+    VAR1=10
+    VAR2=20
+    VAR3=`expr $VAR2 / $VAR1`
+    echo The result is $VAR3
+    # Output: The result is 2
+    ```
+2. Brackets [ ]
+   - In bash, when assigning a mathematical value to a variable, you can enclose the mathematical equation using a dollar sign and square brackets `$[operation]`
+    ```bash
+    VAR1=$[1+5]
+    echo $VAR1
+    # Output: 6
+    VAR2=$[$VAR1*2]
+    echo $VAR2
+    # Output: 12
+    ```
+   - You can't calculate floating numbers in this solution, either.
+- We don't usually need a floating number in shell scripting, because system administrators and DevOps Engineers don't need it for managing system.
+3. Bash Calculator or `bc`
+   - There's another way to calculate floating numbers. By using `bc` command. You can exit the program with `quit`. `bc` can recognize:
+     - Numbers (integer and floating numbers)
+     - Variables (simple variables and arrays)
+     - Comments (Single line comment starts with `#`, or multiline comments start with `/*` and ends with `*/`)
+     - Expressions
+     - Programming statements (such as if-then statements)
+     - Functions
+   - The floating-point arithmetic is controlled by a built-in variable called **scale**. You must set this value to the desired number of decimal places you want in your answers; otherwise, the default value of scale is zero, and `bc` calculates only integer numbers.
+   - Using `bc` in scripts:
+    ```bash
+    VARIABLE=`echo "OPTIONS; EXPRESSION" | bc`
+    VAR1=20
+    VAR2=`echo "scale=4;$VAR1/3" | bc`
+    echo $VAR2
+    # Output: 6.6666
+    ```
+   - If you have more than just a couple of calculations, you can use input redirection, allowing you to redirect a file to the bc command for processing. You just need to make a list of command and then `bc < COMMAND_FILE` or `cat COMMAND_FILE | bc`
+   - Instead of using a file for redirection, you can use the inline input redirection method, which allows you to redirect data directly from the command line. In the shell script, you can assign the output to a variable. This looks like this:
+    ```bash
+    variable=`bc << EOF
+    options
+    statements
+    expressions
+    EOF
+    `
+    ```
+   - Remember that the backtick characters are still needed to assign the output of the `bc` command to the variable.
