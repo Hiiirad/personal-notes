@@ -189,22 +189,22 @@ Wildcards:
 - `?` : Matches any single character
 - `[]` : Matches any one of the enclosed characters
 - `!` or `^` : Not
-```bash
-ls a*
-ls u*.c
-ls a*b*c
+  ```bash
+  ls a*
+  ls u*.c
+  ls a*b*c
 
-ls a?b
-ls ????
-ls x??y
+  ls a?b
+  ls ????
+  ls x??y
 
-ls [abc]*
-ls [0-9]?[k-z]
+  ls [abc]*
+  ls [0-9]?[k-z]
 
-ls /bin/[!a-o]
-ls /bin/[^p-z]
-ls /bin/[!c-e]??
-```
+  ls /bin/[!a-o]
+  ls /bin/[^p-z]
+  ls /bin/[!c-e]??
+  ```
 
 ## Part 05 (Redirection)
 
@@ -239,15 +239,37 @@ ls /bin/[!c-e]??
     EOF
     ```
 - Example (Write a script which uses inline input redirection to append some lines a an existing file in your home directory):
-```bash
-#!/bin/bash
-cat >> TESTFILE << EOF
-Hello $USER
-We're learning shell scripting
-let's get some advance stuff
-see you later
-EOF
-```
+  ```bash
+  #!/bin/bash
+  cat >> TESTFILE << EOF
+  Hello $USER
+  We're learning shell scripting
+  let's get some advance stuff
+  see you later
+  EOF
+  ```
+- Redirections with STDIN, STDOUT, and STDERR:
+  - `<` : Redirects STDIN (0) from file
+  - `>` : Redirects STDOUT (1) to file
+  - `>>` : Append STDOUT to file
+  - `<<` : Here-Document
+  - `&>` : Redirects STDERR (2)
+- Error Redirection:
+  ```bash
+  COMMAND 2> FILE
+  date alex 2> output.txt
+  # output.txt : date: invalid date 'alex'
+
+  touch a
+  date < a
+  # Output: NORMAL DATE OUTPUT
+
+  date < bob
+  # Output: -bash : bob: No such file or directory
+
+  # STDOUT goes where STDERR goes
+  ls AA BB &> CC
+  ```
 
 ## Part 06 (Mathematics)
 
