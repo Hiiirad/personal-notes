@@ -271,8 +271,8 @@ Wildcards:
   ls AA BB &> CC
   ```
 - You can use `printf` to write something by using redirects. This command write/overwrite **NOTHING** to FILENAME. `printf "" > FILENAME`
-- You can also use `> FILENAME` command to redirect **NOTHING** to the FILENAME. (This command doesn't always usable in some shells.)
-- You can redirect STDOUT and STDERR in two different places with command like this:
+- You can also use `> FILENAME` command to redirect **NOTHING** to the FILENAME. (This command doesn't always apply in some shells.)
+- You can redirect STDOUT and STDERR in two different places with a command like this:
   ```bash
   COMMAND 2> ERROR_FILE.txt
   # Errors are going to write in a file.
