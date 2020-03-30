@@ -29,6 +29,12 @@ Shell Scripting is an interpreter and cross-platform programming language.
   ```bash
   echo $$
   ```
+- Exit status of last command:
+  ```bash
+  echo $?
+  # 0: means successful exit
+  # 1-255: means error on exit
+  ```
 - See list of processes from other users:
   - Unix-Style:
     ```bash
@@ -96,15 +102,71 @@ Shell Scripting is an interpreter and cross-platform programming language.
   - Standard error = STDERR = 2
 - Shell variables can contain different sizes based on your system. You can see your system's limitations with `xargs --show-limits` command.
 - The first prompt you see when you open a shell called primary shell, 1 which you can see with `echo $PS1` command and the secondary shell that you see called primary shell 2, which you can see with `echo $PS2`. (You can see PS2 when you use inline input redirection + You can change them in your shell configuration file)
-- Useful syntax for grep (print line(s) for matching a pattern):
+
+## Part 02 (Linux Commands)
+
+- `grep` : Searches for PATTERN in each FILE (Highly recommended that you read all manual page of this command)
   - `-E` or `--extended-regexp` or `egrep`
   - `-F` or `--fixed-strings` or `fgrep`
   - `-i` or `--ignore-case`
   - `-l` or `--files-with-matches`
-  - `-r` or `--recursive`
+  - `-r` or `--recursive` or `rgrep`
   - `-v` or `--invert-case`
+- `tee` : Read from STDIN and write to STDOUT and files
+    ```bash
+    echo hello | tee file1.txt file2.txt
+    ```
+  - Useful options:
+    - `-a`, `--append` : Append to the given FILEs, do not overwrite
+    - `-i`, `--ignore-interrupts` : Ignore interrupt signals
+    - `--output-error=MODE` : Set behavior on write error. See MODE below:
+      - warn: Diagnose errors writing to any output
+      - warn-nopipe: Diagnose errors writing to any output not a pipe
+      - exit: Exit on error writing to any output
+      - exit-nopipe: Exit on error writing to any output not a pipe
+- `nl` : Write each FILE to standard output, with line numbers added
+    ```bash
+    nl /etc/passwd
+    ```
+- `find` : Search for files in a directory hierarchy (Highly recommended that you read all manual page of this command or at least see examples of manual page)
+    ```bash
+    find LOCATION_OF_START ARGUMENT(S)
+    find /test -name "*.txt"
+    ```
+  - Useful options:
+    - You can only use one of these, otherwise each overrides the others. the last one appearing on the command line takes effect. Since `-P` is the default, the `-P` option should be considered to be in effect unless either `-H` or `-L` is specified.
+      - `-P` : Never follow symbolic links
+      - `-L` : Follow symbolic links.
+      - `-H` : Do not follow symbolic links, except while processing the command line arguments.
+    - `-empty` : File is empty and is either a regular file or a directory.
+    - `-executable` : Matches  files  which  are  executable  and directories which are searchable (in a file name resolution sense).
+    - `-gid N` : File's numeric group ID is N.
+    - `-name` : Base of file name (the path with the leading directories removed) matches shell pattern pattern.
+    - `-iname` : Like -name, but the match is case insensitive.
+    - `-iregex` : Like -regex, but the match is case insensitive.
+    - `-regex` : File name matches regular expression pattern.
+    - `-size N` : File uses N units of space, rounding up. The following suffixes can be used:
+      - `b` : for 512-byte blocks (this is the default if no suffix is used)
+      - `c` : for bytes
+      - `w` : for two-byte words
+      - `k` : for Kibibytes (KiB, units of 1024 bytes)
+      - `M` : for Mebibytes (MiB, units of 1024 * 1024 = 1048576 bytes)
+      - `G` : for Gibibytes (GiB, units of 1024 * 1024 * 1024 = 1073741824 bytes)
+      - The + and - prefixes signify greater than and less than, as usual; i.e., an exact size of N units does not match.  Bear in mind that the size is rounded up to the next unit. Therefore -size -1M is  not  equivalent to -size -1048576c. The former only matches empty files, the latter matches files from 0 to 1,048,575 bytes.
+    - `-type C` : File is of type C (To search for more than one type at once, you can supply the combined list of type letters separated by a comma)
+      - `b` : block (buffered) special
+      - `c` : character (unbuffered) special
+      - `d` : directory
+      - `p` : named pipe (FIFO)
+      - `f` : regular file
+      - `l` : symbolic link; this is never true if the `-L` option or the `-follow` option is in effect, unless the symbolic link is broken.  If you want to search for symbolic links when `-L` is in effect, use `-xtype`.
+      - `s` : socket
+      - `D` : door (Solaris)
+      - To search for more than one type at once, you can supply the combined list of type letters separated by a comma or `,`
+    - `-uid N` : File's numeric user ID is N.
+    - `-user uname` : File is owned by user uname (numeric user ID allowed).
 
-## Part 02 (Shell Script Basics)
+## Part 03 (Shell Script Basics)
 
 - If you want to run multiple commands in one line, you must separate commands with semicolon or `;`
   ```bash
@@ -124,7 +186,7 @@ value.
 - The shell script automatically determines the data type used for
 the variable value.
 
-## Part 03 (Variables)
+## Part 04 (Variables)
 
 - Rules of variables:
   - Variables are **case-sensitive**.
@@ -182,7 +244,7 @@ backtick characters:
   # OUTPUT: The value of var1 is $VAR1
   ```
 
-## Part 04 (Special Characters)
+## Part 05 (Special Characters)
 
 Wildcards:
 - `*` : Matches any string or group of characters
@@ -206,7 +268,7 @@ Wildcards:
   ls /bin/[!c-e]??
   ```
 
-## Part 05 (Redirection)
+## Part 06 (Redirection)
 
 - Output
   - `>` : Creating a new file or **overwriting** the existing file
@@ -282,7 +344,7 @@ Wildcards:
   ```
 - It's a wise move to redirect your unessential outputs/errors to `/dev/null`
 
-## Part 06 (Mathematics)
+## Part 07 (Mathematics)
 
 There are three different ways to perform mathematical operations in your shell scripts:
 
