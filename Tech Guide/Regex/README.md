@@ -6,7 +6,7 @@ I **LOVE** regexes (REGular EXpressions), and I believe there is more to them th
 
 - Basic Characters
 
-Matacharacter|Description|Example
+Meta-Character|Description|Example
 -------------|-----------|-------
 `.`|Any Character|
 `\`|Escape Character|`\.` means only a dot
@@ -16,8 +16,8 @@ Matacharacter|Description|Example
 `\0`|Null Character|
 
 - Anchors
- 
-Matacharacter|Description|Example
+
+Meta-Character|Description|Example
 -------------|-----------|-------
 `^`|Start of string (multiline)|
 `\A`|Start of string (singleline)|
@@ -28,20 +28,20 @@ Matacharacter|Description|Example
 
 - Meta Sequences
 
-Matacharacter|Description|Example
+Meta-Character|Description|Example
 -------------|-----------|-------
 `\s`|Any whitespace character|
 `\S`|Any non-whitespace character|
 `\d`|Any digit|
 `\D`|Any non-digit|
-`\w`|Any word character = alphanumberic and underscore = `[A-Za-z0-9_]`|
+`\w`|Any word character = alphanumeric and underscore = `[A-Za-z0-9_]`|
 `\W`|Any non-word character|
 `\x`|Hex Character|`\x20` means space in hex
 `[\b]`|Backspace character|
 
 - Quantifiers
 
-Matacharacter|Description|Example
+Meta-Character|Description|Example
 -------------|-----------|-------
 `?`|Zero or one|`a?` means zero or one of a
 `*`|Zero or more|`a*` means zero or more of a
@@ -54,15 +54,15 @@ Matacharacter|Description|Example
 
 - Group Constructs
 
-Matacharacter|Description|Example
+Meta-Character|Description|Example
 -------------|-----------|-------
-`()`|Capture everythong enclosed|`(a\|b)`
+`()`|Capture everything enclosed|`(a\|b)`
 `(?:)`|using ?: will disable the capturing group|`(:?a\|b)`
 `\|`|Or|`cat\|dog` means cat or dog
 
 - Character Classes
 
-Matacharacter|Description|Example
+Meta-Character|Description|Example
 -------------|-----------|-------
 `[]`|A single character|`[abc]`=`[a-c]`=`a\|b\|c` a, b or c
 `[^]`|A character except|`[^abc]` everything except a, b or c
@@ -84,7 +84,7 @@ Matacharacter|Description|Example
 
 - Flags/Modifiers
 
-Matacharacter|Description|Example
+Meta-Character|Description|Example
 -------------|-----------|-------
 `g`|Global does not return after the first match, restarting the subsequent searches from the end of the previous match|`/abc/g`
 `m`|Multiline when enabled `^` and `$` will match the start and end of a line, instead of the whole string|`/abc/m`

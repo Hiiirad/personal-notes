@@ -27,27 +27,26 @@
   - [Part 13 (Docker Orchestration)](#part-13-docker-orchestration)
     - [Chapter 1 (Docker Swarm)](#chapter-1-docker-swarm)
     - [Chapter 2 (Kubernetes)](#chapter-2-kubernetes)
-  - [Part 14 (Conclusion)](#part-14-conclusion)
-  - [Part 15 (Terminology)](#part-15-terminology)
-  - [Part 16 (References)](#part-16-references)
+  - [Part 14 (Terminology)](#part-14-terminology)
+  - [Part 15 (References)](#part-15-references)
 
 ## Part 01 (Introduction)
 Why do you need Docker?
 - You don't need to worry about Compatibility/Dependency
-- Short Setup Time/Dependency Resolvement
+- Short Setup Time/Dependency
 - You can easily work with different Dev./Test/Prod. environments
 - Lower computation overhead compare to the traditional virtualization methods
 
 What can it do?
 - Containerize Applications
-- Run each service with its own dependencies in seperate containers
+- Run each service with its own dependencies in separate containers
 
 What are containers?
 - Containers are completely isolated environments. They can have their own processes for services, network interface, mounts just like VMs, except they all share the same OS kernel.
 - Containers are not introduced with Docker. They existed for more than 10 years. For instance, LXC, LXD, LXCFS, etc.
 - Docker utilizes [LXC containers](https://en.wikipedia.org/wiki/LXC).
 
-With docker you'll be able to run each component in a seperate container with its own dependencies and its own libraries. All on same VM/OS but within seperate env./container. -> build docker configuration once
+With docker you'll be able to run each component in a separate container with its own dependencies and its own libraries. All on same VM/OS but within separate env./container. -> build docker configuration once
 
 Public Docker Repository = [DockerHub](https://hub.docker.com)
 
@@ -116,7 +115,7 @@ We can use Docker on Windows with these 2 options to run a Linux container on a 
      - Windows Server 2016
      - Nano Server
 - VirtualBox and Hyper-V cannot coexist on the same Windows host. So if you started with docker toolbox with VirtualBox and if you plan to migrate to Hyper-V, remember you cannot have both solutions at the same time. There is a migration guide available on docker documentation page on [how to migrate from VirtualBox to Hyper-V](https://docs.docker.com/docker-for-windows/docker-toolbox/).
-- When you install docker desktop for Windows, the default option is to work with Linux containers. But if you would like to run Windows containers then you must **explicitly** confiure docker for Windows to switch to using Windows containers.
+- When you install docker desktop for Windows, the default option is to work with Linux containers. But if you would like to run Windows containers then you must **explicitly** configure docker for Windows to switch to using Windows containers.
 - Microsoft announced Windows Server 2016 support Windows containers for the first time. You can now packaged applications, Windows applications into Windows docker containers and run them on Windows docker host using docker desktop for windows. Now you can create Windows-based images and run Windows containers on a Windows server just like how you would run Linux containers on a Linux system.
 - Unlike in Linux there are two types of containers in Windows:
   1. Windows Server container which works exactly like Linux containers where the OS kernel is shared with the underlying operating system to allow better security boundary between containers and to a lot of kernels with different versions and configurations to coexist.
@@ -151,7 +150,7 @@ We can use Docker on Windows with these 2 options to run a Linux container on a 
   ```
   docker run SERVICE
   ```
-- List of containers with basic informations. If you want to see the list of all containers (availabe, stopped and exited) use `-a`
+- List of containers with basic information. If you want to see the list of all containers (available, stopped and exited) use `-a`
   ```
   docker ps
   docker ps -a
@@ -242,7 +241,7 @@ We can use Docker on Windows with these 2 options to run a Linux container on a 
   - OS
     - Unix (Terminal): `export VARIABLE=value`
     - Windows (Command Prompt or cmd): `SET VARIABLE=value`
-  - Programmming Languages
+  - Programming Languages
     - Python3: `var = os.environ.get('VARIABLE') = value`
     - C++: `DATATYPE VARIABLE=value; putenv(VARIABLE);`
 
@@ -356,7 +355,7 @@ A wise man once said:
 
 > Give a sysadmin an image and their app will be up-to-date for a day, give a sysadmin a Dockerfile and their app will always be up-to-date.
 
-Hence, creating images for the complex applications is preferred to use Dockerfiles rather than committing into local volume and manipulating the result. 
+Hence, creating images for the complex applications is preferred to use Dockerfiles rather than committing into local volume and manipulating the result.
 
 
 ### Chapter 3 (Transfer Image to an Offline Server)
@@ -466,7 +465,7 @@ What this is, in fact doing is it creates an entry into the `/etc/hosts` file on
 The key aspect when creating a link is the name of the container. Let's start with running a Redis server container:
 
 ```bash
-docker run -d --name MY-REDIS-DB REDIS  
+docker run -d --name MY-REDIS-DB REDIS 
 ```
 To connect to a source container, you use the `--link` option when launching a new container.<br>The container name refers to the source container we defined in the previous step while the alias defines the friendly name of the host.
 
@@ -493,7 +492,7 @@ docker run -it --link REDIS-DB:REDIS --name MY-REDIS-CLIENT-APP redis env
 2. Secondly, Docker will update the HOSTS file of the container with an entry for our source container with three names,<br> _the original_, _the alias_, and the _hash-id_. You can output the containers host entry using cat /etc/hosts <br>
 ```bash
 docker run -it --link REDIS-DB:REDIS --name MY-REDIS-CLIENT-APP redis cat /etc/hosts
-```  
+``` 
 
 ### Chapter 2 (Creating Network Between Containers Using Networks)
 
@@ -510,12 +509,12 @@ docker run -d --name=my-redis-container --net=BACKEND-NETWORK redis
 Unlike using links, Docker network behaves like traditional networks where nodes can be attached/detached.
 The first thing you'll notice is that Docker no longer assigns environment variables or updates the hosts file of containers. see [here](#chapter-1-creating-network-between-containers-using-links).
 
-Instead, the way containers can communicate via an **Embedded DNS Server** in Docker. 
+Instead, the way containers can communicate via an **Embedded DNS Server** in Docker.
 
 ```bash
 docker run --net=BACKEND-NETWORK alpine cat /etc/resolv.conf
 ```
-When containers attempt to access other containers via a well-known name, such as _my-redis-container_, the DNS server will return the IP address of the correct Container. 
+When containers attempt to access other containers via a well-known name, such as _my-redis-container_, the DNS server will return the IP address of the correct Container.
 
 Docker supports multiple networks and containers attached to more than one network at a time. For instance:
 
@@ -648,7 +647,7 @@ worker:
 ```
 Now that we wrote our docker-compose.yml file, bringing up the stack is simple. From the `docker-compose up` command, you can bring up the entire application stack.
 
-When we looked at the example of the voting application, we assumed that all images are already built. Out of the five different components, two of them Redis and Postgres images we know are already available on Docker hub. There are official images from Redis and Postgres, but the remaining three are our applications. They don't need to be already built and available in a Docker registry. If we would like to instruct Docker compose to run a Docker build instead of trying to pull an image, we can replace the image line with a build line and specify the location of a directory that contains the application code and a Dockerfile with instructions to build the Docker image. 
+When we looked at the example of the voting application, we assumed that all images are already built. Out of the five different components, two of them Redis and Postgres images we know are already available on Docker hub. There are official images from Redis and Postgres, but the remaining three are our applications. They don't need to be already built and available in a Docker registry. If we would like to instruct Docker compose to run a Docker build instead of trying to pull an image, we can replace the image line with a build line and specify the location of a directory that contains the application code and a Dockerfile with instructions to build the Docker image.
 In this example, for the voting app, I have all the application code in a folder named `/vote`, which contains all application code and a Dockerfile. This time when you run the `docker-compose up` command, it will first build the images, give a temporary name for it and then use those images to run containers using the options you specified before. Similarly, use the build option to build the two other services from the respective folders.
 
 ```yaml
@@ -769,9 +768,9 @@ Not only can Docker-Compose manage starting containers, but it also provides a w
 
 As Docker-Compose understands how to launch your application containers, it can also be used to scale the number of containers running.
 
-The scale option allows you to specify the service and then the number of instances you want. If the number is greater than the instances already running then, it will launch additional containers. If the number is less, then it will stop the unrequired containers.
+The scale option allows you to specify the service and then the number of instances you want. If the number is greater than the instances already running then, it will launch additional containers. If the number is less, then it will stop the inessential containers.
 
-- Scale Up the number of _web_ containers you previously creatd by using the command below:
+- Scale Up the number of _web_ containers you previously created by using the command below:
   ```bash
   docker-compose scale CONTAINER_NAME=NUMBER_OF_INSTANCES
   docker-compose scale WEB=3
@@ -783,54 +782,217 @@ The scale option allows you to specify the service and then the number of instan
 
 ## Part 11 (Registry)
 
+What is a registry?<br>
+It's the central repository of all Docker images.
+
+Let's make things more clear with an example:
+
+```bash
+docker run nginx
+```
+When you say `nginx`, it's actually `nginx/nginx`. The first `nginx` stands for the user or account name. So if you don't provide an account or a repository name, it assumes that it is the same as the given name, which in this case is `nginx`. The usernames are usually your Dockerhub account name, or if it is an organization, then it's the name of the organization. if you were to create your account and create your repositories or images under it, then you would use a similar pattern.<br>
+Now, where are these images stored and pulled from?<br>
+since we have not specified the location where these images are to be pulled from, it is assumed to be on Dockers default registry Dockerhub. The DNS name for which is `docker.io`. The registry is where all the images are stored, for example, `docker.io/nginx/nginx`. Whenever you create a new image or update an existing image, you push it to the registry, and every time anyone deploys this application, it is pulled from that registry. There are many other popular registries as well; for example, Google's registry is `gcr.io` where a lot of Kubernetes related images are stored. Like the ones used for performing end-to-end tests on the cluster, which located at `gcr.io/kubernetes-e2e-test-images/dnsutils`. These are all publicly accessible images that anyone can download and access. When you have applications built in-house that shouldn't be made available to the public, hosting an internal private registry may be a good solution. Many cloud service providers such as AWS, Azure, GCP provide a private registry by default when you open an account with them. On any of these solutions, a Dockerhub or Google registry or your internal private registry, you may choose to make a repository private so that it can only be accessed using a set of credentials. From Docker's perspective to run a container using an image from a private registry, you first log in to your private registry using the Docker login command.
+
+```bash
+docker login PRIVATE-REGISTRY-ADDRESS
+```
+
+input your credentials once successful run the application using private registry as part of the image name. like this:
+
+```bash
+dcoker run PRIVATE-REGISTRY-ADDRESS/APPS/INTERNAL-APP
+```
+
+Now, if you did not log in to the private registry, it will come back, saying that the image cannot be found. So remember to always log in before pulling or pushing to a private registry. We said that cloud providers like AWS or GCP provide a private registry when you create an account with them. But what if you are running your application on-premise and don't have a private registry. How do you deploy your own private registry within your organization? The Docker registry is another application and is available as a Docker image. The name of the image is **registry**, and it exposes the API on port 5000.
+
+```bash
+docker run -d -p 5000:5000 --name registry registry:2
+```
+
+Now that you have your custom registry running at port 5000 on this Docker host. how do you push your own image to it?<br>
+Use the `docker image tag` command to tag the image with a private registry URL in it.
+
+```bash
+docker image tag MY-IMAGE localhost:5000/MY-IMAGE
+```
+
+In this case, since it's running on the same Docker host, I can use `localhost:5000`, followed by the image name. I can then push my image to my local private registry using the command `docker push` and the new image name with the Docker registry information in it.
+
+```bash
+docker push localhost:5000/MY-IMAGE
+```
+
+Now, I can pull my image from anywhere within this network using the localhost if you're on the same host or the IP or domain name of my Docker host.
+
+```bash
+docker pull localhost:5000/MY-IMAGE
+docker pull IP:5000/MY-IMAGE
+```
 
 ## Part 12 (Engine)
+> This part is an advanced topic. You can skip it if you want to learn the basics because we're going to look at Docker's architecture in detail.
 
+We're going to find out about how it actually runs an application in isolated containers and how it works.
+
+Docker engine, as we have learned before, is simply referred to as a host with Docker installed on it. When you install Docker on a Linux host, you're actually installing three different components the **Docker daemon**, the **Rest API** server, and the **Docker CLI**.
+
+![Docker Engine](Images/docker-engine.png)
+
+1. **The Docker daemon** is a background process that manages Docker objects such as images, containers, volumes, and networks.
+2. **The Docker REST API server** is the API interface that programs can use to talk to the daemon and provide instructions. You could create your own tools using this REST API.
+3. **The Docker CLI** is nothing but the command-line interface that we've been using until now to perform actions such as running a container, stopping containers, destroying images, etc. it uses the REST API to interact with the Docker demon.
+- Something to note here is that the Docker CLI need not necessarily be on the same host. It could be on another system like a laptop and can still work with a remote Docker engine. Use the `-H` option on the Docker command and specify the remote Docker engine address and a port, as shown here:
+
+![Docker Engine - Laptop](Images/docker-engine-laptop.png)
+
+For example, to run a container based on NGINX on a remote Docker host run the command:
+
+```bash
+docker -H=IP:PORT run NGINX
+```
+
+Now, let's try to understand how exactly our applications containerized in Docker.<br>
+Docker uses namespaces to isolate workspace. **Process IDs**, **network**, **inter-process communication**, **mounts**, and **Unix time-sharing systems** are created in their own namespace, thereby providing isolation between containers.
+
+![Docker Engine - PID](Images/docker-engine-namespace.png)
+
+Let's take a look at one of the namespace isolation techniques "process ID namespaces". Whenever a Linux system boots up, it starts with just one process with a process ID of one (PID=1). This is the root process and kicks off all the other processes in the system. By the time the system boots up completely, we have a handful of processors running. This can be seen by running the `ps` command to list all the running processes. The process IDs are unique, and two processes cannot have the same process ID. Now, if we were to create a container that is basically like a child system within the current system, the child system needs to think that it is an independent system on its own. It has its own set of processes originating from a root process with a process ID of one. But we know that there is no hard isolation between the containers and the underlying host. So the processes running inside the container or, in fact, processes running on the underlying host and so two processes cannot have the same process ID of one. This is where namespaces come into play. With process ID namespaces, each process can have multiple process IDs associated with it. For example, when the processes start in the container, it's actually just another set of processes on the base Linux system, and it gets the next available process ID. In this case, 5 and 6. however, they also get another process ID starting with `PID=1` in the container namespace, which is only visible inside the container. So the container thinks that it has its own root process tree and so it is an independent system.
+
+![Docker Engine - PID](Images/docker-engine-pid.png)
+
+So how does that relate to an actual system? How do you see this on a host?<br>
+Let's say I want to run an NGINX server as a container. We know that the NGINX container runs an NGINX service. If we were to list all the services inside the Docker container, we see that the NGINX service was running with a process ID of one. This is the process ID of the service inside of the container namespace. If we list the services on the Docker host, we will see the same service but with a different process ID. That indicates that all processes are running on the same host but separated into their own containers using namespaces. So we learned that the underlying Docker host, as well as the containers, share the same system resources such as CPU and memory.
+
+![Docker Engine - CGroups](Images/docker-engine-cgroups.png)
+
+How much of the resources dedicated to the host and the containers? How does Docker manage and share the resources between the containers?<br>
+By default, there is no restriction as to how much of a resource a container can use. And hence a container may end up utilizing all of the resources on the underlying host. But there is a way to restrict the amount of CPU or memory a container can use. Docker uses **cgroups** or control groups to restrict the number of hardware resources allocated to each container. This can be done by providing the `--cpus` option to the `docker run` command providing a value of 0.5 will ensure that the container does not take up more than 50% of the host CPU at any given time. The same goes for memory setting a value of 100m to the `--memory` option limits the amount of memory the container can use to a hundred megabytes. If you want to read more about resource constraints (CPU, Memory, GPU), [read here](https://docs.docker.com/config/containers/resource_constraints/).
+
+```bash
+docker run --cpus=0.5 SERVICE
+docker run --memory=100m SERVICE
+```
 
 ## Part 13 (Docker Orchestration)
 
-In many applications, running a single service in a single machine will do the job, But production applications are usually much more complex and the single server model will not work to due to vaious reasons like container creation delay, ensuring [High Availability or HA](https://en.wikipedia.org/wiki/High_availability) and the ability to scale. For production applications IT users and app teams need more sophisticated tools. Docker supplies two such tools: Docker Swarm and Kubernetes. 
+Let's understand what container orchestration is. So far, in this course, we've seen that with Docker, you can run a single instance of the application with a simple `docker run` command. In this case, to run a node.js based application, you're on the `docker run nodejs` command, but that's just one instance of your application on one Docker host. What happens when the number of users increases, and that instance is no longer able to handle the load?<br>
+You deploy additional instances of your application by running the `docker run` command multiple times. So, that's something you have to do yourself. You have to keep a close watch on the load and performance of your application and deploy additional instances yourself. And not just that, you have to keep a close watch on the health of these applications. And if a container was to fail, you should be able to detect that and run the `docker run` command again to deploy another instance of that application. What about the health of the Docker host itself? What if the host crashes and is inaccessible? The containers hosted on that host become inaccessible too. So what do you do to solve these issues? You need a dedicated engineer who can sit and monitor the state performance and health of the containers and take necessary actions to remediate the situation. But when you have large applications deployed with tens of thousands of containers, that's not a practical approach. So you can build your scripts, and that helps you tackle these issues to some extent.<br>
+Container orchestration is just a solution for that. It is a solution that consists of a set of tools and scripts that can help host containers in a production environment. Typically a container orchestration solution consists of multiple Docker hosts that can host containers that way even if one fails the application is still accessible through the others.
+
+```bash
+docker service create --replicas=100 nodejs
+```
+
+The container orchestration solution easily allows you to deploy hundreds or thousands of instances of your application with a single command to provide [High Availability or HA](https://en.wikipedia.org/wiki/High_availability). Some orchestration solutions can help you automatically scale up the number of instances when users increase and scale down the number of instances when the demand decreases. Some solutions can even help you in automatically adding additional hosts to support the user load, and not just clustering and scaling the container orchestration solutions also provide support for advanced networking between these containers across different hosts. As well as load balancing user requests across a different house, they also provide support for sharing storage between the hosts as well as support for configuration management and security within the cluster. there are multiple container orchestration solutions available today:
+- Docker Swarm from Docker
+- Kubernetes from Google
+- Mesos from Apache
+
+**Docker Swarm** is easy to set up and get started. It lacks some of the advanced auto-scaling features required for complex production-grade applications.
+
+**Mesos**, on the other hand, is quite difficult to set up and get started. But supports many advanced features.
+
+**Kubernetes**, arguably the most popular of it all, is a bit difficult to set up and get started but provides many options to customize deployments and has support for many different vendors. Kubernetes supports on all public cloud service providers like GCP, Azure, and AWS, and the Kubernetes project is one of the top-ranked projects on Github.
 
 ### Chapter 1 (Docker Swarm)
 
-Swarms can be just a single node, but that is unusual as you would have no high availability capabilities, and you would severely limit your scalability into one single node.
-Initializing Docker Swarm Mode is easy as executing command below:
+Docker Swarm has many concepts to cover and requires its course, but we try to take a quick look at some of the basic details so you can get a brief idea of what it is. With Docker Swarm, you could now combine multiple Docker machines into a single cluster. Docker Swarm takes care of distributing your services or your application instances into separate hosts for high availability and load balancing across different systems and hardware. To set up a Docker Swarm, you must first have hosts or multiple hosts with Docker installed on them. Then you must designate one host to be the manager or the master or the Swarm manager as it is called and others as slaves or workers. Once you're done with that run, the `docker swarm init` command on the Swarm manager, and that initialize the Swarm manager. The output also provides the command to be run on the workers. So copy the command and run it on the worker nodes to join the manager.
+
 ```bash
+docker swarm init
 docker swarm init --advertise-addr $(hostname -i)
+
+docker swarm join-token manager
+docker swarm join-token worker
+
+docker swarm join --token <token> <Internal IP>:<Port>
 ```
-In the output, you'll see
+
+After joining the Swarm, the workers also referred to as **nodes**, and you're now ready to create services and deploy them on the Swarm cluster. So let's get into some more details. As you already know, to run an instance of my webserver, I run the `docker run command` and specify the name of the image I wish to run. This creates a new container instance of my application and serves my webserver. Now that we have learned how to create a Swarm cluster, how do I utilize my cluster to run multiple instances of my webserver? Now one way to do this would be to run the `docker run command` on each worker node, but that's not ideal as I might have to log in to each node and run this command, and there could be hundreds of nodes. I have to set up load balancing myself, a large monitor the state of each instance myself, and if instances were to fail, I'd have to restart them myself. So it's going to be an impossible task. That is where Docker Swarm orchestration consent. Docker Swarm Orchestrator does all of this for us. So far, we've only set up this one cluster, but we haven't seen orchestration in action. The key component of Swarm orchestration is the Docker service.<br>
+Docker services are one or more instances of a single application or service that runs across to saw the nodes in the Swarm cluster. For example, in this case, I could create a Docker service to run multiple instances of my webserver application across worker nodes in my Swarm cluster. For this around the `docker service create` command on the manager node and specify my image name there. Which is my web server in this case and use the option replicas to specify the number of instances of my webserver I would like to run across the cluster. Since I specified three replicas and I get three instances of my webserver distributed across the different worker nodes.
+
 ```bash
-docker swarm join --token SWMTKN-1-********* <Internal IP>:<Port>
+docker service create --replicas=NUMBER SERVICE-NAME
 ```
-which you use to join worker's nodes to the swarm architecture.
 
-You are also given a second command docker for adding additional managers: ```swarm join-token manager``` 
-
-- **Add a worker**
-
-  - Copy the ```docker swarm join...``` command from your manager’s output and paste it in the second terminal window on your screen. 
-
-- **Show Swarm Members**
-  - ```docker node ls```
-
+To view a list of nodes in the swarm run `docker node ls` from a manager node. Remember, the Docker service command must be run on the manager node and not on the worker node. The `docker service create` command is similar to the `docker run` command in terms of the options passed, such as the `-e` or `--env` for the environment variable. The `-p` for publishing ports, the `--network` option to attach a container to a network, etc. well that's a high-level introduction to Docker Swarm, there's a lot more to know, such as configuring multiple managers, overlay networks, etc.
+I make a different course for Docker Swarm in the future.
 
 ### Chapter 2 (Kubernetes)
 
+> Let's get into a brief introduction to basic Kubernetes concepts. Kubernetes requires its course, ultimately, on different methods.
 
-## Part 14 (Conclusion)
+With Docker, you were able to run a single instance of an application using the Docker CLI by running the `docker run` command, which is excellent. Running an application has never been so easy before managing with Kubernetes using the **Kubernetes CLI** known as **kube control** or **kubectl**. You can run a thousand instances of the same application with a single command.
 
-## Part 15 (Terminology)
+```bash
+kubectl run --replicas=1000 WEB-SERVER
+```
+
+Kubernetes can scale it up to two thousand with another command.
+
+```bash
+kubectl scale --replicas=2000 WEB-SERVER
+```
+
+Kubernetes can be configured to do this automatically so that instances and the infrastructure itself can scale up and down based on user load. Kubernetes can upgrade these 2000 instances of the application in a rolling upgrade fashion one at a time with a single command.
+
+```bash
+kubectl rolling-upgrade WEB-SERVER --image=WEB-SERVER:2
+```
+
+If something goes wrong, it can help you rollback these images with a single command.
+
+```bash
+kubectl rolling-update WEB-SERVER --rollback
+```
+
+Kubernetes can help you test new features of your application by only upgrading a percentage of these instances through A/B testing methods. The Kubernetes open architecture provides support for numerous different network and storage vendors. Any network or storage brand that you can think of has a plugin for Kubernetes. Kubernetes supports a variety of authentication and authorization mechanisms. All major cloud service providers have native support for Kubernetes. So what's the relation between Docker and Kubernetes?<br>
+Well, Kubernetes uses Docker host to host applications in the form of Docker containers. Well, it need not be Docker all the time. Kubernetes supports alternatives to Dockers as well, such as **Rocket** or a **Cryo**, but let's take a quick look at the Kubernetes architecture.<br>
+a Kubernetes cluster consists of a set of nodes. A node is a machine physical or virtual on which the Kubernetes software a set of tools are installed. A node is a worker machine, and that is where containers will be launched by Kubernetes.
+
+![Kubernetes Nodes](Images/kubernetes-node.png)
+
+But what if the node on which the application is running fails? Well, obviously, our application goes down. So you need to have more than one node. A cluster is a set of grouped nodes. This way, even if one node fails, you have your application still accessible from the other nodes.
+
+![Kubernetes Cluster](Images/kubernetes-cluster.png)
+
+Now we have a cluster, but who is responsible for managing this cluster? Where is the information about the members of the cluster stored? And how are the nodes monitored when a node fails? How do you move the workload of the failed nodes to another worker node?<br>
+That's where the master comes in. The master is a note with the Kubernetes control plane components installed. The master watches over the notes are in the cluster and is responsible for the actual orchestration of containers on the worker nodes.
+
+![Kubernetes Master](Images/kubernetes-master.png)
+
+When you install Kubernetes on a system, you're installing the following components an **API server**, and **etcd server**, a **kubelet** service, **container runtime** engine like Docker, and a bunch of **controllers** and the **scheduler**.
+
+![Kubernetes Components](Images/kubernetes-components.png)
+
+- The **API server** acts as the front end for Kubernetes. The users' management devices, command-line interfaces, all talk to the API server to interact with the Kubernetes cluster.
+- The **etcd** be a key-value store. The etcd is a distributed, reliable key-value store used by Kubernetes to store all data used to manage the cluster. Think of it this way, when you have multiple nodes and multiple masters in your cluster etcd, stores all that information on all the nodes in the cluster in a distributed manner. Etcd is responsible for implementing locks within the cluster to ensure there are no conflicts between the masters.
+- The **scheduler** is responsible for distributing work or containers across multiple nodes. It looks for newly created containers and assigns them to nodes.
+- The **controllers** are the brain behind orchestration. They're responsible for noticing and responding when notes containers or endpoints go down. The controllers make decisions to bring up new containers in such cases.
+- The **container runtime** is the underlying software that is used to run containers. In our case, it happens to be Docker.
+- The **kubelet** is the agent that runs on each node in the cluster. The agent is responsible for making sure that the containers are running on the nodes as expected.
+
+Finally, we also need to learn a little bit about one of the command-line utilities known as the kube command-line tool or the kube control tool or **kubectl** as it is also called. The kube control tool is the Kubernetes CLI, which is used to deploy and manage applications on a Kubernetes cluster to get cluster related information to get the status with the nodes in the cluster and many other things. The `kubectl run APPLICATION` command is used to deploy an application on the cluster. The `kubectl cluster-info` command is used to view information about the cluster, and the `kubectl get nodes` command is used to list all the nodes part of the cluster. so to run hundreds of instances of your application across hundreds of nodes all I need is a single Kubernetes command like this:
+
+```bash
+kubectl run MY-APP --image=MY-APP --replicas=500
+```
+
+Well that's all we have for now—a quick introduction to Kubernetes and this architecture. You can find a complete course on this repository.
+
+## Part 14 (Terminology)
 
 - **Images**: The file system and configuration of our application which used to create containers.
 - **Containers**: Running instances of Docker images.
-- **Registry**: A server-side application that stores and lets you download Docker images. 
+- **Registry**: A server-side application that stores and lets you download Docker images.
 - **Docker Hub**: A registry of Docker images.
 - **Layers**: A Docker image built up from a series of layers. Each layer represents an instruction in the image’s Dockerfile. Each layer except the last one is read-only.
-- **Dockerfile**:  A text file that contains all the commands, in order, needed to build a given image.
+- **Dockerfile**: A text file that contains all the commands, in order, needed to build a given image.
 - **Node**: An instance of the Docker Engine connected to the Swarm. Nodes are either managers or workers. Managers schedules which containers to run where. Workers execute the tasks. By default, Managers are also workers.
 
 
-## Part 16 (References)
+## Part 15 (References)
 
 1. [Docker Documentation Samples](https://docs.docker.com/samples/)
 2. [Play with Docker](https://training.play-with-docker.com/)

@@ -229,7 +229,7 @@ git commit -S -m "MESSAGE"
 - Blame/Check someone
 ```
 git blame FILE_NAME -> Analyze all of lines in FILE_NAME
-git blame FILE_NAME -LLINE_NUMBER
+git blame FILE_NAME -L<LINE_NUMBER>
     git blame README.md -L8    -> Analyze line 8
     git blame README.md -L8,10 -> Analyze from line 8 to line 10
 ```
