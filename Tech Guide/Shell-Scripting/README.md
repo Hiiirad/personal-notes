@@ -4,6 +4,8 @@
 
 > This note is for SysAdmins or DevOps Engineers, so most of the commands of this course run on Redhat-based distributions such as Redhat, Centos, etc.
 
+> I used bash as a default shell for these commands. You may have some different outputs based on your default shell.
+
 ## Part 01 (Linux Review)
 
 Shell Scripting is an interpreter and cross-platform programming language.
@@ -134,17 +136,17 @@ Shell Scripting is an interpreter and cross-platform programming language.
     find /test -name "*.txt"
     ```
   - Useful options:
-    - You can only use one of these, otherwise each overrides the others. the last one appearing on the command line takes effect. Since `-P` is the default, the `-P` option should be considered to be in effect unless either `-H` or `-L` is specified.
+    - You can only use one of these; otherwise, each overrides the others. The last one appearing on the command line takes effect. Since `-P` is the default, the `-P` option should be considered to be in effect unless either `-H` or `-L` is specified.
       - `-P` : Never follow symbolic links
       - `-L` : Follow symbolic links.
       - `-H` : Do not follow symbolic links, except while processing the command line arguments.
     - `-empty` : File is empty and is either a regular file or a directory.
-    - `-executable` : Matches  files  which  are  executable  and directories which are searchable (in a file name resolution sense).
+    - `-executable` : Matches files which are executable and directories which are searchable (in a file name resolution sense).
     - `-gid N` : File's numeric group ID is N.
-    - `-name` : Base of file name (the path with the leading directories removed) matches shell pattern pattern.
+    - `-name` : Base of the file name (the path with the leading directories removed) matches shell pattern.
     - `-iname` : Like -name, but the match is case insensitive.
     - `-iregex` : Like -regex, but the match is case insensitive.
-    - `-regex` : File name matches regular expression pattern.
+    - `-regex` : File name matches the regular expression pattern.
     - `-size N` : File uses N units of space, rounding up. The following suffixes can be used:
       - `b` : for 512-byte blocks (this is the default if no suffix is used)
       - `c` : for bytes
@@ -152,7 +154,7 @@ Shell Scripting is an interpreter and cross-platform programming language.
       - `k` : for Kibibytes (KiB, units of 1024 bytes)
       - `M` : for Mebibytes (MiB, units of 1024 * 1024 = 1048576 bytes)
       - `G` : for Gibibytes (GiB, units of 1024 * 1024 * 1024 = 1073741824 bytes)
-      - The + and - prefixes signify greater than and less than, as usual; i.e., an exact size of N units does not match.  Bear in mind that the size is rounded up to the next unit. Therefore -size -1M is  not  equivalent to -size -1048576c. The former only matches empty files, the latter matches files from 0 to 1,048,575 bytes.
+      - The + and - prefixes signify greater than and less than, as usual; i.e., the exact size of N units does not match.  Bear in mind that the size is rounded up to the next unit. Therefore -size -1M is  not  equivalent to -size -1048576c. The former only matches empty files, the latter matches files from 0 to 1,048,575 bytes.
     - `-type C` : File is of type C (To search for more than one type at once, you can supply the combined list of type letters separated by a comma)
       - `b` : block (buffered) special
       - `c` : character (unbuffered) special
@@ -165,6 +167,26 @@ Shell Scripting is an interpreter and cross-platform programming language.
       - To search for more than one type at once, you can supply the combined list of type letters separated by a comma or `,`
     - `-uid N` : File's numeric user ID is N.
     - `-user uname` : File is owned by user uname (numeric user ID allowed).
+- `locate` : Find files by name
+  - `-b` or `--basename` : Match only the base name against the specified patterns.  This is the opposite of `--wholename`.
+  - `-c` or `--count` : Instead of writing file names on standard output, write the number of matching entries only.
+  - `-i` or `--ignore-case` : Ignore case distinctions when matching patterns.
+  - `-p` or `--ignore-spaces` : Ignore punctuation and spaces when matching patterns.
+  - `-q` or `--quiet` : Write no messages about errors encountered while reading and processing databases.
+  - `--regex` : Interpret all PATTERNs as extended regexps.
+  - `-w` or `--wholename` : Match only the whole path name against the specified patterns. This is the default behavior. The opposite can be specified using `--basename`.
+- `pushd` and `popd` : The `pushd` command saves the current working directory in memory so it can be returned to at any time, optionally changing to a new directory. The `popd` command returns to the path at the top of the directory stack.
+  ```bash
+  cd /tmp
+  pushd /var/log
+  # Output: /var/log /tmp
+  cd ..
+  pwd
+  # Output: /var
+  popd
+  # Output: /tmp
+  ```
+- 
 
 ## Part 03 (Shell Script Basics)
 
@@ -245,6 +267,16 @@ backtick characters:
   ```
 
 ## Part 05 (Special Characters)
+
+There is a character called backslash or `\` that won't let shell to interpret that special character. For example:
+
+```bash
+#!/bin/bash
+echo $HOME
+# Output: /home/hirad
+echo \$HOME
+# Output: $HOME
+```
 
 Wildcards:
 - `*` : Matches any string or group of characters
