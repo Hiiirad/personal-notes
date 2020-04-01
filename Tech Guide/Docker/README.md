@@ -163,6 +163,10 @@ We can use Docker on Windows with these 2 options to run a Linux container on a 
   ```
   docker rm ID/NAME
   ```
+- Remove a container using ID or Name automatically when it exits
+  ```bash
+  docker run --rm ID/NAME
+  ```
 - List of images and their sizes
   ```
   docker images
