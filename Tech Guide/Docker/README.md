@@ -181,6 +181,10 @@ We can use Docker on Windows with these 2 options to run a Linux container on a 
   docker run SERVICE COMMAND
   docker run ubuntu sleep 5
   ```
+- Remove all stopped containers:
+  ```bash
+  docker container prune
+  ```
 - Execute a command (for a running container)
   ```
   docker exec NAME/ID COMMAND
