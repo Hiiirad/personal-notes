@@ -297,7 +297,7 @@ backtick characters:
   - **Local Variable**: Local variables are only available in the shell that creates them. This makes global environment variables useful in applications that spawn child processes that require information from the parent process.
 - After login into the system, a copy of the shell is given to the user.
 - The environment is maintained all the time until the user logs off.
-- You can see all variables (Global + Local) with `set` command.
+- You can see all variables (Global + Local) with `set` command, and other options of it with `help set` command.
 - You can see Global variables with `env` or `printenv` command.
 - The method used to create a global environment variable is to create a local environment variable, then export it to the global environment. This is done by using the `export` command:
   ```bash
