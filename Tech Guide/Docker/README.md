@@ -90,10 +90,10 @@ Docker Editions:
 
 ### Chapter 2 (Docker on Windows)
 
-- You won't be able to run Windows-based container on Docker host with Linux on it. For that you'll require a docker on a Windows Server.
-- Because they don't have a same kernel.
-- Here's a little trick that Windows do to run a Linux-based container in Docker:
-  - When you install docker on Windows and run a Linux container on Windows, you're not really running a Linux container on Windows. Windows runs a Linux container on a Linux virtual machine (VM) under the hood. So it's really Linux container on a Linux virtual machine on Windows.
+ - You won't be able to run Windows-based containers on Docker host with Linux on it. For that, you'll require a docker on a Windows Server.
+ - Because they don't have a same kernel.
+ - Here's a little trick that Windows do to run a Linux-based container in Docker:
+    - When you install Docker on Windows and run a Linux container on Windows, you're not running a Linux container on Windows. Windows   runs a Linux container on a Linux virtual machine (VM) under the hood. So it's Linux container on a Linux virtual machine on Windows.
 
 We can use Docker on Windows with these 2 options to run a Linux container on a Windows host:
 1. Docker on Windows using Docker Toolbox (Original support for docker on Windows)
@@ -114,8 +114,8 @@ We can use Docker on Windows with these 2 options to run a Linux container on a 
      - Windows 10 Enterprise Edition
      - Windows Server 2016
      - Nano Server
-- VirtualBox and Hyper-V cannot coexist on the same Windows host. So if you started with docker toolbox with VirtualBox and if you plan to migrate to Hyper-V, remember you cannot have both solutions at the same time. There is a migration guide available on docker documentation page on [how to migrate from VirtualBox to Hyper-V](https://docs.docker.com/docker-for-windows/docker-toolbox/).
-- When you install docker desktop for Windows, the default option is to work with Linux containers. But if you would like to run Windows containers then you must **explicitly** configure docker for Windows to switch to using Windows containers.
+- VirtualBox and Hyper-V cannot coexist on the same Windows host. So if you started with docker toolbox with VirtualBox and if you plan to migrate to Hyper-V, remember you cannot have both solutions at the same time. There is a migration guide available on Docker documentation page on [how to migrate from VirtualBox to Hyper-V](https://docs.docker.com/docker-for-windows/docker-toolbox/).
+- When you install Docker desktop for Windows, the default option is to work with Linux containers. But if you would like to run Windows containers then you must **explicitly** configure docker for Windows to switch to using Windows containers.
 - Microsoft announced Windows Server 2016 support Windows containers for the first time. You can now packaged applications, Windows applications into Windows docker containers and run them on Windows docker host using docker desktop for windows. Now you can create Windows-based images and run Windows containers on a Windows server just like how you would run Linux containers on a Linux system.
 - Unlike in Linux there are two types of containers in Windows:
   1. Windows Server container which works exactly like Linux containers where the OS kernel is shared with the underlying operating system to allow better security boundary between containers and to a lot of kernels with different versions and configurations to coexist.
@@ -205,7 +205,7 @@ We can use Docker on Windows with these 2 options to run a Linux container on a 
   ```
   docker run --rm -it  SERVICE:TAG
   ```
-- Port Mapping / Port Publishing. Every docker container gets an IP assigned by default. Docker container IP is 172.17.1.2:3000 and Docker host IP is 192.168.1.25 so, you can map their port like below. You can even run multiple instances of your application and map them to different ports on the docker host or you can run your application on a single port and map them to different port. Remember, you cannot map to the same port on the docker host more than once.
+- Port Mapping / Port Publishing. Every docker container gets an IP assigned by default. Docker container IP is 172.17.1.2:3000 and Docker host IP is 192.168.1.25 so, you can map their port like below. You can even run multiple instances of your application and map them to different ports on the Docker host or you can run your application on a single port and map them to a different port. Remember, you cannot map to the same port on the Docker host more than once.
   ```
   docker run -p USER_PORT:CONTAINER_PORT SERVICE
   docker run -p 80:3000 redis
@@ -236,7 +236,7 @@ We can use Docker on Windows with these 2 options to run a Linux container on a 
 
 
 ## Part 05 (Environment Variables)
-- An environment variable is a variable whose value is set outside the program, typically through functionality built into the operating system or microservice. An environment variable is made up of a name/value pair, and any number may be created and available for reference at a point in time.
+- An environment variable is a variable whose value is set outside the program, typically through a functionality built into the operating system or microservice. An environment variable is made up of a name/value pair, and any number may be created and available for reference at a point in time.
 - Assignments:
   - OS
     - Unix (Terminal): `export VARIABLE=value`
@@ -249,7 +249,7 @@ We can use Docker on Windows with these 2 options to run a Linux container on a 
 docker run -e VARIABLE=value NAME/ID
 ```
 - To deploy multiple containers with different Environment Variable, you should run docker command multiple times and set different Environment Variables each time.
-- If you want to fine the environment variable set on a running container, you should simply use `docker inspect NAME/ID` and look for `ENV` under `Config` section.
+- If you want to find the list of environment variables set on a running container, you should use `docker inspect NAME/ID` and look for `ENV` under `Config` section.
 
 ## Part 06 (Docker Image)
 
@@ -318,7 +318,7 @@ docker push NAME
   - `FROM`: First line of dockerfile defines what the base OS should be for this container or another image that was created before which is based on an OS. It's mandatory command for dockerfile.
   - `RUN`: Instructs docker to run a particular command on those based images.
   - `COPY`: Copy whatever you need inside the docker image
-  - `ENTRYPOINT`: Allows us to specify a command that will be run when the image is run as a container.
+  - `ENTRYPOINT`: Allows us to specify a command that will be run when the image is running as a container.
 - Layered Architecture
   - When docker builds images it builds these in a layered architecture. Each line of instruction creates a new layer in the docker image with just the changes from the previous layer. You can see size of packages with this command:
   ```
@@ -334,9 +334,9 @@ docker push NAME
   ```
 - **Dockerignore**
   - Sometimes we need to exclude some files and folders before building our container to avoid unnecessarily sending large or sensitive files or directories to the daemon. So we make a file as `.dockerignore`
-  - Think of it as `.gitignore` file for better understanding.
+  - Think of it as a `.gitignore` file for better understanding.
   - Syntax:
-    1. Lines starting with `#` will be ignored.
+    1. Lines starting with `#` will be considered as a comment.
     2. You can use wildcards with `*`
     3. You can use `?` like wildcards but for only a single character.
     4. Lines starting with `!` can be used to make exceptions to exclusions. But it must come after that specific ignore files.
