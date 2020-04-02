@@ -405,7 +405,7 @@ docker run --entrypoint NEW_COMMAND SERVICE PARAMETER
 
 ## Part 08 (Networking)
 
-When you install Docker, it creates 3 networks automatically:
+When you install Docker, it creates 3 networks by default:
 1. **Bridge**: is the default network a container gets attached to.
 ```bash
 docker run SERVICE
@@ -603,7 +603,7 @@ Let's look at a better example. I'm going to use the same application that every
 
 ### Chapter 1 (Docker-Compose Introduction Using an Example)
 
-This is a sample voting application which provides an interface for a user to vote and another interface to show the results. the application consists of various components such as the voting app which is a web application developed in **Python** to provide the user with an interface to choose between two options a cat and a dog. when you make a selection the vote is stored in **Redis** (In this case, servers as a database in memory). This vote is then processed by the worker which is an application written in **.NET**. The worker application takes the new vote and updates the persistent database which is a **PostgreSQL** that has simply a table with a number of vote for each category cats and dogs. in this case it increments the number of votes for cats as our vote for cats. finally the result of the vote is displayed in a web interface which is another web application developed in **Node.js**. This resulting application reads the count of votes from the PostgreSQL database and display it to user. so that is the architecture and dataflow of this simple voting application stack. as you can see this application is built with a combination of different services, different development tools and multiple different development platforms such as Python, Node.js etc. This sample application will be used to showcase how easy it is to setup an entire application stack consisting of diverse components in Docker.
+This is a sample voting application that provides an interface for a user to vote and another interface to show the results. The application consists of various components such as the voting app which is a web application developed in **Python** to provide the user with an interface to choose between two options a cat and a dog. When you make a selection, the vote is stored in **Redis** (In this case, servers as a database in memory). This vote is then processed by the worker which is an application written in **.NET**. The worker application takes the new vote and updates the persistent database which is a **PostgreSQL** that merely has a table with several votes for each category cats and dogs. In this case, it increments the number of votes for cats as our vote for cats. Finally the result of the vote is displayed in a web interface which is another web application developed in **Node.js**. This resulting application reads the count of votes from the PostgreSQL database and displays it to the user. So that is the architecture and dataflow of this simple voting application stack. As you can see, this application is built with a combination of different services, different development tools and multiple different development platforms such as Python, Node.js, etc. This sample application will be used to showcase how easy it is to setup an entire application stack consisting of diverse components in Docker.
 
 ![Voting App](Images/voting-application.png)
 
@@ -689,7 +689,7 @@ vote:
     - redis
 ```
 
-This is the original version of the Docker-compose file known as version 1. this had several limitations. For example, if you wanted to deploy containers on a different network other than the default Bridge network, there was no way of specifying that in this version of the file. Also, say you have a dependency or start-up order of some kind, for example, your database container must come up first and only then the voting application should be started. There was no way you could specify that in version 1 of the Docker compose file. Support for these came in version 2. with version 2 and up, the format of the file also changed a little bit. You no longer specify your stack information directly, as you did before. It is all encapsulated in a **Services** section, so create a property called services in the root of the file and then move all the services underneath that. You will still use the same `docker-compose up` command to bring up your application stack. But how does Docker-compose know what version of the file you're using?<br>
+This is the original version of the Docker-compose file known as version 1. this had several limitations. For example, if you wanted to deploy containers on a different network other than the default Bridge network, there was no way of specifying it in this version of the file. Also, say you have a dependency or start-up order of some kind, for example, your database container must come up first and only then the voting application should be started. There was no way you could specify that in version 1 of the Docker compose file. Support for these came in version 2. with version 2 and up, the format of the file also changed a little bit. You no longer specify your stack information directly, as you did before. It is all encapsulated in a **Services** section, so create a property called services in the root of the file and then move all the services underneath that. You will still use the same `docker-compose up` command to bring up your application stack. But how does Docker-compose know what version of the file you're using?<br>
 You're free to use version 1 or version 2, depending on your needs. So how does the Docker compose know what format you are using?<br>
 For version 2 and up, you must specify the version of the Docker-compose file you are intending to use by specifying the version at the top of the file. In this case, `version:2`.
 
@@ -833,7 +833,7 @@ docker pull IP:5000/MY-IMAGE
 ## Part 12 (Engine)
 > This part is an advanced topic. You can skip it if you want to learn the basics because we're going to look at Docker's architecture in detail.
 
-We're going to find out about how it actually runs an application in isolated containers and how it works.
+We're going to find out about how Docker actually runs an application in isolated containers and how it works.
 
 Docker engine, as we have learned before, is simply referred to as a host with Docker installed on it. When you install Docker on a Linux host, you're actually installing three different components the **Docker daemon**, the **Rest API** server, and the **Docker CLI**.
 
