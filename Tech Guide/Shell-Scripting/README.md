@@ -27,15 +27,18 @@ Shell Scripting is an interpreter and cross-platform programming language.
   chsh -s SHELL_PATH
   chsh -s /bin/bash
   ```
-- Process ID of your shell:
+- Predefined Variables:
   ```bash
-  echo $$
-  ```
-- Exit status of last command:
-  ```bash
-  echo $?
-  # 0: means successful exit
-  # 1-255: means error on exit
+  echo $# # Tell you number of command line arguments supplied
+  echo $0 # Tell you shell name
+  echo $1 # First argument to the script
+  echo $2 # Second argument to the script, and so on...
+  echo $$ # PID of our shell
+  echo $! # PID of the last background process
+  echo $- # Current shell status
+  echo $? # Exit status of last command:
+          # 0: means successful exit
+          # 1-255: means error on exit
   ```
 - See list of processes from other users:
   - Unix-Style:
@@ -49,7 +52,7 @@ Shell Scripting is an interpreter and cross-platform programming language.
   - Process State:<br>
   ![Process State](Images/Process_State.png)
 
-- You can compile shell script to C using `shc`.
+- You can compile shell script to C using `shc` command.
 - Revert your shell to the previous shell using `exit`.
 - Shell level:
   ```bash
@@ -239,6 +242,10 @@ Shell Scripting is an interpreter and cross-platform programming language.
 - `script` : 
   - Script command can be used to make a record of everything that appears on the terminal.
   - Once started, all terminal outputs will also be copied into the *scriptfile* until a `^D` or `exit` is received.
+    - `exit` : Exit command tells shell that I'm leaving/closing this connection.
+    - `^D` : Control+D from keyboard device driver tells OS to break/close the connection.
+      - You can see list of them using `stty -a`.
+      - Stty (Set TeleTYpe) is a command that changes keyboard and monitor commands. For example, it can change rows and columns of monitor, speed of keyboard, etc.
   - Where filename is optional and if not specified it is assumed to be **typescript**.
 
 ## Part 03 (Shell Script Basics)
@@ -432,6 +439,19 @@ Wildcards:
   # We don't have any output on the screen, because we write it in a file.
   ```
 - It's a wise move to redirect your unessential outputs/errors to `/dev/null`
+- Pipe or `|`
+  - Redirect one program's output into another program's input.
+  - A pipe (Unnamed pipe) is a way to connect the output of one program to the input of
+another program **without any temporary file**.
+  - Examples:
+    ```bash
+    #!/bin/bash
+    who | less
+    who | sort > user_list.txt
+    who | wc -l
+    ls -l | wc -l
+    who | grep PATTERN
+    ```
 
 ## Part 07 (Mathematics)
 
