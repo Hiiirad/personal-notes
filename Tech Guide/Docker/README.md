@@ -768,8 +768,8 @@ networks:
   back-end:
 ```
 
-So as the conclusion, much like a docker file, we have something called docker-compose to help us out when we spin up many containers.
-thus you can think of a docker file as automating the process of creating images. And a docker-compose automates the process of creating images.
+So as the conclusion, much like a dockerfile, we have something called docker-compose to help us out when we spin up many containers.
+thus you can think of a dockerfile as automating the process of creating images. And a docker-compose automates the process of creating images.
 
 ### Chapter 2 (Docker-Compose Management Commands)
 
@@ -817,7 +817,7 @@ docker login PRIVATE-REGISTRY-ADDRESS
 input your credentials once successful run the application using private registry as part of the image name. like this:
 
 ```bash
-dcoker run PRIVATE-REGISTRY-ADDRESS/APPS/INTERNAL-APP
+docker run PRIVATE-REGISTRY-ADDRESS/APPS/INTERNAL-APP
 ```
 
 Now, if you did not log in to the private registry, it will come back, saying that the image cannot be found. So remember to always log in before pulling or pushing to a private registry. We said that cloud providers like AWS or GCP provide a private registry when you create an account with them. But what if you are running your application on-premise and don't have a private registry. How do you deploy your own private registry within your organization? The Docker registry is another application and is available as a Docker image. The name of the image is **registry**, and it exposes the API on port 5000.
