@@ -37,8 +37,11 @@ Shell Scripting is an interpreter and cross-platform programming language.
   echo $! # PID of the last background process
   echo $- # Current shell status
   echo $? # Exit status of last command:
-          # 0: means successful exit
-          # 1-255: means error on exit
+          # 0: Successful exit
+          # 1-255: Error on exit
+          # 126: Not executable
+          # 127: Command not found
+          # 130: Command terminated with ^C or Ctrl+C
   ```
 - See list of processes from other users:
   - Unix-Style:
@@ -295,6 +298,7 @@ backtick characters:
 - There are two types of environment variables in the bash shell:
   - **Global/Environmental Variable**: Global variables, which are called environment variables, are visible from the shell session, and any child processes that the shell spawns.
   - **Local Variable**: Local variables are only available in the shell that creates them. This makes global environment variables useful in applications that spawn child processes that require information from the parent process.
+- Environmental variables are defined in `/etc/profile`, `/etc/profile.d`, and `~/.bash_profile`. These files are the initialization files, and they are read by the shell when the bash shell invokes. When a login shell exits, bash reads `~/.bash_logout`.
 - After login into the system, a copy of the shell is given to the user.
 - The environment is maintained all the time until the user logs off.
 - You can see all variables (Global + Local) with `set` command, and other options of it with `help set` command.
@@ -303,6 +307,8 @@ backtick characters:
   ```bash
   VAR1=test
   export VAR1
+  # Export command in some shells is different.
+  # BSD & TCSH: setenv
   ```
 - Exported variables and their values are copied into a subshell's environment, where they may be accessed and changed. However, such changes have no effect on the variables in the parent shell.
 - A subshell is a new shell that is executed by the login shell to run the desired program.
@@ -325,6 +331,17 @@ backtick characters:
   echo 'The value of var1 is $VAR1'
   # OUTPUT: The value of var1 is $VAR1
   ```
+- `readonly` : Use the readonly command to make variables and functions readonly. You cannot change the value of variables.
+  ```bash
+  readonly VAR
+  readonly VAR=value
+  
+  VAR=new_value
+  # Output: -bash: unset: VAR: cannot unset: readonly variable
+  unset VAR
+  # Output: -bash: unset: VAR: cannot unset: readonly variable
+  ```
+- 
 
 ## Part 05 (Special Characters)
 
