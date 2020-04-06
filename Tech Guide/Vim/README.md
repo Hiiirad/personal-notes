@@ -122,3 +122,5 @@
 ## Extended Chapter
 - Move cursor with mouse instead of arrow keys: `:set mouse=a`
 - Soft text wrapping: `:set wrap linebreak nolist`
+- Activate syntax highlighting: `syntax on`
+- Set tab for X spaces: `:set shiftwidth=X`
