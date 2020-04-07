@@ -42,6 +42,8 @@ Shell Scripting is an interpreter and cross-platform programming language.
           # 126: Not executable
           # 127: Command not found
           # 130: Command terminated with ^C or Ctrl+C
+          # Exit code more than 255 returns an exit code modulo 256
+          # exit 3809 = exit 225
   ```
 - See list of processes from other users:
   - Unix-Style:
@@ -74,7 +76,18 @@ Shell Scripting is an interpreter and cross-platform programming language.
   bash SCRIPT      # Shell tells OS to fork me and run the program on that.
   . SCRIPT         # Shell tells OS to don't fork me! And doesn't need permission to run!
   source SCRIPT
+
+  (cat /etc/passwd; sleep 500)   # Current shell execute it
+  (cat /etc/passwd; sleep 500) & # This command runs in background
+  {cat /etc/passwd; sleep 500; } # This command runs in subshell
   ```
+- You can bypass aliased command with these methods:
+  - The full path of the command: `/bin/ls`
+  - Command substitution: `$(which ls)`
+  - The command builtin: `command ls`
+  - Using Double quotation: `"ls"`
+  - Using single quotation: `'ls'`
+  - Using backslash character: `\ls`
 - Understand internal (built-in) or external command using `type COMMAND`.
   - If the command is builtin, you see an output like this: `COMMAND is a shell builtin.`
   - If the command isn't builtin, you can see 2 different output based on what you did:
