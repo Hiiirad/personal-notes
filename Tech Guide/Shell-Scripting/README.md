@@ -260,7 +260,7 @@ Shell Scripting is an interpreter and cross-platform programming language.
   - Once started, all terminal outputs will also be copied into the *scriptfile* until a `^D` or `exit` is received.
     - `exit` : Exit command tells shell that I'm leaving/closing this connection.
     - `^D` : Control+D from keyboard device driver tells OS to break/close the connection.
-      - You can see list of them using `stty -a`.
+      - You can see a list of them using `stty -a`.
       - Stty (Set TeleTYpe) is a command that changes keyboard and monitor commands. For example, it can change rows and columns of monitor, speed of keyboard, etc.
   - Where filename is optional and if not specified it is assumed to be **typescript**.
 
@@ -270,7 +270,7 @@ Shell Scripting is an interpreter and cross-platform programming language.
   ```bash
   date ; whoami ; echo Hello World!
   ```
-- You can on comment a line with `#` which has different names. (Sharp, Number, Pound, Hash or Hashtag)
+- You can comment a line with `#` which has different names. (Sharp, Number, Pound, Hash or Hashtag)
 - When creating a shell script file, you must specify the shell you are using only in the **first line** of file. It tells the OS what is the correct interpreter. The `#!` before shell path called **Shebang** and the format for this is:
   ```bash
   #!SHELL_PATH
@@ -557,3 +557,145 @@ There are three different ways to perform mathematical operations in your shell 
     `
     ```
    - Remember that the backtick characters are still needed to assign the output of the `bc` command to the variable.
+
+## Part 08 (Conditional Tasks)
+
+- **if/then**
+  - If the exit code of our command is zero (0), the command and command(s) under *then* will execute; otherwise, command(s) under *then* will ignore.
+  - Structure:
+    ```bash
+    #!/bin/bash
+    if COMMAND
+    then
+      COMMAND(S)
+    fi
+    ```
+  - By putting a semicolon at the end of the command to evaluate, you can include the then statement on the same line.
+    ```bash
+    #!/bin/bash
+    if COMMAND; then
+      COMMAND(S)
+    fi
+    ```
+- **if/then/else**
+  - If the command in the if statement line returns with an exit status code of zero, the command(s) listed in the *then* section are executed, just as in a normal if-then statement. If the command in the if statement line returns a non-zero exit status code, the bash shell executes the commands in the else section.
+    ```bash
+    #!/bin/bash
+    if COMMAND
+    then
+      COMMAND(S)
+    else
+      COMMAND(S)
+    fi
+    ```
+- **Nested if**
+  - Sometimes you must check for several situations in your script code. Instead of having to write separate if-then statements, you can use an alternative version of the else section, called *elif*. The *elif* continues an else section with another if-then statement.
+    ```bash
+    #!/bin/bash
+    if COMMAND1
+    then
+      COMMAND(S)
+    elif COMMAND2
+    then
+      MORE_COMMAND(S)
+    fi
+    ```
+- **test**
+  - To evaluate any condition other than the exit status code of a command, we need to use test command. The test command provides a way to test different conditions in an if-then statement. If the condition listed in the test command evaluates to true, the test command exits with a zero exit status code.
+    ```bash
+    #!/bin/bash
+    if test CONDITION
+    then
+      COMMAND(S)
+    fi
+    ```
+  - Test command has special structure to follow. There have to be a blank between operands and operator.
+    ```bash
+    #!/bin/bash
+    if test "A" = "A"
+    then
+      echo "Good job!"
+    fi
+    # Output: Good job!
+
+    if test "A"="B"
+    then
+      echo "Good job!"
+    fi
+    # Output: Good job!
+    ```
+- **Brackets or [ ]**
+  - The bash shell provides an alternative way of declaring the test command in an if-then statement.
+    ```bash
+    #!/bin/bash
+    if [ CONDITION ]
+    then
+      COMMAND(S)
+    fi
+    ```
+  - Be careful, you must have space after the first bracket, and a space before the last bracket or you’ll get an error message.
+- There are three classes of conditions the test command can evaluate:
+  - Numeric Comparison
+      |Comparison|Description|
+      |----------|-----------|
+      |n1 -eq n2|Check if n1 is equal to n2|
+      |n1 -ne n2|Check if n1 is not equal to n2|
+      |n1 -ge n2|Check if n1 is greater than or equal to n2|
+      |n1 -gt n2|Check if n1 is greater than to n2|
+      |n1 -le n2|Check if n1 is less than or equal to n2|
+      |n1 -lt n2|Check if n1 is less than to n2|
+  - String Comparison
+      |Comparison|Description|
+      |----------|-----------|
+      |str1 = str2|Check if str1 is the same as str2|
+      |str1 != str2|Check if str1 is not the same as str2|
+      |str1 < str2|Check if str1 is less than str2|
+      |str1 > str2|Check if str1 is greater than str2|
+      |-n str1|Check if str1 has a length greater than zero|
+      |-z str1|Check if str1 has a length of zero|
+  - File Comparison
+      |Comparison|Description|
+      |----------|-----------|
+      |-d file|Check if file exists and is a directory|
+      |-e file|Check if file exists|
+      |-f file|Check if file exists and is a file|
+      |-s file|Check if file exists and is not empty|
+      |-r file|Check if file exists and is readable|
+      |-w file|Check if file exists and is writable|
+      |-x file|Check if file exists and is executable|
+      |-O file|Check if file exists and is owned by the current user|
+      |-G file|Check if file exists and the default group is the same as the current user|
+      |file1 -nt file2|Check if file1 is newer than file2|
+      |file1 -ot file2|Check if file1 is older than file2|
+- Compound Condition Testing
+  - **AND** or **&&** : Both conditions must be true for the then section to execute. `[ condition1 ] && [ condition2 ]` or `[ condition1 -a condition2 ]`
+  - **OR** or **||** : At least one condition must be true that then section is executed. `[ condition1 ] || [ condition2 ]` or `[ condition1 -o condition2 ]`
+  - **NOT** or **!**
+    - `! expression`
+    - `[ ! expression ]`
+    - `if test ! expression`
+    - `if [ ! condition ]`
+- **Case**
+  - The case statement is good alternative to Multilevel if-then-else-fi statement. It enable you to match several values against one variable. Its easier to read and write.
+    ```bash
+    #!/bin/bash
+    case $VARIABLE in
+      pattern1)
+        # Commands to be executed if pattern1 matches
+        COMMAND(s)
+        ;;
+      pattern2)
+        # Commands to be executed if pattern2 matches
+        COMMAND(s)
+        ;;
+      patternN)
+        # Commands to be executed if patternN matches
+        COMMAND(s)
+        ;;
+      *)
+        # Default condition to be executed
+        COMMAND(s)
+    esac
+    ```
+
+## Part 09 (Repetitive Tasks)
