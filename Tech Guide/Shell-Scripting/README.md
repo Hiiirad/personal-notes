@@ -699,3 +699,120 @@ There are three different ways to perform mathematical operations in your shell 
     ```
 
 ## Part 09 (Repetitive Tasks)
+
+- **For**
+  - The bash shell provides the for command to allow you to create a loop that iterates through a series of values.
+    ```bash
+    #!/bin/bash
+    for VAR in LIST
+    do
+      COMMAND(s)
+    done
+    ```
+  - Examples:
+    ```bash
+    #!/bin/bash
+    for color in Red Green Blue
+    do
+      echo The next color is $color
+    done
+
+    for i in {1..10}
+    do
+      echo $i
+    done
+    ```
+  - You use the backtick characters to execute any command that produces output, then use the output of the command in the for command.
+    ```bash
+    #!/bin/bash
+    counter=1
+    for line in `cat /etc/passwd | grep nologin`
+    do
+      echo "Line $counter:"
+      echo $line
+      counter=$[ $counter + 1 ]
+    done
+    ```
+  - If bash sees any field separator (Space, Tab, Newline) it assumes that you are starting a new field. To solve this problem you can change temporarily the IFS (Internal Field Separator) environment variable.
+    ```bash
+    #!/bin/bash
+    IFS=$'\n'
+    for line in `head /etc/services`
+    do
+      echo $line
+    done
+    ```
+    - This syntax `IFS=$'\n'` is necessary in order not to use character "n" as a separator in addition to the new line. So we have to use `IFS=$'\n'` instead of `IFS='\n'`.
+  - You can use the for command to automatically iterate through a directory of files. To do this, you must use a wildcard character in the file or pathname.
+    ```bash
+    #!/bin/bash
+    for file in /usr/lib/*
+    do
+      if [ -d "$file" ]
+      then
+        echo "$file is a directory"
+      elif [ ! -r "$file" ]
+      then
+        echo "$file is not readable"
+      fi
+    done
+    ```
+- **While**
+  - The while command allows you to define a command to test, then loop through a set of commands for as long as the defined test command returns a zero exit status. It tests the test command at the start of each iteration. When the test command returns a non-zero exit status, the while command stops executing the set of commands.
+    ```bash
+    #!/bin/bash
+    while test COMMAND
+    do
+      COMMAND(s)
+    done
+    # OR
+    while [ CONDITION ]
+    do
+      COMMAND(s)
+    done
+    ```
+- **Continue**
+  - The continue command is a way to prematurely stop processing commands inside of a loop but not terminate the loop entirely. This allows you to set conditions within a loop where the shell won’t execute commands. Let's look at an example:
+    ```bash
+    #!/bin/bash
+    for VAR1 in {1..10}
+    do
+      if [ $VAR1 -gt 3 ] && [ $VAR1 -lt 7]
+      then
+        continue
+      fi
+      echo $VAR1
+    done
+    # Output: 1 2 3 7 8 9 10
+    ```
+- **Break**
+  - The break command is a simple way to escape out of a loop in progress. You can use the break command to exit out of any type of loop, including for and while. Let's look at an example:
+    ```bash
+    #!/bin/bash
+    for VAR1 in {1..10}
+    do
+      if [ $VAR1 -eq 5 ]
+      then
+        break
+      fi
+      echo $VAR1
+    done
+    # Output: 1 2 3 4 6 7 8 9 10
+    ```
+  - There may be times when you’re in an inner loop but need to stop the outer loop. The break command includes a single command line parameter value `break n` where *n* indicates the level of the loop to break out. By default, *n* is one, indicating to break out of the current loop. If you set *n* to a value of two, the break command stops the next level of the outer loop:
+    ```bash
+    #!/bin/bash
+    for VAR1 in {1..10}
+    do
+      for VAR2 in {1..10}
+      do
+        echo -n "$[ $VAR1 * $VAR2 ]"
+        if [ $VAR2 -eq 5 ]
+        then
+          break 2
+        fi
+      done
+      echo ""
+    done
+    # Output: 12345
+    ```
