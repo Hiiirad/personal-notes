@@ -799,7 +799,7 @@ There are three different ways to perform mathematical operations in your shell 
     done
     # Output: 1 2 3 4 6 7 8 9 10
     ```
-  - There may be times when you’re in an inner loop but need to stop the outer loop. The break command includes a single command line parameter value `break n` where *n* indicates the level of the loop to break out. By default, *n* is one, indicating to break out of the current loop. If you set *n* to a value of two, the break command stops the next level of the outer loop:
+  - There may be times when you’re in an inner loop but need to stop the outer loop. The break command includes a single command line parameter value `break n` where *n* indicates the level of the loop to break out. By default, *n* is one, indicating to break out of the current loop. If you set *n* to a value of two, the break command stops the next level of the outer loop.
     ```bash
     #!/bin/bash
     for VAR1 in {1..10}
@@ -816,3 +816,19 @@ There are three different ways to perform mathematical operations in your shell 
     done
     # Output: 12345
     ```
+- **C-Style for**
+  - The bash shell also supports a version of the for loop that looks similar to the C-style for loop, although it does have some subtle differences, including a couple of things that'll confuse shell script programmers. Here's the basic format of the C-style bash for loop:
+    ```bash
+    #!/bin/bash
+    for (( VARIABLE_ASSIGNMENT ; CONDITION ; ITERATION_PROCESS ))
+    do
+      COMMAND(s)
+    done
+
+    for (( a=1 ; a < 10 ; a++ ))
+    do
+      echo $a
+    done
+    ```
+
+## Part 10 (Interactive Scripts)
