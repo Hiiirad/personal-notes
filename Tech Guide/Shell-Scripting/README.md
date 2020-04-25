@@ -302,6 +302,12 @@ the variable value.
   VAR1=27
   VAR2=$VAR1
   ```
+- You can create an empty variable in two ways:
+  ```bash
+  #!/bin/bash
+  VAR=
+  VAR=""
+  ```
 - The backtick or **\`** allows you to assign the output of a shell command
 to a variable. You must surround the entire command line command with
 backtick characters:
@@ -396,7 +402,87 @@ Wildcards:
   ls /bin/[!c-e]??
   ```
 
-## Part 06 (Redirection)
+## Part 06 (Strings)
+
+- **Length** of a string
+  ```bash
+  #!/bin/bash
+  STRING=ABCdef
+  echo ${#STRING}
+  # The result of a empty variable or an unassigned variable is 0
+  ```
+- **Add** to variable's value
+  ```bash
+  #!/bin/bash
+  STRING=ABCdef
+  echo ${STRING}GHI
+  # Output: ABCdefGHI
+  ```
+- **Remove** a part of variable's value
+  ```bash
+  #!/bin/bash
+  STRING=ABCdef
+  echo ${STRING/ABC/}
+  # Output: def
+  echo ${STRING#AB}
+  # Output: Cdef -> Remove only from the beginning of the value
+- **Search and Remove** a part of variable's value
+  ```bash
+  #!/bin/bash
+  STRING=ABCdef
+  echo ${STRING%C*}
+  # Output: AB
+  STR=abcABC123ABCab1c
+  echo ${STR%b*c}
+  # Output: abcABC123ABCa -> Strip out the shortest match between 'b' and 'c', from the end of the STR
+  echo ${STR%%b*c}
+  # Output: a -> Strip out the longest match between 'b' and 'c', from the end of the STR
+  ```
+- **Substitute/Replace** a part of variable's value with another value
+  ```bash
+  #!/bin/bash
+  STRING=ABCdef
+  echo ${STRING/ABC/123}
+  ```
+- Assign/Set a value
+  ```bash
+  #!/bin/bash
+  VAR=""
+  echo ${VAR:=STRING}
+  echo $STRING
+  unset var
+  # If the VAR variable doesn't have a value or not set, then assign/set it to STRING variable.
+  ```
+- Not assign/Set a value
+  ```bash
+  #!/bin/bash
+  VAR=""
+  echo ${VAR:-STRING}
+  echo $STRING
+  unset var
+  # If the VAR variable doesn't have a value, then show STRING variable and don't change the value of VAR.
+  ```
+- Check value
+  ```bash
+  #!/bin/bash
+  VAR=""
+  echo ${VAR:?}
+  # If the VAR variable doesn't have a value, show an error message, otherwise, show the content of VAR.
+  echo ${VAR:?DOES NOT HAVE A VALUE}
+  # Output: bash: VAR: DOES NOT HAVE A VALUE
+  ```
+- Positions
+  ```bash
+  #!/bin/bash
+  STR=university
+  echo ${STR:3}
+  # Prints STR from position 3. Starting position is zero
+  # Output: versity
+  echo ${STR:1:3}
+  # Output: niv
+  ```
+
+## Part 07 (Redirection)
 
 - Output
   - `>` : Creating a new file or **overwriting** the existing file
@@ -485,7 +571,7 @@ another program **without any temporary file**.
     who | grep PATTERN
     ```
 
-## Part 07 (Mathematics)
+## Part 08 (Mathematics)
 
 There are three different ways to perform mathematical operations in your shell scripts:
 
@@ -560,7 +646,7 @@ There are three different ways to perform mathematical operations in your shell 
     ```
    - Remember that the backtick characters are still needed to assign the output of the `bc` command to the variable.
 
-## Part 08 (Conditional Tasks)
+## Part 09 (Conditional Tasks)
 
 - **if/then**
   - If the exit code of our command is zero (0), the command and command(s) under *then* will execute; otherwise, command(s) under *then* will ignore.
@@ -700,7 +786,7 @@ There are three different ways to perform mathematical operations in your shell 
     esac
     ```
 
-## Part 09 (Repetitive Tasks)
+## Part 10 (Repetitive Tasks)
 
 - **For**
   - The bash shell provides the for command to allow you to create a loop that iterates through a series of values.
@@ -840,7 +926,7 @@ There are three different ways to perform mathematical operations in your shell 
     done
     ```
 
-## Part 10 (Interactive Scripts)
+## Part 11 (Interactive Scripts)
 
 - **Handling User Input**
   - **Read**
