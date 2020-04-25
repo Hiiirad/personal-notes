@@ -21,25 +21,26 @@
 - `:x` = `:wq` = Write and Exit
 
 ## Chapter 1
-- `a` = [append] -> start from a character 
-- `x` = delete a character under the cursor
-  - `xp` = substitute character under cursor with next character
+- `a` = [append] -> Start from a character 
+- `x` = Delete a character under the cursor
+  - `xp` = Substitute character under cursor with next character
+- `X` = Delete a character backward
 
 ## Chapter 2
 - `d` = [Delete] + KEYWORD
   - `w` = [Word] + space
   - `e` = [End] -> from place of cursor to the end of word
   - `$` = to the end of line
-- `w` = [Word] -> go to next word
-- `e` = [End] -> go to end of word
-- `0` or `^` = go to beginning of line
-- `$` = go to end of line
+- `w` = [Word] -> Go to next word
+- `e` = [End] -> Go to end of word
+- `0` or `^` = Go to beginning of line
+- `$` = Go to end of line
 - Combination (Operator[number]motion):
-  - `d3w` = delete next 3 words
-  - `d$` = delete whole line from cursor's position to the end of line
+  - `d3w` = Delete next 3 words
+  - `d$` = Delete whole line from cursor's position to the end of line
   - `ce` = [change] until the end of word + enter Insert mode
 - `dd` = delete whole line without consideration of cursor's position
-- `yy` = [Yank Yank] paste the deleted line in place of cursor
+  - `yy` = [Yank Yank] paste the deleted line in place of cursor
 - `u` = [undo] undo a single character
 - `U` = [Undo] undo a whole line changes
 - `Ctrl+r` = [redo]
@@ -49,44 +50,44 @@
 - `rX` = [replace] replace the character under cursor with X
 
 ## Chapter 4
-- `Ctrl+g` = show line numbers and your cursor's position
-- `gg` = go to top of file
-- `G` = go to end of file
-- `NUM+G` = go to line number NUM
-- `NUM+H` = go to NUMth line from top of screen
-- `NUM+L` = go to NUMth line from bottom of screen
+- `Ctrl+g` = Show line numbers and your cursor's position
+- `gg` = Go to top of file
+- `G` = Go to end of file
+- `NUM+G` = Go to line number NUM
+- `NUM+H` = Go to NUMth line from top of screen
+- `NUM+L` = Go to NUMth line from bottom of screen
 - Search
-  - `/` = forward search
-  - `?` = backward search
-  - `n` = go to next word in search
-  - `N` = go to previous word in search
-  - `Ctrl+O` = go backward to where you came from
-  - `Ctrl+I` = go forward from where you went with `Ctrl+O`
+  - `/` = Forward search
+  - `?` = Backward search
+  - `n` = Go to next word in search
+  - `N` = Go to previous word in search
+  - `Ctrl+O` = Go backward to where you came from
+  - `Ctrl+I` = Go forward from where you went with `Ctrl+O`
   - `/KEYWORD\c` = `\c` will ignore case sensitivity search for just a single time
-- `%` = matching `(), {}, []` in current line
+- `%` = Matching `(), {}, []` in current line
 - Substitution
   - `:s/OLD/NEW` = To substitute NEW for the first OLD in a line
   - `:s/OLD/NEW/g` = To substitute NEW for all 'OLD's on a line
   - `:#,#s/OLD/NEW/g`
     - `#,#` = are line numbers. From line # to line #
-    - `g` = globally (change all occurrences) in line
+    - `g` = Globally (change all occurrences) in line
   - `:%s/OLD/NEW/g`
-    - `%` = whole file without considering specific line numbers
+    - `%` = Whole file without considering specific line numbers
   - `:%s/OLD/NEW/gc`
-    - `c` = ask for confirmation whether to change it or not
+    - `c` = Ask for confirmation whether to change it or not
 
 ## Chapter 5
 - `:! COMMAND` = Execute the COMMAND with shell
-- `:w FILENAME` = save this file to another file named FILENAME
-- `v` = visual mode for selecting -> press `v` and select what you want with arrow keys, then press `:` and you can see `:'<,'>` on bottom. Finally you can decide what to do with your selection. For instance, you can save the selected part to another file and name it TEST. -> `:'<,'>w TEST`
-- `V` = visual mode with line selection
-- `Ctrl+v` = visual mode with block selection
-- `:r FILENAME` = retrieves file FILENAME from your hard disk and puts it below the cursor position.
-- `:r !COMMAND` = reads the output of your COMMAND and puts it below the cursor position.
+- `:w FILENAME` = Save this file to another file named FILENAME
+- `v` = Visual mode for selecting -> press `v` and select what you want with arrow keys, then press `:` and you can see `:'<,'>` on bottom. Finally you can decide what to do with your selection. For instance, you can save the selected part to another file and name it TEST. -> `:'<,'>w TEST`
+- `V` = Visual mode with line selection
+- `Ctrl+v` = Visual mode with block selection
+- `:r FILENAME` = Retrieves file FILENAME from your hard disk and puts it below the cursor position.
+- `:r !COMMAND` = Reads the output of your COMMAND and puts it below the cursor position.
 
 ## Chapter 6
-- `o` = [open] a line below the cursor + enter Insert mode
-- `O` = [Open] a line above the cursor + enter Insert mode
+- `o` = [open] a line below the cursor + Enter Insert mode
+- `O` = [Open] a line above the cursor + Enter Insert mode
 - Append commands
   - `a` = [append] from next character of cursor
   - `A` = [Append] from end of line
@@ -95,24 +96,26 @@
 - Copy and Paste
   1. Select your text in visual mode (v)
   2. `y` = [yank] copy your selected text
+     - `yw` = [Yank Word] Copy the word under the cursor
+     - `yy` = [Yank Yank] Copy the whole line including the newline character at the end of the line.
   3. `p` = [paste] wherever you want
-
+     
 ## Chapter 7
 - `:help`
   - `Ctrl+w + Ctrl+w` = (Hold down Ctrl button and press w button 2 times) to jump from one window to another.
-  - `:q` = close help window
-- `:help KEYWORD` = find help on your KEYWORD
+  - `:q` = Close help window
+- `:help KEYWORD` = Find help on your KEYWORD
 - VIMRC
   - Most of the vim features are disabled by default. You have to enable them manually by creating a configuration file named `vimrc`
   - If you wanna add plugins, remember that they are only load during initialization.
   - You can see example of `vimrc` with this command in vim `:r $VIMRUNTIME/vimrc_example.vim`
   - You can personalize your `vimrc` based on your programming language.
   - Some personal vimrc configurations:
-    - `:set number` = show line numbers
-    - `:set autoindent` = enable auto-indentation
-    - `:set hlsearch` = enable highlight in search
-    - `:set ic` = ignore case-sensitive in search
-    - `:set is` = show partial matches for a search phrase
+    - `:set number` = Show line numbers
+    - `:set autoindent` = Enable auto-indentation
+    - `:set hlsearch` = Enable highlight in search
+    - `:set ic` = Ignore case-sensitive in search
+    - `:set is` = Show partial matches for a search phrase
   - `:set noX` = You can disable set `X`
 - Completion
   - `:set nocp` = To make sure Vim is not in compatible mode
@@ -124,3 +127,5 @@
 - Soft text wrapping: `:set wrap linebreak nolist`
 - Activate syntax highlighting: `syntax on`
 - Set tab for X spaces: `:set shiftwidth=X`
+- `J` = [Join] this line with the next line
+- `.` = Repeat the latest command
