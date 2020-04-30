@@ -254,10 +254,11 @@ Shell Scripting is an interpreter and cross-platform programming language.
   - `-l` or `--files-with-matches`
   - `-r` or `--recursive` or `rgrep`
   - `-v` or `--invert-case`
-- `tee` : Read from STDIN and write to STDOUT and files
+- `tee` : Read from STDIN and write to STDOUT and files. Usually use for logging.
     ```bash
     echo hello | tee file1.txt file2.txt
     ```
+  - Be careful; the `tee` command overwrites the output file on each use by default.
   - Useful options:
     - `-a`, `--append` : Append to the given FILEs, do not overwrite
     - `-i`, `--ignore-interrupts` : Ignore interrupt signals
