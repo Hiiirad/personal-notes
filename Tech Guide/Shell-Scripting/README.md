@@ -354,6 +354,48 @@ spaces** can appear between the variable, the equal sign, and the
 value.
 - The shell script automatically determines the data type used for
 the variable value.
+- **`mktemp`**
+  - Using Temporary Files
+    - The Linux system contains a special directory location reserved for temporary files. Linux uses the `/tmp/` directory for files that don’t need to be kept indefinitely or you can create a local temporary file with `mktemp` command which create a file in the current directory by default.
+    - `mktemp` command creates an empty file without your `umask` default permissions/values and with these features:
+      1. Your user as owner of the file
+      2. Your group as group owner of the file
+      3. Gives file read and write permission only for you = chmod 600
+    - The `mktemp` command replaces the X’s with a random characters code to ensure the filename is unique in the directory. You may need to delete temporary file ay the end of script.
+    - Example
+      ```bash
+      #!/bin/bash
+      tempfile=`mktemp test.XXXX`
+      # Some commands
+      rm -rf $tempfile
+      ```
+    - The `-t` option forces `mktemp` to create the file in the temporary directory of the system. When you use this feature, the `mktemp` command returns the full pathname used to create the temporary file, not just the filename.
+      ```bash
+      #!/bin/bash
+      mktemp -t test.XXXX
+      # Output: /tmp/test.59a1
+      ```
+  - Using Temporary Directory
+    - The `-d` option tells the `mktemp` command to create a temporary directory instead of a file. You can then use that directory for whatever purposes you need, such as creating additional temporary files.
+      ```bash
+      #!/bin/bash
+      mktemp -d DIR.XXXX
+      # Output: DIR.i69
+      mktemp -t -d DIR.XXXX
+      # Output: /tmp/DIR.v58n
+      ```
+  - You can also use `mktemp` command without any suffix or prefix.
+    ```bash
+    #!/bin/bash
+    mktemp
+    # Output: tmp.VWJhMEtNlE
+    mktemp -t
+    # Output: /tmp/tmp.lj6uMPORkz
+    mktemp -d
+    # Output: tmp.B5ofuVYK9w
+    mktemp -d -t
+    # Output: /tmp/tmp.82OoFbxwCt
+    ```
 
 ## Part 04 (Variables)
 
