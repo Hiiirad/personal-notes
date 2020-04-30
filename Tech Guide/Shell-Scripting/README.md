@@ -125,10 +125,78 @@ Shell Scripting is an interpreter and cross-platform programming language.
 - Initialization Files: (Executed for login and interactive shell)
   - `/etc/bashrc` : System-wide functions and aliases for bash
   - `~/.bashrc` : User-specific initialization files
-- Shell input and outputs:
-  - Standard input = STDIN = 0
-  - Standard output = STDOUT = 1
-  - Standard error = STDERR = 2
+- **Standard File Descriptor**
+  - The Linux system handles every object as a file. This includes the input and output process, which are identified by an object named file descriptor. The file descriptor is a non-negative integer, which uniquely identifies open files in a session. The bash shell reserves the first three file descriptors (0, 1, and 2) for particular purposes shown below:
+    - Standard input = STDIN = 0
+    - Standard output = STDOUT = 1
+    - Standard error = STDERR = 2
+  - If you want to generate error messages in your script purposely, you can redirect an individual output line to STDERR. All you need to do is use the output redirection symbol to redirect the output to the STDERR file descriptor. When you redirect to a file descriptor, you must precede the file descriptor number with an ampersand sign or `$`:
+    ```bash
+    #!/bin/bash
+    echo "This is an error message" >&2
+    ```
+  - This line displays the text wherever the STDERR file descriptor for the script is pointing, instead of the STDOUT. `$ ./script.sh 2>log/error.txt`
+- **Create File Descriptor**
+  - You assign a file descriptor for output by using the `exec` command. Just as with the standard file descriptors, once you assign an alternative file descriptor to a file location, that redirection stays permanent until you reassign it. Here’s a simple example of using an alternative file descriptor in a script:
+    ```bash
+    #!/bin/bash
+    # using an alternative file descriptor
+    exec 3> OUTPUT.txt
+    echo "This should display on the monitor"
+    echo "and this should be stored in the file" >&3
+    echo "Then this should be back on the monitor"
+    ```
+- **Closing File Descriptor**
+  - If you create new input or output file descriptors, the shell automatically closes them when the script exits. There are situations though when you need to manually close a file descriptor before the end of the script. To close a file descriptor, redirect it to the special symbol `&-`
+    ```bash
+    #!/bin/bash
+    exec 3> OUTPUT.txt
+    echo "This is a test line of data" >&3
+    exec 3>&-
+    echo "This won't work" >&3
+    # Output: line 5: 3: Bad file descriptor
+    # Because we closed file descriptor number 3
+    # OUTPUT.txt exists containing the first echo command
+    ```
+- **Listing Open File Descriptor**
+  - The `lsof` command lists all of the open file descriptors on the entire Linux system. This is somewhat of a controversial feature, as it can provide information about the Linux system to non-system-administrators. Because of this, many Linux systems hide this command so that users don’t accidentally stumble across it. It is normally placed under `/usr/sbin` directory: `$ lsof`
+  - This includes all of the processes running on background, as well as any user accounts logged in to the system.
+  - There are plenty of command line parameters and options available to help filter out the `lsof` output. The most commonly used are `-p`, which allows you to specify a process ID (PID), and `-d` allows you to specify the file descriptor numbers to display.
+  - To easily determine the current PID of the process, you can use the special environment variable `$$`, which the shell sets to the current PID. The `-a` option is used to **AND** the results of the other two options, to produce the following:</br>
+  `$ lsof -a -p $$ -d 0,1,2`
+  - Default `lsof` output:
+    |Column|Description|
+    |------|-----------|
+    |COMMAND|The first 9 characters of the name of the command in the process|
+    |PID|The process ID of the process|
+    |USER|The login name of the user who owns the process|
+    |FD|The file descriptor number and access type (r=read, w=write, u=read/write)|
+    |TYPE|The type of file (CHR=Character, BLK=Block, DIR=Directory, REG=Regular File)|
+    |DEVICE|The device numbers (major and minor) of the device|
+    |SIZE|If available, the size of the file|
+    |NODE|The inode number of the local file|
+    |NAME|The name of the file|
+  - Run this script to understand the chart:
+    ```bash
+    #!/bin/bash
+    touch TESTFILE7
+    exec 3> TESTFILE3
+    exec 6> TESTFILE6
+    exec 7< TESTFILE7
+    /usr/sbin/lsof -a -p $$ -d 0,1,2,3,6,7
+    ```
+  - The file descriptor of STDIN, STDOUT, and STDERR in `lsof` is read/write and shown as `<>`
+  - You can see list of your file descriptors with this command:
+    ```bash
+    PROCESS=`echo $$`
+    ls -la /proc/$PROCESS/fd/
+    # OR
+    ls -la /proc/`echo $$`/fd/
+    ```
+- For more information on **File Descriptor**, check out [Part 7 (Redirection)](#part-07-redirection).
+- Suppressing Command Output
+  - There are times when you don’t want to display any output from your script. This often occurs if you’re running a script as a background process.
+  - The standard location for the null file on Linux systems is `/dev/null`. Any data you redirect to that location is thrown away and doesn’t appear.
 - Shell variables can contain different sizes based on your system. You can see your system's limitations with `xargs --show-limits` command.
 - Primary Shells:
   1. Primary Shell 1 (`echo $PS1`): The first prompt you see when you open a shell/terminal.
@@ -524,7 +592,7 @@ Wildcards:
   see you later
   EOF
   ```
-- Redirections with STDIN, STDOUT, and STDERR:
+- Redirection with STDIN, STDOUT, and STDERR:
   - `<` : Redirects STDIN (0) from file
   - `>` : Redirects STDOUT (1) to file
   - `>>` : Append STDOUT to file
@@ -569,6 +637,42 @@ another program **without any temporary file**.
     who | wc -l
     ls -l | wc -l
     who | grep PATTERN
+    ```
+- **Permanent Redirection**
+  - STDOUT and STDERR
+    - If you have lots of data that you’re redirecting in your script, it can get tedious having to redirect every echo statement. Instead, you can tell the shell to redirect a specific file descriptor for the duration of the script by using the exec command:
+      ```bash
+      #!/bin/bash
+      exec 1> /var/log/output-script.txt
+      echo "This is a test of redirecting all output."
+      echo "from a script to another file."
+      echo "without having to redirect every individual line"
+      ```
+    - The `exec` command replaces current shell with a new shell, and redirects the STDOUT file descriptor to a file. All output in the script that goes to STDOUT is instead redirected to the file.
+  - STDIN
+    - You can use the same technique used to redirect STDOUT and STDERR in your scripts to redirect STDIN from the keyboard. The `exec` command allows you to redirect STDIN to a file on the Linux system:
+      ```bash
+      #!/bin/bash
+      exec 0< TESTFILE
+      COUNTER=1
+      while read line
+      do
+        echo "Line #$COUNTER: $line"
+        COUNTER=$[ $COUNTER + 1 ]
+      done
+      ```
+    - This command informs the shell that it should retrieve input from the file TESTFILE instead of STDIN. This redirection applies anytime the script requests input.
+- **Redirecting File Descriptors**
+  - There is a common way to temporarily redirect output in script files then set the output back to the normal settings. Here is an example:
+    ```bash
+    #!/bin/bash
+    exec 3>&1
+    exec 1> TESTFILE
+    echo "This should store in the output file"
+    echo "along with this line."
+    exec 1>&3
+    echo "Now things should be back to normal"
+    # Only the last line shows on the monitor.
     ```
 
 ## Part 08 (Mathematics)
