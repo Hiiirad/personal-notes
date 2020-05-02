@@ -22,6 +22,7 @@
 
 ## Chapter 1
 - `a` = [append] -> Start from a character 
+- `A` = [Append] -> Go to end of line and append
 - `x` = Delete a character under the cursor
   - `xp` = Substitute character under cursor with next character
 - `X` = Delete a character backward
@@ -77,10 +78,13 @@
     - `c` = Ask for confirmation whether to change it or not
 
 ## Chapter 5
-- `:! COMMAND` = Execute the COMMAND with shell
+- `:! COMMAND` = Execute the COMMAND with shell and show the result
+- `:.! COMMAND` = Execute the command and import command's output in VIM
 - `:w FILENAME` = Save this file to another file named FILENAME
 - `v` = Visual mode for selecting -> press `v` and select what you want with arrow keys, then press `:` and you can see `:'<,'>` on bottom. Finally you can decide what to do with your selection. For instance, you can save the selected part to another file and name it TEST. -> `:'<,'>w TEST`
 - `V` = Visual mode with line selection
+- `v >` = Forward indent for selected line(s)
+- `v <` = Backward indent for selected line(s)
 - `Ctrl+v` = Visual mode with block selection
 - `:r FILENAME` = Retrieves file FILENAME from your hard disk and puts it below the cursor position.
 - `:r !COMMAND` = Reads the output of your COMMAND and puts it below the cursor position.
@@ -129,3 +133,7 @@
 - Set tab for X spaces: `:set shiftwidth=X`
 - `J` = [Join] this line with the next line
 - `.` = Repeat the latest command
+- `%` = Go to the other side of bracket, curly bracket, or parenthesis in command mode.
+- `:Explore` = Access file manager from inside VIM
+- `:Vexplore` = Vertically split window and access file manager
+- `:Sexplore` = Horizontally split window and access file manager
