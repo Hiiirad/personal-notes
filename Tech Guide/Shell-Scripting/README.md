@@ -211,7 +211,7 @@ Shell Scripting is an interpreter and cross-platform programming language.
     3. Acted Upon
     4. Ignored
   - If a process receives signals such as `SIGFPE`, `SIGKILL`, etc., the process will be terminated immediately, and a core dump file is created. The core file is an image of the process, and we can use it to debug.
-  - List of all signals:
+  - List of all signals using `kill -l` command:
     |Signal|Name|Description|
     |------|----|-----------|
     |SIGHUP|1|Hangup (POSIX)|
@@ -244,13 +244,22 @@ Shell Scripting is an interpreter and cross-platform programming language.
     |SIGWINCH|28|Window size change (4.3 BSD, Sun)|
     |SIGIO|29|I/O now possible (4.2 BSD)|
     |SIGPWR|30|Power failure restart (System V)|
-- Terminal/Shell verbose mode:
+- Terminal/Shell verbose mode for command completion:
+  - Shell is sensitive to two keyboard keys, one of them is **Tab**, and the other is **Esc**. With `stty -a` command, you can see the lookup table/list of system calls are not implemented in the Linux kernel by developers.
   - You can use `set -v -x` or `set +v +x` to see how shell reacts to your command for command completion. You can see it when you double-tap Tab key after your command.
   - The result of the command completion are:
     - `+` : It's in the first shell
     - `++` : If the shell calls a function
     - `+++` : If the function calls another command/function
     - The more `+` signs means more layers of functions (Nested functions)
+- Useful shortcuts in shell:
+  - `Ctrl + U` = Cut/Delete from cursor to start of the line
+  - `Ctrl + K` = Cut/Delete from cursor to end of the line
+  - `Ctrl + Y` = Paste what you cut from Ctrl+U or Ctrl+K
+  - `Ctrl + M` = It's the same function as Enter key on keyboard
+  - `Ctrl + D` = EOF (End of File) or Log out of this session
+  - `Ctrl + S` = Stop = Keyboard's device driver tells OS to stop/pause this process
+  - `Ctrl + Q` = Start = Keyboard's device driver tells OS to start/restart this process
 
 ## Part 02 (Linux Commands)
 
