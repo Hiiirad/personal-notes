@@ -2,7 +2,7 @@
 
 > The minimum knowledge of your Linux and Unix systems should be LPIC 1 to understand shell scripting.
 
-> This note is for SysAdmins or DevOps Engineers, so most of the commands of this course run on Redhat-based distributions such as Redhat, Centos, etc.
+> This note is for SysAdmins or DevOps Engineers, so most of the commands of this course run on RedHat-based distributions such as RedHat, CentOS, etc.
 
 > I used bash as a default shell for these commands. You may have some different outputs based on your default shell.
 
@@ -244,6 +244,13 @@ Shell Scripting is an interpreter and cross-platform programming language.
     |SIGWINCH|28|Window size change (4.3 BSD, Sun)|
     |SIGIO|29|I/O now possible (4.2 BSD)|
     |SIGPWR|30|Power failure restart (System V)|
+- Terminal/Shell verbose mode:
+  - You can use `set -v -x` or `set +v +x` to see how shell reacts to your command for command completion. You can see it when you double-tap Tab key after your command.
+  - The result of the command completion are:
+    - `+` : It's in the first shell
+    - `++` : If the shell calls a function
+    - `+++` : If the function calls another command/function
+    - The more `+` signs means more layers of functions (Nested functions)
 
 ## Part 02 (Linux Commands)
 
@@ -1103,7 +1110,7 @@ There are three different ways to perform mathematical operations in your shell 
     - `dirname $0` : Program full path = `pwd` of program
   - **Testing Parameters**
     - You need to be careful when using command line parameters in your shell scripts. If the script runs without the parameters, bad things can happen.
-    - Based on your need for parameters, you can use `-n` or `-z` from [string comparison](#part-08-conditional-tasks) on `$1`
+    - Based on your need for parameters, you can use `-n` or `-z` from [string comparison](#part-09-conditional-tasks) on `$1`
       ```bash
       #!/bin/bash
       if [ -n "$1" ]
