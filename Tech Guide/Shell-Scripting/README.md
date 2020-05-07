@@ -2,7 +2,7 @@
 
 > The minimum knowledge of your Linux and Unix systems should be LPIC 1 to understand shell scripting.
 
-> This note is for SysAdmins or DevOps Engineers, so most of the commands of this course run on RedHat-based distributions such as RedHat, CentOS, etc.
+> This note is for SysAdmins or DevOps Engineers, so most of the commands of this course run on RedHat-based distributions (RedHat, CentOS), Debian-based distributions (Debian, Ubuntu), openSUSE, and Oracle Linux.
 
 > I used bash as a default shell for these commands. You may have some different outputs based on your default shell.
 
