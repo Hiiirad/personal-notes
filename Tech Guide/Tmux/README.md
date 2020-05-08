@@ -9,7 +9,7 @@
 
 ## Part 01 (Introduction)
 
-Tmux abbreviated from [**Terminal Multiplexer**](https://en.wikipedia.org/wiki/Tmux) 
+Tmux abbreviated from [**Terminal Multiplexer**](https://en.wikipedia.org/wiki/Tmux)
 - **Concept:**
     - Within one terminal window, you can open multiple windows and split-views. (called **panes**)
     - Each pane will contain its own, independently running terminal instance.
@@ -54,12 +54,12 @@ There is a useful theme for showing windows name, date, etc. at the bottom of th
     - You can see all of Tmux powers and capabilities: `[prefix] + ?`
 
 - **Section 02 (Session Management)**
-    - Figure out which sessions are running: ```tmux ls```
-    - Create a new session: ```tmux new -s <session_name>```
-    - Connect (attach) to a existing Tmux session: ```tmux attach -t <session_name>```
-    - Exit (detach) a currently running session: ```[prefix] + d```
-    - Rename an existing session: ```tmux rename-session -t <previous_session_name> <new_session_name>```
-    
+    - Figure out which sessions are running: `tmux ls`
+    - Create a new session: `tmux new -s <session_name>`
+    - Connect (attach) to a existing Tmux session: `tmux attach -t <session_name>`
+    - Exit (detach) a currently running session: `[prefix] + d`
+    - Rename an existing session: `tmux rename-session -t <previous_session_name> <new_session_name>`
+
 - **Section 03 (Session Transmission)**
     - Switch the attached client to the previous session: `[prefix] + (`
     - Switch the attached client to the next session: `[prefix] + )`
@@ -78,6 +78,8 @@ There is a useful theme for showing windows name, date, etc. at the bottom of th
     - Scroll up or down: `[prefix] + PAGEUP/PAGEDOWN`
     - Search: `[prefix] + s`
     - Close current pane: `[prefix] + x` or `exit`
+    - Move current pane to the left: `[prefix] + {`
+    - Move current pane to the right: `[prefix] + }`
 
 ## Part 05 (References)
 
