@@ -421,7 +421,7 @@ the variable value.
 
 ## Part 04 (Variables)
 
-- Rules of variables:
+- Rules of Variables:
   - Variables are **case-sensitive**.
   - Variables cannot contain spaces.
   - Variables cannot start with a number.
@@ -495,6 +495,190 @@ backtick characters:
   unset VAR
   # Output: -bash: unset: VAR: cannot unset: readonly variable
   ```
+- **Array Variable**
+  - An array is a variable that can hold multiple values. Values can be referenced either individually or as a whole for the entire array. Arrays in the shell are one-dimensional, unlike other programming languages. To set multiple values for an environment variable, just list them in **parentheses**, with others separated by a **space**:
+    ```bash
+    mytest=(one two three four five)
+    echo $mytest
+    # Output: one
+    # Only the first value in the array appears
+    ```
+  - Array support first appeared in bash version 2. The original Unix shell program (sh) didn't support arrays at all.
+  - To reference an individual array element, you must use a numerical index value, which represents its place in the array. The numeric value enclosed in square brackets and environment variable arrays start with an index value of zero:
+    ```bash
+    mytest=(one two three four 5)
+    echo ${mytest[2]}
+    # Output: three
+    ```
+  - You can create a single value array with this syntax: `$ ARRAYNAME[INDEX]=VALUE`
+  - Also, there's another way to create an array which used a lot in **KSH** with this syntax, but we can use it in bash as well: `$ declare -a ARRAYNAME`
+  - Besides, it is possible to assign values to a specific element by specifying an index for each value:
+    ```bash
+    days=([0]=SUN [1]=MON [2]=TUE [3]=WED [4]=THU [5]=FRI [6]=SAT)
+    days=([6]=SAT [0]=SUN [5]=FRI [3]=WED [1]=MON [2]=TUE [4]=THU)
+    # Both of them works
+    ```
+  - To display the entire array variables, you use the asterisk as a wildcard character as the index value:
+    ```bash
+    mytest=(one two three four 5)
+    echo ${mytest[*]}
+    # Output: one two three four 5
+    ```
+  - To display the entire array variables, **`*`** and **`@`** can be used to access every element in an array. As with positional parameters, the **`@`** notation is more useful. The **`*`** creates one argument, and you can deal with the result as one variable, while **`@`** expand into separate arguments, and you can deal with them as multiple variables.
+    ```bash
+    #!/bin/bash
+    LIST=(1 2 3)
+    for i in "${LIST[*]}"
+    do
+        echo "example.$i"
+    done
+
+    echo =========
+    
+    LIST=(1 2 3)
+    for i in "${LIST[@]}"
+    do
+        echo "example.$i"
+    done
+    ```
+  - You can also change the value of an individual index position:
+    ```bash
+    mytest=(one two three four 5)
+    mytest[0]=zero
+    echo ${mytest[*]}
+    # Output: zero two three four 5
+    mytest[10]=ten
+    # Output: zero two three four 5 ten
+    # Index number more than the length of the array consider as a new value appended to end of the array, and the array's values which not mentioned are null. Besides, the null values don't count in the length of our array.
+    ```
+  - We can see the index number of the array with using exclamation mark before the array name:
+    ```bash
+    #!/bin/bash
+    echo "Values: "
+    myarray=([4]=b [2]=a [7]=c)
+    for i in ${myarray[@]}
+    do
+      echo $i
+    done
+    # Output:
+    # a
+    # b
+    # c
+    echo "Indexes: "
+    myarray=([4]=b [2]=a [7]=c)
+    for i in ${!myarray[@]}
+    do
+      echo $i
+    done
+    # Output:
+    # 2
+    # 4
+    # 7
+    ```
+  - Length of an array:
+    ```bash
+    mytest=(one two three four 5)
+    echo ${#mytest[*]}
+    # Output: 5
+    ```
+  - Remove a value from an array or remove the array using `unset` command. Note that when you read array's value one-by-one the place of removed value will be **null**, because the index numbers of all array remains the same:
+    ```bash
+    mytest=(one two three four 5)
+    unset mytest[3]
+    echo ${mytest[*]}
+    # Output: zero two three 5
+    echo ${#mytest[*]}
+    # Output: 4
+    echo ${mytest[2]}
+    # Output: three
+    echo ${mytest[3]}
+    # Output:
+    echo ${mytest[4]}
+    # Output: 5
+
+    unset mytest
+    # Output:
+    ```
+  - Adding Elements To The End Of An Array: Knowing the number of elements in an array is no help if we need to append values to the end of an array since the values returned by the `*` and `@` notations do not tell us the maximum array index in use. Fortunately, the shell provides us with a solution. By using the `+=` assignment operator, we can automatically append values to the end of an array. Here is an example:
+    ```bash
+    #!/bin/bash
+    myarray=(a b c)
+    echo ${myarray[*]}
+    # Output: a b c
+    myarray+=(d e f)
+    echo ${myarray[*]}
+    # Output: a b c d e f
+    ```
+  - Sort an Array: It's often necessary to sort the values in a column of data. The shell has no direct way of doing this, but it's not hard to do it with a little coding:
+    ```bash
+    #!/bin/bash
+    myarray=(f c b e d a)
+    echo "Original Array: ${myarray[@]}"
+    sorted_array=($(for i in "${myarray[@]}"; do echo $i; done | sort))
+    echo "Sorted Array: ${sorted_array[@]}"
+    ```
+  - Associative Array: Recent versions of bash now support associative arrays. Associative arrays use strings rather than integers as array indexes. This capability allows interesting new approaches to managing data. For example, we can create an array called "colors" and use color names as indexes:
+    ```bash
+    #!/bin/bash
+    declare -A colors
+    colors["red"]="#ff0000"
+    colors["green"]="#00ff00"
+    colors["blue"]="#0000ff"
+
+    echo ${colors["blue"]}
+    # Output: #0000ff
+    ```
+  - Example/Script 1 of the Array:
+    ```bash
+    #!/bin/bash
+    # Script that count files by modification time    
+    usage (){    
+        echo "Usage: $(basename $0) Directory" >&2    
+    }    
+    # Check that argument is a directory    
+    if [ ! -d $1 ]    
+    then    
+        usage    
+        exit 1    
+    fi    
+    # Initialize array    
+    for i in {0..23}; do hours[i]=0; done    
+    # Collect data    
+    for i in $(stat -c %y "$1"/* | cut -c 12-13)    
+    do    
+        # We have to remove leading zeros from the hours' field    
+        # since the shell will, unfortunately, fail to interprets    
+        # values 00 through 09 as octal numbers    
+        j=${i/#0}    
+        ((++hours[j]))    
+        ((++count))    
+    done    
+    # Display Data    
+    echo -e "Hour\tFiles\tHoue\tFiles"    
+    echo -e "----\t-----\t----\t-----"    
+    for i in {0..11}    
+    do    
+        j=$((i+12))    
+        printf "%02d\t%d\t%02d\t%d\n" $i ${hours[i]} $j ${hours[j]}    
+    done    
+    printf "\nTotal Files = %d\n\n" $count
+    ```
+  - Example/Script 2 of the Array:
+    ```bash
+    #!/bin/bash
+    #set -v -x
+    counter=0
+    # ESC = \e = \033 = \x1B
+    white="\e[37m"
+    codes=(31 32 33 34 35 36)
+    colors=("\e[31m" "\e[32m" "\e[33m" "\e[34m" "\e[35m" "\e[36m")
+    names=("red" "green" "yellow" "blue+" "pink" "cyan")
+    for i in ${colors[*]}
+    do
+      echo -e "$i ${names[counter]}\t $white color and it's code is $i"Esc[${codes[counter]}m"$white "
+      ((counter++))
+    done
+    ```
 
 ## Part 05 (Special Characters)
 
@@ -1378,3 +1562,4 @@ There are three different ways to perform mathematical operations in your shell 
 ## Part ?? (References)
 
 1. [Signals](https://www.computerhope.com/unix/signals.htm)
+2. [Bash Color and Formatting](https://misc.flogisoft.com/bash/tip_colors_and_formatting)
