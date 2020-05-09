@@ -69,7 +69,8 @@ There is a useful theme for showing windows name, date, etc. at the bottom of th
     - Split pane vertically: `[prefix] + %`
     - Split pane horizontally: `[prefix] + "`
     - Switch between panes: `[prefix] + ARROWKEYS`
-    - Switch the pane layout `[prefix] + o`
+    - Switch between panes: `[prefix] + o`
+    - Rotate pane layouts: `[prefix] + Ctrl + o`
     - Zoom to pane and zoom back to normal size: `[prefix] + z`
     - Resize current pane height: `[prefix] + Ctrl + UP/DOWN`
     - Resize current pane width: `[prefix] + Ctrl + LEFT/RIGHT`
