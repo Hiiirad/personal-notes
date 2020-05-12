@@ -1525,6 +1525,7 @@ There are three different ways to perform mathematical operations in your shell 
     - `+` : Most recent job or the default job
     - `-` : The job before the most recent one or the job that would be in the default job when the current default job finishes processing.
   - There will be only one job with the plus sign and one job with the minus sign at any time, no matter how many jobs are running in the shell.
+  - You can kill a job with `kill` command and percent sign before job number: `kill %1`
   - Jobs command parameters:
     |Parameters|Description|
     |----------|-----------|
@@ -1558,6 +1559,244 @@ There are three different ways to perform mathematical operations in your shell 
     - Login Shell: SSH, Telnet, ... -> `.bash_profile` will execute.
     - Non-Login Shell: Bash, Right click on desktop and open a new terminal, ... -> `.bashrc` will execute.
   - The best reference for this topic is manual page of bash which you can see with `$ man bash` command.
+
+## Part 13 (Functions)
+
+Often while writing shell scripts, you'll find yourself using the same code in multiple locations. If you're rewriting large chunks of code multiple times in your shell script, that can get tiring. The bash shell provides a way to help you out by supporting user-defined functions.
+You can encapsulate your shell script code into a function, which you can then use as many times as you want anywhere in your script.
+
+- **Create a Function**: There are two formats you can use to create functions in bash shell scripts.
+  1. The first format uses the keyword function, along with the function name you assign to the block of code. The NAME attribute defines a unique name assigned to the function. Each function you define in your script must be assigned a unique name. The commands are one or more bash shell commands that make up your function. When you call the function, the bash executes each of the commands just as in a regular script:
+    ```bash
+    function NAME {
+      COMMANDS
+    }
+    ```
+  2. The second format for defining a function in a bash shell script more closely follows how functions defined in other programming languages. The empty parentheses after the function name indicate that you're defining a function. The same naming rules apply in this format as in the original shell script function format:
+    ```bash
+    NAME(){
+      COMMANDS
+    }
+    ```
+- **Using a Function**: To use a function in your script, specify the function name on a line, just as you would any other shell command:
+  ```bash
+  #!/bin/bash
+  function func1 {
+    echo "This is an example of a function"
+  }
+  COUNTER=1
+  while [ $COUNTER -le 5 ]
+  do
+    func1
+    COUNTER=$[ $COUNTER + 1 ]
+  done
+  ```
+- **ATTENTION**
+  1. The function definition doesn't have to be the first thing in your shell script, but be careful. If you attempt to use a function before it's defined, you'll get an error message.
+  2. You also need to be careful about your function names. Remember, each function name must be unique, or you'll have a problem. If you redefine a function, the new definition will override the original function definition, without producing any error message.
+- **Returning a Value**: The bash shell treats functions like mini-scripts, complete with an exit status. There are three different ways you can generate an exit status for your functions.
+- **The Default Exit Status**: By default, the exit status of a function is the exit status returned by the last command in the function. After the function executes, you use the standard `$?` variable to determine the exit status of the function.
+- **Using The Return Command**: The bash shell uses the return command to exit a function with a specific exit status. The return command allows you to specify a single integer value to define the function exit status, providing an easy way for you to set the exit status of your function programmatically.
+  ```bash
+  #!/bin/bash
+  # Using the return command in a function
+  function dbl {
+    read -p "Enter a value: " VALUE
+    echo "Doubling the value..."
+    return $[ $VALUE * 2 ]
+  }
+  dbl
+  echo "The new value is $?"
+  ```
+- **ATTENTION**
+  - You must be careful when using this technique to return a value from a function. Two things can cause problems:
+    1. Remember to retrieve the return value as soon as the function completes.
+    2. Remember that an exit status can only be in the range of 0 to 255.
+  - You can't use this return value technique if you need to return either larger integer values or a string value. Instead, you'll need to use another method, demonstrated in the next section.
+- **Using Function Output**
+  - Just as you can capture the output of a command to a shell variable, you can also capture the output of a function to a shell variable. You can use this technique to retrieve any output from a function to assign to a variable:
+    ```bash
+    RESULT=`dbl`
+    ```
+  - This command assigns the output of the *dbl* function to the `$RESULT` shell variable. Here's an example of using this method in a script:
+    ```bash
+    #!/bin/bash
+    # Using the return command in a function
+    function dbl {
+      read -p "Enter a value: " VALUE
+      echo "Doubling the value..."
+      return $[ $VALUE * 2 ]
+    }
+    RESULT=`dbl`
+    echo "The new value is $RESULT"
+    ```
+  - You'll notice that the *dbl* function outputs two messages. The read command outputs a short message querying the user for the value. The bash shell script is smart enough not to consider this as a part of the STDOUT output and ignores it.
+  - Using this technique, you can also return floating-point numbers and string values, making this an extremely versatile method for returning values from functions.
+- **Passing Parameters To A Function**
+  - Bash treats functions, just like mini-scripts. This means that you can pass parameters to a function just like a regular script.
+  - The name of the function defined in the `$0` variable, and any parameters on the function command line defined using the variables `$1`, `$2`, and so on. You can also use the special variable `$#` to determine the number of parameters passed to function.
+  - When specifying the function in your script, you must provide the parameters on the same command line as the function, like this: `func1 10 A`
+  - Example 1:
+    ```bash
+    #!bin/bash
+    # Passing parameters to a function
+    function addem {
+      if [ $# -eq 0 ] || [ $# -gt 2 ]
+      then
+        echo -1
+      elif [ $# -eq 1 ]
+      then
+        echo $[ $1 + $1 ]
+      else
+        echo $[ $1 + $2 ]
+      fi
+    }
+    echo -n "Adding $1 and $2: "
+    VALUE=`addem $1 $2`
+    echo $VALUE
+    ```
+  - Example 2:
+    ```bash
+    #!/bin/bash
+    function stars {
+      # Stars in triangle shape
+      COUNTER=0
+      while [ $1 -ge $COUNTER ]
+      do
+          for ((i=1 ; i<=$COUNTER ; i++))
+          do
+              echo -n "*"
+          done
+          echo 
+          COUNTER=$[ $COUNTER + 1 ]
+      done
+    }
+    stars $1
+    ```
+- **Handling Variables In A Function**
+  - One thing that causes problems for shell script programmers is the scope of a variable. The scope is where the variable is visible. Variables defined in functions can have a different scope than regular variables. That is, they can be hidden from the rest of the script.
+  - Functions use two types of variables:
+    1. Global
+    2. Local
+  - Global:
+    - Global variables are variables that are valid anywhere within the shell script. If you define a global variable in the main section of a script, you can retrieve its value inside a function. Likewise, if you define a global variable inside a function, you can retrieve its value in the main section of the script. By default, any variables you define in the script are global variables. Variables defined outside of a function can be accessed within the function just fine:
+    ```bash
+    #!/bin/bash
+    # Using the return command in a function
+    function dbl {
+      VALUE=$[ $VALUE * 2 ]
+    }
+    read -p "Enter a value: " VALUE
+    dbl
+    echo "The new value is $VALUE"
+    ```
+    - Since these variables are global, if you change them in your function could be dangerous because the function may be used in different scripts and may change a variable that has a similar name inside the script unintentionally.
+    ```bash
+    #!/bin/bash
+    function func1 {
+    TEMP=$[ $VALUE + 5 ]
+    RESULT=$[ $TEMP * 2 ]
+    }
+    TEMP=4
+    VALUE=6
+    func1
+    echo "The result is $RESULT"
+    echo "Temp = $TEMP"
+    echo "Value = $VALUE"
+    ```
+  - Local:
+    - Instead of using global variables in functions, any variables that the function uses internally can declare as local variables. To do that, use the local keyword in front of the variable declaration: `local temp`
+    - You can also use the local keyword in an assignment statement while assigning a value to the variable: `local temp=$[ $value + 5 ]`
+    - The local keyword ensures that the variable is limited to only within the function. If a variable with the same name appears outside the function in the script, the shell keeps the two variable values separate.
+    ```bash
+    #!/bin/bash
+    function func1 {
+    local TEMP=$[ $VALUE + 5 ]
+    RESULT=$[ $TEMP * 2 ]
+    }
+    TEMP=4
+    VALUE=6
+    func1
+    echo "The result is $RESULT"
+    echo "Temp = $TEMP"
+    echo "Value = $VALUE"
+    ```
+- **ATTENTION**: If you call a function/script like `./script` in your shell script, it opens a subshell. But, if these scripts are quite a lot, then only one subshell opens and do these scripts one by one until the end. Also, if you want to force many subshells to take over your scripts, you can put an ampersand sign `&` at the end of each line to background those processes in different subshells.
+  ```bash
+  #!/bin/bash
+
+  # Only one subshell handles these scripts one by one
+  ./script1
+  ./script2
+  ./script3
+  ./script4
+
+  # Different subshells handle these scripts at the same time
+  ./script1 &
+  ./script2 &
+  ./script3 &
+  ./script4 &
+  ```
+- **Recursion**
+  - Calling a function recursively is when the function calls itself to reach an answer. Usually, a recursive function has a base value that it eventually iterates down to the constant base value. The classic example of a recursive algorithm is calculating factorials: `x! = x * (x-1)!`
+    ```bash
+    #!/bin/bash
+    function factorial {
+    if [ $1 -eq 1 ]
+    then
+      echo 1
+    else
+      local TEMP=$[ $1 - 1 ]
+      local RESULT=`factorial $TEMP`
+      echo $[ $RESULT * $1 ]
+    fi
+    }
+    read -p "Enter value: " VALUE
+    RESULT=`factorial $VALUE`
+    echo "The factorial of $VALUE is: $RESULT"
+    ```
+- **Creating a Library**
+  - The bash shell allows you to create a _library file_ for your functions, then reference that single _library file_ in as many scripts as you need to.
+  - The first step in the process is to create a standard _library file_ that contains the functions you need in your scripts. Here’s a simple _library file_ called `MyFuncs` that defines three simple functions:
+    ```bash
+    #!/bin/bash
+    # My Script Functions
+    function addem {
+      echo $[ $1 + $2 ]
+    }
+    function multem {
+      echo $[ $1 * $2 ]
+    }
+    function divem {
+      if [ $2 -ne 0 ]
+      then
+        echo $[ $1 / $2 ]
+      else
+        echo -1
+      fi
+    }
+    ```
+  - The next step is to include the `MyFuncs` _library file_ in your script files that want to use any of the functions. This is where things get tricky. The problem is with the scope of shell functions. Just as with environment variables, shell functions are only valid for the shell session in which you define them. If you run the `MyFuncs` shell script from your shell command-line interface prompt, the shell creates a new shell (subshell) and runs the script in that new shell (subshell). This defines the three functions for that shell, but when you try to run another script that uses those functions, they won’t be available. If you try just to run the _library file_ as a regular script file, the functions won’t appear in your script:
+    ```bash
+    #!/bin/bash
+    ./MyFuncs
+    addem 10 20
+    # Output: line 3: addem: command not found
+    ```
+  - The key to using function libraries is the `source` command. The `source` command executes commands within the current shell context instead of creating a new shell to execute them. You use the `source` command to run the _library file_ script inside of your shell script. This makes the functions available to the script. The `source` command has a shortcut alias, called the dot operator. To source the `MyFuncs` _library file_ in a shell script, all you need to do is add the following line: `. ./MyFuncs` or `source ./MyFuncs`
+    ```bash
+    #!/bin/bash
+    # Using Functions Defined In A Library File
+    . ./MyFuncs
+    VALUE1=10
+    VALUE2=5
+    RESULT1=`addem $VALUE1 $VALUE2`
+    RESULT2=`multem $VALUE1 $VALUE2`
+    RESULT3=`divem $VALUE1 $VALUE2`
+    echo "The result of adding them is: $RESULT1"
+    echo "The result of multiplying them is: $RESULT2"
+    echo "The result of dividing them is: $RESULT3" 
+    ```
 
 ## Part ?? (References)
 
