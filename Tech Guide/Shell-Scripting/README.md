@@ -1470,6 +1470,38 @@ There are three different ways to perform mathematical operations in your shell 
       esac
     done
     ```
+  - Example:
+    ```bash
+    #!/bin/bash
+    # Using Select In The Menu Example
+    function diskspace {
+      clear
+      df -k
+    }
+    function whoison {
+      clear
+      who
+    }
+    function memusage {
+      clear
+      free -h
+    }
+    PS3="Enter option > "
+    select OPTION in "Display Disk Space" "Display Logged On Users"
+    "Display Memory Usage" "Exit Program"
+    do
+      case $OPTION in
+        "Exit Program") break ;;
+        "Display Disk Space") diskspace ;;
+        "Display Logged On Users") whosisn ;;
+        "Display Memory Usage") memusage ;;
+        *)
+          clear
+          echo "Sorry, Wrong Selection!" ;;
+      esac
+    done
+    clear
+    ```
 
 ## Part 12 (Script Control)
 
