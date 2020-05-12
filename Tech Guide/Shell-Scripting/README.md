@@ -727,14 +727,14 @@ Wildcards:
   echo ${#STRING}
   # The result of a empty variable or an unassigned variable is 0
   ```
-- **Add** to variable's value
+- **Add** to string
   ```bash
   #!/bin/bash
   STRING=ABCdef
   echo ${STRING}GHI
   # Output: ABCdefGHI
   ```
-- **Remove** a part of variable's value
+- **Remove** a part of string
   ```bash
   #!/bin/bash
   STRING=ABCdef
@@ -742,7 +742,7 @@ Wildcards:
   # Output: def
   echo ${STRING#AB}
   # Output: Cdef -> Remove only from the beginning of the value
-- **Search and Remove** a part of variable's value
+- **Search and Remove** a part of string
   ```bash
   #!/bin/bash
   STRING=ABCdef
@@ -754,11 +754,19 @@ Wildcards:
   echo ${STR%%b*c}
   # Output: a -> Strip out the longest match between 'b' and 'c', from the end of the STR
   ```
-- **Substitute/Replace** a part of variable's value with another value
+- **Substitute/Replace** only the first match
   ```bash
   #!/bin/bash
   STRING=ABCdef
   echo ${STRING/ABC/123}
+  # ${STRING/PATTERN/REPLACEMENT}
+  ```
+- **Substitute/Replace** all the matches
+  ```bash
+  #!/bin/bash
+  STRING=ABCdefABC456
+  echo ${STRING//ABC/123}
+  # ${STRING//PATTERN/REPLACEMENT}
   ```
 - Assign/Set a value
   ```bash
@@ -787,15 +795,19 @@ Wildcards:
   echo ${VAR:?DOES NOT HAVE A VALUE}
   # Output: bash: VAR: DOES NOT HAVE A VALUE
   ```
-- Positions
+- Positions/Extraction
   ```bash
   #!/bin/bash
   STR=university
   echo ${STR:3}
-  # Prints STR from position 3. Starting position is zero
+  # Prints STR from position 3. Starting position is zero -> ${STRING:POSITION}
   # Output: versity
   echo ${STR:1:3}
   # Output: niv
+  # Start STR from position 1 and print 3 more characters -> ${STRING:POSITION:LENGTH}
+
+  # Print the last 5 characters of a string
+  echo ${STR:${#STR}-5}
   ```
 
 ## Part 07 (Redirection)
