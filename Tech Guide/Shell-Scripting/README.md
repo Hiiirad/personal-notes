@@ -679,6 +679,7 @@ backtick characters:
       ((counter++))
     done
     ```
+  - To know more about colors, check [Part 15](#part-15-colors-in-scripts) about colors in scripts.
 
 ## Part 05 (Special Characters)
 
@@ -1901,6 +1902,64 @@ You can encapsulate your shell script code into a function, which you can then u
   printf "%02X:%02X:%02X:%02X:%02X:%02X\n" 0x${mac//:/ 0x}
   # Output: 00:13:CE:07:7A:AD
   ```
+
+## Part 15 (Colors in Scripts)
+
+- Most terminal emulation software recognizes the ANSI escape codes for formatting display output.
+- The ANSI escape codes begin with a Control Sequence Indicator (CSI), which tells the terminal that the data represents an escape code, followed by data indicating the operation to perform on display.
+- To control the display format, you must use the Select Graphic Rendition (SGR) escape codes.
+- The format of an SGR escape code is: **`CSIn[;k]m`**
+- You can specify just one parameter or two at the same time, separating them using the semicolon.
+- There are three classes of display control parameters:
+  1. Effect control codes
+  2. Foreground color control codes
+  3. Background color control codes
+- The ANSI SGR Effect Control Codes:
+  |Code|Description|
+  |----|-----------|
+  |0|Reset To Normal Mode|
+  |1|Set To Bold Intensity|
+  |2|Set To Faint Intensity|
+  |3|Use Italic Font|
+  |4|Use Single Underline|
+  |5|Use Slow Blink|
+  |6|Use Fast Blink|
+  |7|Reverse Foreground/Background Colors|
+  |8|Set Foreground Color To Background Color (Invisible Text)|
+- Examples:
+  - Italic: `CSI3m`
+  - Italic + Slow Blink: `CSI3;5m`
+- The foreground and background color control codes use a two-digit code:
+  - Foreground colors use a two-digit value starting with 3
+  - Background colors use a two-digit value starting with 4
+- The ANSI Color Control Codes
+  |Code|Description|
+  |----|-----------|
+  |0|Black|
+  |1|Red|
+  |2|Green|
+  |3|Yellow|
+  |4|Blue|
+  |5|Magenta|
+  |6|Cyan|
+  |7|White|
+- Example:
+  - White foreground color: `CSI37m`
+  - Black background color & Red foreground color: `CSI31;40m`
+- Displaying ANSI escape codes
+  - To display escape code you can use **`echo -e "\e[???m???`** syntax and `-e` option of echo enables interpretation of backslash escapes.
+  - I just created CSI with `\e[`. For more information, check the ATTENTION section at the end of this part.
+- Example:
+  - Red foreground and black background: `echo -e "\e[31;40mThis is a test"`
+  - Red foreground with italic and black background: `echo -e "\e[4 31;40mThis is a test"`
+  - To get back to normal state it is usually a good idea to use the reset control code (0): `echo -e "\e[31;40mThis is a test\e[0m"`
+- There are a few substitutions for ESC: **`\e`** = **`\E`** = **`\033`** = **`\x1B`**
+- **ATTENTION**
+  - If you write shell scripts to send some escape sequences to your printer or terminal, then you would need to enter control characters. In VI, some of these characters are directly enterable, but generally, a control character has to be preceded by another control character for it to be appropriately interpreted. VI uses **`Ctrl+v`** to precede any control character. For instance, to enter **`Ctrl+H`**, first, you have to press **`Ctrl+v`** and then **`Ctrl+h`**. You'll see this on the screen: **`^H`**
+  - Even though you see a ^ (caret) and an H, there's only a single character out there. You can position the cursor only on the ^ and not on the H; that's how you identify control characters anyway.
+  - The same technique can be adopted for entering the Esc character. Press **`Ctrl+v+Esc`**, and you'll see the Esc character looking like this: **`^[`**
+  - This, too, is a single character; you can place your cursor only on the ^. If your version of VI or PuTTY doesn't let you enter the Esc character as advised above, then you can use this: **`Ctrl+v+[`**
+  - The Esc character may need special treatment in VI since it is the terminator of the Input Mode.
 
 ## Part ?? (References)
 
