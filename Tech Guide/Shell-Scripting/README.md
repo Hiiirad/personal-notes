@@ -631,36 +631,36 @@ backtick characters:
   - Example/Script 1 of the Array:
     ```bash
     #!/bin/bash
-    # Script that count files by modification time    
-    usage (){    
-        echo "Usage: $(basename $0) Directory" >&2    
-    }    
-    # Check that argument is a directory    
-    if [ ! -d $1 ]    
-    then    
-        usage    
-        exit 1    
-    fi    
-    # Initialize array    
-    for i in {0..23}; do hours[i]=0; done    
-    # Collect data    
-    for i in $(stat -c %y "$1"/* | cut -c 12-13)    
-    do    
-        # We have to remove leading zeros from the hours' field    
-        # since the shell will, unfortunately, fail to interprets    
-        # values 00 through 09 as octal numbers    
-        j=${i/#0}    
-        ((++hours[j]))    
-        ((++count))    
-    done    
-    # Display Data    
-    echo -e "Hour\tFiles\tHoue\tFiles"    
-    echo -e "----\t-----\t----\t-----"    
-    for i in {0..11}    
-    do    
-        j=$((i+12))    
-        printf "%02d\t%d\t%02d\t%d\n" $i ${hours[i]} $j ${hours[j]}    
-    done    
+    # Script that count files by modification time
+    usage (){
+        echo "Usage: $(basename $0) Directory" >&2
+    }
+    # Check that argument is a directory
+    if [ ! -d $1 ]
+    then
+        usage
+        exit 1
+    fi
+    # Initialize array
+    for i in {0..23}; do hours[i]=0; done
+    # Collect data
+    for i in $(stat -c %y "$1"/* | cut -c 12-13)
+    do
+        # We have to remove leading zeros from the hours' field
+        # since the shell will, unfortunately, fail to interprets
+        # values 00 through 09 as octal numbers
+        j=${i/#0}
+        ((++hours[j]))
+        ((++count))
+    done
+    # Display Data
+    echo -e "Hour\tFiles\tHoue\tFiles"
+    echo -e "----\t-----\t----\t-----"
+    for i in {0..11}
+    do
+        j=$((i+12))
+        printf "%02d\t%d\t%02d\t%d\n" $i ${hours[i]} $j ${hours[j]}
+    done
     printf "\nTotal Files = %d\n\n" $count
     ```
   - Example/Script 2 of the Array:
@@ -1711,7 +1711,7 @@ You can encapsulate your shell script code into a function, which you can then u
           do
               echo -n "*"
           done
-          echo 
+          echo
           COUNTER=$[ $COUNTER + 1 ]
       done
     }
@@ -1839,8 +1839,68 @@ You can encapsulate your shell script code into a function, which you can then u
     RESULT3=`divem $VALUE1 $VALUE2`
     echo "The result of adding them is: $RESULT1"
     echo "The result of multiplying them is: $RESULT2"
-    echo "The result of dividing them is: $RESULT3" 
+    echo "The result of dividing them is: $RESULT3"
     ```
+
+## Part 14 (Formatted Printing)
+
+- The `printf` command provides a method to print preformatted text similar to the `printf()` system interface (C function). It meant as a successor for echo and has far more features and possibilities. Syntax: `printf FORMAT ARGUMENT(S)`
+- The text format is given in `FORMAT`, while all arguments the format-string may point to are given after that, here, indicated by `ARGUMENT(S)`.
+- Example:
+  ```bash
+  #!/bin/bash
+  printf "%s\n" "Hello World"
+
+  FIRST="Linus"
+  LAST="Torvalds"
+  printf "First Name: %s\nLast Name: %s\n" "$FIRST" "$LAST"
+  ```
+- There's an option `-v` for `printf` which allows you to assign a VALUE to a VARIABLE instead of printed to STDOUT:
+  ```bash
+  #!/bin/bash
+  printf -v VAR "Hello"
+  echo $VAR
+  # Output: Hello
+  ```
+- **Format Specifiers**: The format string interpretion is derived from the C `printf()` function family.
+
+  |Format|Description|
+  |------|-----------|
+  |%c|Interprets the associated argument as **CHAR**: only the first character of a given argument is printed|
+  |%d|Print the associated argument as **DECIMAL** number (Signed or Unsigned)|
+  |%e|A **FLOATING POINT** number in scientific notation (XXXeYY)|
+  |%f|Interpret and print the associated argument as **FLOATING POINT** number|
+  |%o|An **OCTAL UNSIGNED** integer|
+  |%s|Interprets the associated argument literally as **STRING**|
+  |%x|Print the associated argument as **UNSIGNED HEXADECIMAL** number with **lower-case HEX-DIGITS (a-f)**|
+  |%X|Print the associated argument as **UNSIGNED HEXADECIMAL** number with **UPPER-CASE HEX-DIGITS (A-F)**|
+- **Modifiers**: To be more flexible in the output of numbers and strings, the `printf` command allows format modifiers. These are specified between the introductory `%` and the character that specifies the format. Usage: `"% <MODIFIER> <SPECIFIER>"`
+  
+  |Field Output Format|Description|
+  |-------------------|-----------|
+  |**`<N>`**|**Any number**: Specifies a **minimum field width**, if the text to print is shorter, it's padded with spaces, if the text is longer, the field is expanded|
+  |**`*`**|**The Asterisk**: The width is given as an argument before the string or a number. Usage (The "*" corresponds to the "20"): `printf "%*s\n" 20 "test string"`|
+  |**`+`**|Prints all number's **sign** (+ for positive, - for negative)|
+  |**`0`**|Pads numbers with **zeros**, not spaces. Usage: `printf "%04d\n" 4`|
+  |**`'`**|For decimal conversions, the thousands grouping separator is applied to the integer portion of the output according to the current LC_NUMERIC|
+- **Escape Codes**
+  |Code|Description|
+  |----|-----------|
+  |**`\\`**|Prints the backslash character|
+  |**`\b`**|Prints a backspace|
+  |**`\n`**|Prints a newline|
+  |**`\r`**|Prints a carriage-return|
+  |**`\t`**|Prints a horizontal tabulator|
+  |**`\v`**|Prints a vertical tabulator|
+- Example -> How can we take a standard MAC Address and rewrite it into a well-known format (regarding leading zeros or upper/lowercase of the hex digits, ...):
+  ```bash
+  #!/bin/bash
+  mac="0:13:ce:7:7a:ad"
+  printf "%02x:%02x:%02x:%02x:%02x:%02x\n" 0x${mac//:/ 0x}
+  # Output: 00:13:ce:07:7a:ad
+  printf "%02X:%02X:%02X:%02X:%02X:%02X\n" 0x${mac//:/ 0x}
+  # Output: 00:13:CE:07:7A:AD
+  ```
 
 ## Part ?? (References)
 
