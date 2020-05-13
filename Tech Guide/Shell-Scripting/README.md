@@ -198,7 +198,7 @@ Shell Scripting is an interpreter and cross-platform programming language.
   - There are times when you don’t want to display any output from your script. This often occurs if you’re running a script as a background process.
   - The standard location for the null file on Linux systems is `/dev/null`. Any data you redirect to that location is thrown away and doesn’t appear.
 - Shell variables can contain different sizes based on your system. You can see your system's limitations with `xargs --show-limits` command.
-- Primary Shells:
+- Primary Shells (Check `man bash`):
   1. Primary Shell 1 (`echo $PS1`): The first prompt you see when you open a shell/terminal.
   2. Primary Shell 2 (`echo $PS2`): The prompt when you use inline input redirection.
   3. Primary Shell 3 (`echo $PS3`): The prompt when you use select to create a text menu.
@@ -1444,7 +1444,7 @@ There are three different ways to perform mathematical operations in your shell 
       |-y|Answer yes to all questions|
 - **Creating Text Menu**
   - The most common way to create an interactive shell script is to utilize a menu. Offering your customers a choice of various options helps guide them through exactly what the script can and can’t do. Menu scripts usually clear the display area, then show a list of options available.
-  - The select command allows you to create a menu from a single command line, then retrieve the entered answer and automatically process it. The format of the select command is:
+  - The `select` command allows you to create a menu from a single command line, then retrieve the entered answer and automatically process it. The format of the `select` command is:
     ```bash
     #!/bin/bash
     select VARIABLE in LIST
@@ -1452,7 +1452,7 @@ There are three different ways to perform mathematical operations in your shell 
       COMMAND(s)
     done
     ```
-  - The list parameter is a space-separated list of text items that build the menu. The select command displays each item in the list as a numbered option and then displays a special prompt, defined by the `PS3` environment variable, for the selection.
+  - The list parameter is a space-separated list of text items that build the menu. The `select` command displays each item in the list as a numbered option and then displays a special prompt, defined by the `PS3` environment variable, for the selection. You can see more information about `PS3` in bash manual page.
   - Examples:
     ```bash
     #!/bin/bash
@@ -1906,3 +1906,4 @@ You can encapsulate your shell script code into a function, which you can then u
 
 1. [Signals](https://www.computerhope.com/unix/signals.htm)
 2. [Bash Color and Formatting](https://misc.flogisoft.com/bash/tip_colors_and_formatting)
+3. Primary Shell [Link1](https://www.thegeekstuff.com/2008/09/bash-shell-take-control-of-ps1-ps2-ps3-ps4-and-prompt_command/) and [Link2](https://linoxide.com/how-tos/change-bash-prompt-variable-ps1/)
