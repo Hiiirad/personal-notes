@@ -1,4 +1,8 @@
-# Useful Regex
+# Regex
+
+- [Regex](#regex)
+  - [Basic Concepts](#basic-concepts)
+  - [Practical Usage in Real World](#practical-usage-in-real-world)
 
 I **LOVE** regexes (REGular EXpressions), and I believe there is more to them than meets the eyes.
 

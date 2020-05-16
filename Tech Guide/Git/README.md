@@ -1,15 +1,15 @@
 # **Git Essentials**
 
-- Git Essentials
-    - [First Steps](#first-steps)
-    - [Useful Commands](#useful-commands)
-    - [Branch](#branch)
-    - [Remote and Conflict](#remote-and-conflict)
-    - [Tag](#tag)
-    - [Sign Tags and Commits](#sign-tags-and-commits)
-    - [Debugging](#debugging)
+- [**Git Essentials**](#git-essentials)
+  - [Part 01 (First Steps)](#part-01-first-steps)
+  - [Part 02 (Useful Commands)](#part-02-useful-commands)
+  - [Part 03 (Branch)](#part-03-branch)
+  - [Part 04 (Remote and Conflict)](#part-04-remote-and-conflict)
+  - [Part 05 (Tag)](#part-05-tag)
+  - [Part 06 (Sign Tags and Commits)](#part-06-sign-tags-and-commits)
+  - [Part 07 (Debugging)](#part-07-debugging)
 
-## First Steps
+## Part 01 (First Steps)
 
 1. Install git:
 ```bash
@@ -34,7 +34,7 @@ git config --global core.editor "EDITOR"
 git config --global user.signingkey <gpg-key-id>
 ```
 
-## Useful Commands
+## Part 02 (Useful Commands)
 
 - Check status of files
 ```bash
@@ -116,7 +116,7 @@ git pull origin master
 git show COMMIT_HASH
 ```
 
-## Branch
+## Part 03 (Branch)
 
 - Show branches
 ```bash
@@ -143,7 +143,7 @@ git merge BRANCH_NAME
 git branch -d BRANCH_NAME
 ```
 
-## Remote and Conflict
+## Part 04 (Remote and Conflict)
 
 - Show remotes
 ```bash
@@ -158,7 +158,7 @@ git remote add origin ADDRESS
 git remote -v
 ```
 
-## Tag
+## Part 05 (Tag)
 
 - List of tags
 ```bash
@@ -186,7 +186,7 @@ git push origin VERSION_NAME
 git push origin --tags
 ```
 
-## Sign Tags and Commits
+## Part 06 (Sign Tags and Commits)
 
 > PGP: Pretty Good Privacy
 
@@ -224,7 +224,7 @@ git tag -v VERSION_NAME
 git commit -S -m "MESSAGE"
 ```
 
-## Debugging
+## Part 07 (Debugging)
 
 - Blame/Check someone
 ```

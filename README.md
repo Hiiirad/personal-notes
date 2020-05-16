@@ -1,6 +1,6 @@
 # Notes
 
-> This repository will be outdated over time. I appreciate it if anyone helps me keep it up-to-date.
+> This repository is going to be outdated over time. I appreciate it if anyone helps me keep it up-to-date.
 
 I believe technology helps us to think differently in every way. So I believe everyone deserves to learn things. Sometimes the hardest part of starting something is the first step in that direction, so these notes are going to help you with that very first step, and I hope you do the rest.
 
