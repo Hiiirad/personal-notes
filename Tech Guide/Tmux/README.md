@@ -81,6 +81,7 @@ There is a useful theme for showing windows name, date, etc. at the bottom of th
     - Close current pane: `[prefix] + x` or `exit`
     - Move current pane to the left: `[prefix] + {`
     - Move current pane to the right: `[prefix] + }`
+    - Jump between the different available layouts: `[prefix] + SPACE`
 
 ## Part 05 (References)
 
