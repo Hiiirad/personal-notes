@@ -356,6 +356,13 @@ Shell Scripting is an interpreter and cross-platform programming language.
       - You can see a list of them using `stty -a`.
       - Stty (Set TeleTYpe) is a command that changes keyboard and monitor commands. For example, it can change rows and columns of monitor, speed of keyboard, etc.
   - Where filename is optional and if not specified it is assumed to be **typescript**.
+- `dd` :
+  - Convert and Copy a file
+  - `if=` : Input File (If it doesn't provided in command, it gets from STDIN)
+  - `of=` : Output File (If it doesn't provided in command, it prints on STDOUT)
+  - `bs=` : Block Size by Byte (Default=512 Byte)
+  - `count=N` : Copy only N input blocks
+  - `conv=` : Convert the file as per the comma separated symbol list (See the list of them in dd manual page)
 
 ## Part 03 (Shell Script Basics)
 
@@ -831,7 +838,7 @@ Wildcards:
     wc -l < /etc/passwd
     cat < /etc/services
     ```
-  - `<<` : The inline input redirection method allows you to specify the data for input redirection on the command line instead of in a file. Besides this symbol, you must specify a text marker that delineates the beginning and end of the data used for input.
+  - `<<` : The inline input redirection method (or "here documents") allows you to specify the data for input redirection on the command line instead of in a file. Besides this symbol, you must specify a text marker that delineates the beginning and end of the data used for input.
     ```bash
     COMMAND << MARKER
     DATA
@@ -842,6 +849,17 @@ Wildcards:
     line 2
     good-bye
     EOF
+    ```
+  - `<<<` : The "Here Strings" isn't documented well by anyone. So, i'm just showing you one of its usage by an example:
+    ```bash
+    $ VAR="Bash is good"
+    $ read X Y Z <<< $VAR
+    $ echo $X
+    # Output: Bash
+    $ echo $Y
+    # Output: is
+    $ echo $Z
+    # Output: good
     ```
 - Example (Write a script which uses inline input redirection to append some lines a an existing file in your home directory):
   ```bash
@@ -857,7 +875,7 @@ Wildcards:
   - `<` : Redirects STDIN (0) from file
   - `>` : Redirects STDOUT (1) to file
   - `>>` : Append STDOUT to file
-  - `<<` : Here-Document
+  - `<<` : Here Documents
   - `&>` : Redirects STDERR (2)
 - Error Redirection:
   ```bash
