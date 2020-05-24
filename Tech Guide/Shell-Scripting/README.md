@@ -541,7 +541,7 @@ backtick characters:
     done
 
     echo =========
-    
+
     LIST=(1 2 3)
     for i in "${LIST[@]}"
     do
@@ -1894,7 +1894,7 @@ You can encapsulate your shell script code into a function, which you can then u
   |%x|Print the associated argument as **UNSIGNED HEXADECIMAL** number with **lower-case HEX-DIGITS (a-f)**|
   |%X|Print the associated argument as **UNSIGNED HEXADECIMAL** number with **UPPER-CASE HEX-DIGITS (A-F)**|
 - **Modifiers**: To be more flexible in the output of numbers and strings, the `printf` command allows format modifiers. These are specified between the introductory `%` and the character that specifies the format. Usage: `"% <MODIFIER> <SPECIFIER>"`
-  
+
   |Field Output Format|Description|
   |-------------------|-----------|
   |**`<N>`**|**Any number**: Specifies a **minimum field width**, if the text to print is shorter, it's padded with spaces, if the text is longer, the field is expanded|
@@ -1978,6 +1978,183 @@ You can encapsulate your shell script code into a function, which you can then u
   - The same technique can be adopted for entering the Esc character. Press **`Ctrl+v+Esc`**, and you'll see the Esc character looking like this: **`^[`**
   - This, too, is a single character; you can place your cursor only on the ^. If your version of VI or PuTTY doesn't let you enter the Esc character as advised above, then you can use this: **`Ctrl+v+[`**
   - The Esc character may need special treatment in VI since it is the terminator of the Input Mode.
+
+## Part ?? (Regular Expression or Regex)
+
+- What is Regular Expression?
+  - A regular expression is a pattern template you define that a Linux utility uses to filter text.
+  - A Linux utility (such as the sed editor or the gawk program) matches the regular expression pattern against data as that data flows into the utility. If the data matches the pattern, it's accepted for processing. If the data doesn't match the pattern, it's rejected.
+- **Types of Regular Expression**
+  - The biggest problem with using regular expressions is that there isn't just one set of them. Several different applications use different types of regular expressions in the Linux environment.
+  - These include such diverse applications as programming languages (Java, Perl, and Python), Linux utilities (such as the sed editor, the gawk program, and the grep utility), and mainstream applications (such as the MySQL and PostgreSQL database servers). A regular expression is implemented using a regular expression engine. A regular expression engine is an underlying software that interprets regular expression patterns and uses those patterns to match the text.
+  - In the Linux world, there are two popular regular expression engines:
+    1. The POSIX Basic Regular Expression (BRE) engine
+    2. The POSIX Extended Regular Expression (ERE) engine
+  - Most Linux utilities, at a minimum, conform to the POSIX BRE engine specifications, recognizing all of the pattern symbols it defines. Unfortunately, some utilities (such as the sed editor) only conform to a subset of the BRE engine specifications. This is due to speed constraints, as the sed editor attempts to process text in the data stream as quickly as possible.
+- Patterns are case sensitive. It means they'll only match patterns with the proper case of characters.
+- **Special Characters**: Regular expression patterns assign a special meaning to a few characters. If you try to use these characters in your text pattern, you won't get the results you were expecting. Unless we use a single backslash before these characters. The special characters recognized by regular expressions are:
+  ```
+  .*[]^${}\+?|()
+  ```
+  - **`^`** : The caret character defines a pattern that starts at the beginning of a line of text in the data stream. If the pattern located at any place other than the start of the line, the regular expression pattern fails.
+  - **`$`** : The dollar sign special character defines the end anchor. Adding this special character at the end of a text pattern indicates that the line of data must end with the text pattern.
+  - **`.`** : The dot/period special character use to match any single character except a newline character.
+  - **`[]`** : The dot/period special character is excellent for matching a character position against any character, but what if you want to limit what characters to match? It is called a character class in regular expressions. To define a character class, you use square brackets. The brackets should contain any character that you want to include in the class.
+  - **`[^]`** : Instead of looking for a character contained in the class, you can look for any character that's not in the class. To do that, place a caret character at the beginning of the character class range.
+  - **`[-]`** : You can use a range of characters within a character class by using the dash symbol. Just specify the first character in the range, a dash, then the last character in the range.
+  - **`*`** : Placing an asterisk after a character signifies that the character must appear zero or more times in the text to match the pattern.
+  - **`?`** : The question mark indicates that the preceding character can appear zero or one time, but that's all. It doesn't match repeating occurrences of the character, and this character also called lazy character. (The POSIX ERE patterns include a few additional symbols that are used by some Linux applications and utilities. The gawk program or egrep recognizes the ERE patterns, but the sed editor doesn't.)
+  - **`+`** : The plus sign indicates that the preceding character can appear one or more times, but must be present at least once. The pattern doesn't match if the character is not present. (The POSIX ERE)
+  - **`{}`** : The curly braces are available in ERE to allow you to specify a limit on a repeatable regular expression. It is often referred to as an interval. By default, the gawk program doesn't recognize regular expression intervals. You must specify the `--re-interval` command-line option for the gawk program to recognize regular expression intervals. You can express the interval in these formats:
+    - **`{m}`** : The regular expression appears exactly m times.
+    - **`{m,n}`** : The regular expression appears at least m times, but no more than n times.
+    - **`{m,}`** : The regular expression appears at least m times.
+    - **`{,n}`** : The regular expression appears at most n times. (zero to n times)
+  - **`|`** : The pipe symbol allows you to specify two or more patterns that the regular expression engine uses in a logical OR formula when examining the data stream. If any of the patterns match the data stream text, the text passes. If none of the patterns match, the data stream text fails. (The POSIX ERE)
+  - **`()`** : Parentheses can also group regular expression patterns. When you group a regular expression pattern, the group treated as a standard character. You can apply a special character to the group just as you would to a regular character. (The POSIX ERE)
+- Examples:
+  ```shell
+  $ echo "This is a test" | sed -n '/test/p'
+  This is a test
+  $ echo "This is a test" | sed -n '/trial/p'
+
+  # Escape Special Characters
+  $ cat FILE.txt
+  The cost is $4.00
+  $ sed -n '/\$/p' FILE.txt
+  The cost is $4.00
+
+  # ^
+  $ echo "The book store" | sed -n '/^book/p'
+
+  $ echo "Books are great" | sed -n '/^Book/p'
+  Books are great
+
+  # $
+  $ echo "This book is good" | sed -n '/book$/p'
+
+  $ echo "This is a good book" | sed -n '/book$/p'
+  This is a good book
+
+  # .
+  $ cat TEST.txt
+  This is a test of a line.
+  The cat is sleeping.
+  That is a very nice hat.
+  This test is at line four.
+  at ten o'clock we'll go home.
+
+  $ sed -n '/.at/p' TEST.txt
+  The cat is sleeping.
+  That is a very nice hat.
+  This test is at line four.
+
+  # []
+  $ sed -n '/[ch]at/p' TEST.txt
+  The cat is sleeping.
+  That is a very nice hat.
+  $ echo "Yes" | sed -n '/[Yy]es/p'
+  Yes
+  $ echo "yes" | sed -n '/[Yy]es/p'
+  yes
+
+  # [^]
+  $ sed -n '/[^ch]at/p' TEST.txt
+  This test is at line four.
+
+  # [-]
+  $ cat FILE1.txt
+  1
+  43
+  8
+  684
+  31
+  68
+  87
+  551
+  $ sed -n '/^[0-9][0-9][0-9]$/p' FILE1.txt
+  684
+  511
+
+  # *
+  $ cat FILE2.txt
+  ik
+  isk
+  iek
+  iesk
+  ieek
+  ieeek
+  ieeeek
+  $ sed -n '/ie*k/p' FILE2.txt
+  ik
+  iek
+  ieek
+  ieeek
+  ieeeek
+
+  $ cat FILE3.txt | sed -n '/b[ae]*t/p'
+  bt
+  bat
+  bet
+  baat
+  baaeeet
+  baeeaeeat
+
+  # ?
+  $ echo "bt" | gawk '/be?t/{print $0}'
+  bt
+  $ echo "bet" | gawk '/be?t/{print $0}'
+  bet
+  $ echo "beet" | gawk '/be?t/{print $0}'
+
+  $ echo "beeet" | gawk '/be?t/{print $0}'
+
+  # +
+  $ echo "beeet" | gawk '/be+t/{print $0}'
+  beeet
+  $ echo "beet" | gawk '/be+t/{print $0}'
+  beet
+  $ echo "bet" | gawk '/be+t/{print $0}'
+  bet
+  $ echo "bt" | gawk '/be+t/{print $0}'
+
+  # {}
+  $ echo "bt" | gawk --re-interval '/be{1}t/{print $0}'
+
+  $ echo "bet" | gawk --re-interval '/be{1}t/{print $0}'
+  bet
+  $ echo "beet" | gawk --re-interval '/be{1}t/{print $0}'
+
+  $ echo "beeet" | gawk --re-interval '/be{1,}t/{print $0}'
+  beeet
+  $ echo "beeet" | gawk --re-interval '/be{,3}t/{print $0}'
+  beeet
+  $ echo "beeeeet" | gawk --re-interval '/be{2,5}t/{print $0}'
+  beeeeet
+
+  # |
+  $ echo "The cat is asleep" | gawk '/cat|dog/{print $0}'
+  The cat is asleep
+  $ echo "The dog is asleep" | gawk '/cat|dog/{print $0}'
+  The dog is asleep
+  $ echo "The sheep is asleep" | gawk '/cat|dog/{print $0}'
+
+  # ()
+  $ echo "Sat" | gawk '/Sat(urday)?/{print $0}'
+  Sat
+  $ echo "Saturday" | gawk '/Sat(urday)?/{print $0}'
+  Saturday
+  $ echo "cat" | gawk '/(c|b)a(b|t)/{print $0}'
+  cat
+  $ echo "cab" | gawk '/(c|b)a(b|t)/{print $0}'
+  cab
+  $ echo "bat" | gawk '/(c|b)a(b|t)/{print $0}'
+  bat
+  $ echo "bab" | gawk '/(c|b)a(b|t)/{print $0}'
+  bab
+  $ echo "tab" | gawk '/(c|b)a(b|t)/{print $0}'
+
+  ```
 
 ## Part ?? (References)
 
