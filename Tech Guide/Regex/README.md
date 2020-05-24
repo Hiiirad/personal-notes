@@ -53,6 +53,7 @@ Meta-Character|Description|Example
 `{n}`|Exactly n times|`a{3}` exactly 3 of a
 `{n,}`|More than n times|`a{3,}` 3 or more of a
 `{n,m}`|Between n and m|`a{3,5}` between 3 and 5 of a
+`{,m}`|Less than m times|`a{,5}` 0 to 5 times
 `*`|Greedy Quantifier|`a.*a` greedy c**an be dangerous a**t times
 `*?`|Lazy Quantifier|`a.*?a` greedy c**an be da**ngerous at times
 
