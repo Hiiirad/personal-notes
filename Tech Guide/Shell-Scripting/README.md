@@ -1521,6 +1521,78 @@ There are three different ways to perform mathematical operations in your shell 
     done
     clear
     ```
+- **Dialog**
+  - The `dialog` command allows you to display a variety of questions or display messages using dialog boxes from a shell script. (Kdialog allows you to create KDE-specific front-ends for scripts)
+  - The exit status of the dialog command is set depending on which button the user selects. If the No button is selected, the exit status is one.
+  - The dialog command uses command line parameters to determine what type of windows widget to produce. A widget is the dialog package term for a kind of windows element. The dialog package currently supports these types of widgets:
+    |Widget|Description|
+    |------|-----------|
+    |calendar|Provides a calendar to select a date from|
+    |checklist|Displays multiple entries where each entry can be turned on or off|
+    |form|Allows you to build a form with labels and text fields to be filled out|
+    |fselect|Provides a file selection window to browse for a file|
+    |gauge|Displays a meter showing a percentage of completion|
+    |infobox|Displays a message without waiting for a response|
+    |inputbox|Displays a single text form box for text entry|
+    |inputmenu|Provides an editable menu|
+    |menu|Displays a list of selections to choose from|
+    |msgbox|Displays a message and requires the user to select an OK button|
+    |passwordbox|Displays a single textbox that hides entered text|
+    |passwordform|Displays a form with labels and hidden text fields|
+    |pause|Displays a meter showing the status of a specified pause period|
+    |radiolist|Provides a group of menu items where only one item can be selected|
+    |tailbox|Displays text from a file in a scrolling window using the tail command|
+    |tailboxbg|Same as tailbox, but operates in background mode|
+    |textbox|Displays the contents of a file in a scrolling window|
+    |timebox|Provides a window to select an hour, minute, and second|
+    |yesno|Provides a simple message with Yes and No buttons|
+  - **msgbox**
+    - It displays a simple message in a window and waits for the user to click on an OK button before disappearing. The format required to use a msgbox widget is:
+    - Syntax:
+      ```bash
+      $ dialog --msgbox "TEXT" HEIGHT WIDTH
+      $ dialog --title Testing --msgbox "This is a test" 10 20
+      ```
+  - **yesno**
+    - Syntax:
+      ```bash
+      $ dialog --yesno "TEXT" HEIGHT WIDTH
+      $ dialog --title "Please Answer" --yesno "Is this machine still on? " 10 20
+      ```
+  - **inputbox**
+    - The inputbox widget provides a simple textbox area for the user to enter a text string. The dialog command sends the value of the text string to STDERR. You must redirect that to retrieve the answer.
+    - The inputbox provides two buttons, OK and Cancel. If the Cancel button is selected, the exit status of the command is one; otherwise, the exit status will be zero.
+    - Syntax:
+      ```bash
+      $ dialog --inputbox "TEXT" HEIGHT WIDTH 2>FILE.txt
+      $ dialog --inputbox "Enter your age:" 10 20 2>age.txt
+      $ cat age.txt
+      # Output: 12
+      ```
+  - **textbox**
+    - The textbox widget is a great way to display lots of information in a window. It produces a scrollable window containing the text from a file specified in the parameters.
+    - Syntax:
+      ```bash
+      $ dialog --textbox /FILE/PATH HEIGHT WIDTH
+      $ dialog --textbox /etc/passwd 15 45
+      ```
+  - **menu**
+    - Syntax:
+      ```bash
+      $ dialog --menu "TITLE" HEIGHT WIDTH NUMBER_OF_MENU_LINES INDEX_1 "TEXT OF INDEX_1" INDEX_2 "TEXT OF INDEX_2"
+      $ dialog --menu "SysAdmin Menu" 20 30 10 1 "Display Disk Space" 2 "Display Users" 3 "Display Memory Usage" 4 "Exit" 2>text.txt
+      ```
+  - **fselect**
+    - The fselect widget is convenient when working with filenames. Instead of forcing the user to type in a filename, you can use the fselect widget to browse to the file location and select the file.
+    - Syntax:
+      ```bash
+      $ dialog --fselect DIRECTORY_ADDRESS HEIGHT WIDTH 2>FILE.txt
+      $ dialog --title "Select a file" --fselect $HOME/ 10 50 2>file.txt
+      ```
+- **Zenity**
+  - Zenity is free software and a cross-platform program that allows the execution of GTK dialog boxes in command-line and shell scripts.
+  - You can't use `zenity` command on CLI mode. If you want users to use a graphical tool over remote connection protocols such as SSH, Telnet, etc., you should use `dialog` command.
+  - You can check the manual page of this command, which has lots of different examples.
 
 ## Part 12 (Script Control)
 
