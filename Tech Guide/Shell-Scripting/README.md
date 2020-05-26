@@ -1522,7 +1522,7 @@ There are three different ways to perform mathematical operations in your shell 
     clear
     ```
 - **Dialog**
-  - The `dialog` command allows you to display a variety of questions or display messages using dialog boxes from a shell script. (Kdialog allows you to create KDE-specific front-ends for scripts)
+  - The `dialog` command allows you to display a variety of questions or display messages using dialog boxes from a shell script. (Kdialog allows you to create KDE-specific front-ends for scripts. Also, Xdialog is designed to be a drop-in replacement for the "dialog" or "cdialog" programs. It converts any terminal based program into a program with an X-windows interface. The dialogs are easier to see and use while adding even more functionalities (e.g., with the treeview, the file selector, the edit box, the range box, the help button/box). Because Xdialog uses GTK+, it will match your desktop theme.)
   - The exit status of the dialog command is set depending on which button the user selects. If the No button is selected, the exit status is one.
   - The dialog command uses command line parameters to determine what type of windows widget to produce. A widget is the dialog package term for a kind of windows element. The dialog package currently supports these types of widgets:
     |Widget|Description|
