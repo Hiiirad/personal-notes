@@ -2051,6 +2051,149 @@ You can encapsulate your shell script code into a function, which you can then u
   - This, too, is a single character; you can place your cursor only on the ^. If your version of VI or PuTTY doesn't let you enter the Esc character as advised above, then you can use this: **`Ctrl+v+[`**
   - The Esc character may need special treatment in VI since it is the terminator of the Input Mode.
 
+## Part ?? (Stream Editors)
+
+- **SED (Stream EDitor)**
+  - The sed editor is called a stream editor, as opposed to a regular interactive text editor. In an interactive text editor, such as vim, you interactively use keyboard commands to insert, delete, or replace text in the data. A stream editor edits a stream of data based on a set of rules you supply ahead of time before the editor processes it.
+  - Syntax: `sed OPTIONS SCRIPT FILE`
+  - Sed Command Options:
+    |Option|Description|
+    |------|-----------|
+    |-e SCRIPT|Add commands specified in the script to the commands run while processing the input|
+    |-f FILE|Add the commands specified in the file to the commands run while processing the input|
+    |-n|Don’t produce output for each command, but wait for the print command|
+  - By default, the sed editor applies the specified commands to the STDIN input stream. This allows you to pipe data directly to the sed editor for processing.
+  - Finally, if you have lots of sed commands you want to process, it’s often easier to store them in a separate file and use the -f option to specify the file in the sed command.
+  - Examples:
+    ```bash
+    # Example 1
+    echo "This is a test" | sed 's/test/big test/'
+
+    # Example 2
+    $ cat data1
+    The quick brown fox jumps over the lazy dog
+    $ sed -e 's/brown/green/; s/dog/cat/' data1
+    The quick green fox jumps over the lazy cat.
+
+    # Example 3 (Multiline)
+    $ sed -e '
+    s/brown/green/
+    s/fox/elephant/
+    s/dog/cat/' data1
+    The quick green elephant jumps over the lazy cat.
+
+    # Example 4 (Reading editor commands from a file)
+    $ cat SCRIPT1
+    s/brown/green/
+    s/fox/elephant/
+    s/dog/cat/
+    $ sed -f SCRIPT1 data1
+    The quick green elephant jumps over the lazy cat
+    ```
+- **GAWK**
+  - GAWK is the GNU implementation of AWK. The awk program takes stream editing one step further than the sed editor by providing a programming language instead of just editor commands. Within the programming language you can:
+    - Define variables to store data.
+    - Use arithmetic and string operators to operate on data.
+    - Use structured programming concepts, such as if-then statements and loops, to add logic to your data processing.
+    - Generate formatted reports by extracting data elements within the data file and repositioning them in another order or format.
+  - Syntax: `gawk OPTIONS PROGRAM FILE`
+  - GAWK Options:
+    |Option|Description|
+    |------|-----------|
+    |-F FILE_SEPERATOR|Specify a file separator for delineating data fields in a line|
+    |-f FILE|Specify a filename to read the program from|
+    |-v VAR=VALUE|Define a variable and default value used in the gawk program|
+  - Reading The Program Script From The Command Line
+    - A gawk program script is defined by opening and closing braces. You must place script commands between the two braces. Since the gawk command line assumes that the script is a single text string, you must also enclose your script in single quotation marks: `$ gawk '{print "Hello World!"}'`
+    - When you run the program above, it just waits for text to come in via STDIN. You can exit by pressing Ctrl+D
+  - Using Data Field Variables
+    - One of the primary features of gawk is its ability to manipulate data in the text file. It does this by automatically assigning a variable to each data element in a line. By default, gawk assigns the following variables to each data field it detects in the line of text:
+      - **$0** : Represents the entire lines of text.
+      - **$1** : Represents the first data field in the line of text.
+      - **$2** : Represents the second data field in the line of text.
+      - **$n** : Represents the n th data field in the line of text.
+      - **NF** : Represents number of fields.
+      - **$NF** : Represents the the last field.
+    - Each data field is determined in a text line by a field separation character. The default field separation character in gawk is any whitespace character (such as the tab or space characters).
+    - Example:
+      ```shell
+      $ cat data3
+      Line     1 of   test text.
+      Line  2   of test   text.
+      Line    3   of  test   text.
+      $ gawk '{print $2}' data3
+      1
+      2
+      3
+      $ gawk '{print NF}' data3
+      5
+      5
+      5
+      $ gawk '{print $NF}' data3
+      text.
+      text.
+      text.
+      ```
+    - If you're reading a file that uses a different field separation character, you can specify it by using the `-F` option:
+      ```bash
+      $ gawk -F: '{print $1 " -> " $3}' /etc/passwd | head
+      root -> 0
+      daemon -> 1
+      bin -> 2
+      sys -> 3
+      sync -> 4
+      games -> 5
+      man -> 6
+      lp -> 7
+      mail -> 8
+      news -> 9
+      ```
+  - Using Multiple Commands In The Program Script
+    - To use multiple commands in the program script specified on the command line, just place a semicolon between each command:
+    - Example:
+      ```bash
+      $ echo "My name is Microsoft" | gawk '{$4="Linux";print $0}'
+      My name is Linux
+      ```
+  - Reading The Program From A File
+    - Example of single-line script:
+      ```bash
+      # Example 1
+      $ cat script5
+      { print "Shell of " $1 " is " $NF }
+      $ gawk -F: -f script5 /etc/passwd | head
+      Shell of root is /bin/bash
+      Shell of daemon is /usr/sbin/nologin
+      Shell of bin is /usr/sbin/nologin
+      Shell of sys is /usr/sbin/nologin
+      Shell of sync is /bin/sync
+      Shell of games is /usr/sbin/nologin
+      Shell of man is /usr/sbin/nologin
+      Shell of lp is /usr/sbin/nologin
+      Shell of mail is /usr/sbin/nologin
+      Shell of news is /usr/sbin/nologin
+      ```
+    - Example of multi-line script:
+      ```bash
+      $ cat script10
+      {
+        text1="Shell of "
+        text2=" is "
+        print text1 $1 text2 $NF
+      }
+      $ gawk -F: -f script10 /etc/passwd
+      Shell of root is /bin/bash
+      Shell of daemon is /usr/sbin/nologin
+      Shell of bin is /usr/sbin/nologin
+      Shell of sys is /usr/sbin/nologin
+      Shell of sync is /bin/sync
+      Shell of games is /usr/sbin/nologin
+      Shell of man is /usr/sbin/nologin
+      Shell of lp is /usr/sbin/nologin
+      Shell of mail is /usr/sbin/nologin
+      Shell of news is /usr/sbin/nologin
+      ```
+
 ## Part ?? (Regular Expression or Regex)
 
 - What is Regular Expression?
