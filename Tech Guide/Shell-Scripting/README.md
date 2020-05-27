@@ -1095,7 +1095,7 @@ There are three different ways to perform mathematical operations in your shell 
     fi
     # Output: Good job!
     ```
-- **Brackets or [ ]**
+- **Square Brackets or [ ]**
   - The bash shell provides an alternative way of declaring the test command in an if-then statement.
     ```bash
     #!/bin/bash
@@ -2056,6 +2056,12 @@ You can encapsulate your shell script code into a function, which you can then u
 - **SED (Stream EDitor)**
   - The sed editor is called a stream editor, as opposed to a regular interactive text editor. In an interactive text editor, such as vim, you interactively use keyboard commands to insert, delete, or replace text in the data. A stream editor edits a stream of data based on a set of rules you supply ahead of time before the editor processes it.
   - Syntax: `sed OPTIONS SCRIPT FILE`
+  - We should use a single quote at the beginning and the end of the script, otherwise shell interprets special characters, and the result will be different.
+  - Sed works on a temporary buffer called - The Pattern Space - it does not change the original input.
+  - The three most commonly used sed operations are:
+    - Printing to STDOUT
+    - Delete from a file
+    - Substitution
   - Sed Command Options:
     |Option|Description|
     |------|-----------|
@@ -2063,6 +2069,7 @@ You can encapsulate your shell script code into a function, which you can then u
     |-f FILE|Add the commands specified in the file to the commands run while processing the input|
     |-n|Don’t produce output for each command, but wait for the print command|
   - By default, the sed editor applies the specified commands to the STDIN input stream. This allows you to pipe data directly to the sed editor for processing.
+  - Sed uses the same commands as the ex and vi editors (when running inline mode)
   - Finally, if you have lots of sed commands you want to process, it’s often easier to store them in a separate file and use the -f option to specify the file in the sed command.
   - Examples:
     ```bash
@@ -2089,6 +2096,17 @@ You can encapsulate your shell script code into a function, which you can then u
     s/dog/cat/
     $ sed -f SCRIPT1 data1
     The quick green elephant jumps over the lazy cat
+
+    # Example 5 (vi commands in sed)
+    $ cat data2
+    1
+    2
+    3
+    4
+    5
+    $ sed '1,3d' data2
+    4
+    5
     ```
 - **GAWK**
   - GAWK is the GNU implementation of AWK. The awk program takes stream editing one step further than the sed editor by providing a programming language instead of just editor commands. Within the programming language you can:
@@ -2192,6 +2210,93 @@ You can encapsulate your shell script code into a function, which you can then u
       Shell of lp is /usr/sbin/nologin
       Shell of mail is /usr/sbin/nologin
       Shell of news is /usr/sbin/nologin
+      ```
+  - Running Scripts Before Processing Data
+    - The gawk program also allows you to specify when the program script is run. By default, gawk reads a line of text from the input, then executes the program script on the data in the line of text. Sometimes you may need to run a script before processing data, such as to create a header section for a report. To do that, you use the BEGIN keyword. This keyword forces gawk to execute the program script specified after the BEGIN keyword before reading the data: `gawk 'BEGIN {print "Hello World!"}'`
+    - If you want to process data with a normal program script, you must define the program using another script section: `gawk 'BEGIN {print "Hello World!"} {print $0}'`
+  - Running Scripts After Processing Data:
+    - Similarly to the BEGIN keyword, the END keyword allows you to specify a program script that gawk executes after reading the data: `gawk 'BEGIN {print "Hello World!"} {print $0} END {print "BYE"}'`
+  - Example (Advanced):
+    ```bash
+    # Write a gawk program script to produce below output:
+    $ head /etc/passwd | gawk -f script20
+    The list of users and their shells
+    Userid         Shell
+    -------   ------------
+    root     /bin/bash
+    daemon     /usr/sbin/nologin
+    bin     /usr/sbin/nologin
+    sys     /usr/sbin/nologin
+    sync     /bin/sync
+    games     /usr/sbin/nologin
+    man     /usr/sbin/nologin
+    lp     /usr/sbin/nologin
+    mail     /usr/sbin/nologin
+    news     /usr/sbin/nologin
+    End of the list
+
+    # Answer
+    $ cat script20
+    BEGIN {
+      print "The list of users and their shells"
+      print "Userid         Shell"
+      print "-------   ------------"
+      FS=":"
+    }
+    {
+      print $1 "     " $NF
+    }
+    END {
+      print "End of the list"
+    }
+    ```
+  - Formatted Printing:
+    - Syntax: `printf "FORMAT STRING", var1, var2, ...`
+    - Examples:
+      ```bash
+      # Example 1
+      $ cat /etc/passwd | gawk -F":" '{printf "%d %20s\n", $3, $1}'
+      0                 root
+      1               daemon
+      2                  bin
+      3                  sys
+      4                 sync
+      5                games
+      6                  man
+      7                   lp
+      8                 mail
+      9                 news
+
+      # Example 2 (Last example with formatted printing)
+      $ cat script20
+      BEGIN {
+        print "The list of users and their shells"
+        print "Userid         Shell"
+        print "-------   ------------"
+        FS=":"
+      }
+      {
+        printf "%10s\t%20s\n", $1, $NF
+      }
+      END {
+        print "End of the list"
+      }
+
+      $ head /etc/passwd | gawk -f script20
+      The list of users and their shells
+      Userid         Shell
+      -------   ------------
+            root                 /bin/bash
+          daemon         /usr/sbin/nologin
+             bin         /usr/sbin/nologin
+             sys         /usr/sbin/nologin
+            sync                 /bin/sync
+           games         /usr/sbin/nologin
+             man         /usr/sbin/nologin
+              lp         /usr/sbin/nologin
+            mail         /usr/sbin/nologin
+            news         /usr/sbin/nologin
+      End of the list
       ```
 
 ## Part ?? (Regular Expression or Regex)
