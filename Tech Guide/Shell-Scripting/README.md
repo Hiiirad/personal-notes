@@ -2051,7 +2051,7 @@ You can encapsulate your shell script code into a function, which you can then u
   - This, too, is a single character; you can place your cursor only on the ^. If your version of VI or PuTTY doesn't let you enter the Esc character as advised above, then you can use this: **`Ctrl+v+[`**
   - The Esc character may need special treatment in VI since it is the terminator of the Input Mode.
 
-## Part ?? (Stream Editors)
+## Part 16 (Stream Editors)
 
 > SED and GAWK are very advanced tools/utilities that you can do so much with them. In this part, I'm going to describe as far as I know about them.
 
@@ -2553,7 +2553,7 @@ You can encapsulate your shell script code into a function, which you can then u
       End of the list
       ```
 
-## Part ?? (Regular Expression or Regex)
+## Part 17 (Regular Expression or Regex)
 
 - What is Regular Expression?
   - A regular expression is a pattern template you define that a Linux utility uses to filter text.
@@ -2730,7 +2730,48 @@ You can encapsulate your shell script code into a function, which you can then u
 
   ```
 
-## Part ?? (References)
+## Part 18 (SysAdmin's Power)
+
+There's no place where shell script programming is more useful than for the Linux system administrator. The typical Linux system administrator has many jobs that need to be done daily, from monitoring disk space and users to backing up important files. Shell scripts can make the life of the system administrator much easier!
+
+- Monitoring System Statistics
+  - One of the Linux system administrators' core responsibilities is to ensure that the system is running correctly. So, there are lots of different system statistics that you must monitor. Creating automated shell scripts to monitor specific situations can be a lifesaver.
+  - Monitoring Disk Free Space: To automatically monitor the available disk space, first, you'll need to use a command that can display that value. The best command to monitor disk space is the `df` command.
+  - Example for used space of root:
+    ```bash
+    #!/bin/bash
+    # 1. Select our needed field
+    df | sed -n '/\/$/p'
+    # 2. Separate used space percentage
+    df | sed -n '/\/$/p' | gawk '{print $5}'
+    # 3. Delete % sign so we can use the value for mathematical purposes
+    df | sed -n '/\/$/p' | gawk '{print $5}' | sed 's/%//'
+    # 4. Assign it to a variable
+    USED=`df | sed -n '/\/$/p' | gawk '{print $5}' | sed 's/%//'`
+    # 5. Comparison and alert/mail SysAdmin
+    if [ $USED -gt 90 ]
+    then
+      echo "Disk used on root is at $USED%" | mail -s "Disk Warning!" fake@email.com
+    fi
+    # 6. Now we should use crontab to run it constantly
+    ```
+  - How often you need to run this script depends on how active your file server is. For a low-volume file server, you may only have to run the script once a day.
+  - Example for whole disk usage:
+    ```bash
+    #!/bin/bash
+    df | egrep -v "tmpfs|udev|Use" | gawk '{print $5"|"$6}' | while read line
+    do
+      USED=`echo $line | gawk -F"|" '{print $1}' | sed 's/%//'`
+      FILESYSTEM=`echo $line | gawk -F"|" '{print $2}' | sed 's/%//'`
+      if [ $USED -gt 85 ]
+      then
+        echo "Used space on $FILESYSTEM is at $USED%" | mail -s "Disk Warning on $FILESYSTEM" fake@email.com
+      fi
+    done
+    ```
+<!-- Maximum temperature of CPU should be 104 degree. -->
+
+## Part 19 (References)
 
 1. [Signals](https://www.computerhope.com/unix/signals.htm)
 2. [Bash Color and Formatting](https://misc.flogisoft.com/bash/tip_colors_and_formatting)
