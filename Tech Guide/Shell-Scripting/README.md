@@ -2405,6 +2405,10 @@ You can encapsulate your shell script code into a function, which you can then u
       text.
       text.
       text.
+      $ gawk '{print $(NF-1)}' data3
+      test
+      test
+      test
       ```
     - If you're reading a file that uses a different field separation character, you can specify it by using the `-F` option:
       ```bash
@@ -2734,8 +2738,9 @@ You can encapsulate your shell script code into a function, which you can then u
 
 There's no place where shell script programming is more useful than for the Linux system administrator. The typical Linux system administrator has many jobs that need to be done daily, from monitoring disk space and users to backing up important files. Shell scripts can make the life of the system administrator much easier!
 
-- Monitoring System Statistics
-  - One of the Linux system administrators' core responsibilities is to ensure that the system is running correctly. So, there are lots of different system statistics that you must monitor. Creating automated shell scripts to monitor specific situations can be a lifesaver.
+One of the Linux system administrators' core responsibilities is to ensure that the system is running correctly. So, there are lots of different system statistics that you must monitor. Creating automated shell scripts to monitor specific situations can be a lifesaver.
+
+- Monitoring Disk Statistics
   - Monitoring Disk Free Space: To automatically monitor the available disk space, first, you'll need to use a command that can display that value. The best command to monitor disk space is the `df` command.
   - Example for used space of root:
     ```bash
@@ -2769,6 +2774,77 @@ There's no place where shell script programming is more useful than for the Linu
       fi
     done
     ```
+- Watching CPU and Memory Usage
+  - There are a few different commands that you can use to extract CPU and memory information for the system.
+  - CPU Load Averages: `uptime | sed 's/.*average://' | gawk '{print $1 $2 $3}'`
+  - **`vmstat` or Virtual Memory Statistics**:
+    - Another great command for extracting system information is the `vmstat` command. 
+    - The first time you run the `vmstat` command, it displays the average values since the last reboot. To get the current statistics, you must run the `vmstat` command with these command line parameters: `vmstat 1 2`
+    - The `vmstat` Output Symbols:
+      |Symbol|Description|
+      |------|-----------|
+      |r|The Amount of Processes Waiting For CPU Time|
+      |b|The Amount of Processes In Uninterruptible Sleep|
+      |swpd|The Amount of Virtual Memory Used (MB)|
+      |free|The Amount of Physical Memory Not Used (MB)|
+      |buff|The Amount of Memory Used As Buffer Space (MB)|
+      |cache|The Amount of Memory Used As Cache Space (MB)|
+      |si|The Amount of Memory Swapped In From Disk (MB)|
+      |so|The Amount of Memory Swapped Out To Disk (MB)|
+      |bi|Number of Blocks Received From a Block Device|
+      |bo|Number of Blocks Sent To a Block Device|
+      |in|The number of CPU Interrupts Per Second|
+      |cs|The number of CPU context switches per second|
+      |us|Percent of CPU Time Spent Running Non-Kernel Code|
+      |sy|Percent of CPU Time Spent Running Kernel Code|
+      |id|Percent of CPU Time Spent Idle|
+      |wa|Percent of CPU Time Spent Waiting For I/O|
+      |st|Percent of CPU Time Stolen From a Virtual Machine|
+- Adding Time To Log Files
+  - You'll want to tag each data record with a date and timestamp to indicate when the snapshots are taken. The date command is handy, but the default output from the date command might be cumbersome. You can simplify the date command output by specifying another format: `date +"%m/%d/%Y %H:%M:%S"`
+  - Since you need to sample system data at a regular interval, you'll need two separate scripts. One script captures the data and saves it to the log file. The second script should output the report data and e-mail it to the appropriate individual(s).
+- Generating The Report Script:
+  - Now that you have a full raw data file, you can start working on the script to generate a fancy report for your boss. The best tool for this is the gawk command.
+  - The gawk command allows you to extract raw data from a file and present it in any manner necessary.
+  - For the report, we'll be using HTML format. It allows us to create a nicely formatted report with a minimum amount of work. The browser that displays the report does all the hard work of formatting and displaying the report. All you need to do is insert the appropriate HTML tags to format the data.
+  - Sample Bash Script To Create HTML:
+    ```bash
+    #!/bin/bash
+    # Parse First Script Data Into Daily Report
+    FILE="Path/To/First/Script/Output"
+    TEMP="Path/To/HTML/Output"
+    MAIL=`which mutt`
+    DATE=`date +"%A, %B %d, %Y"`
+    echo "<html><body><h2>Report For $DATE</h2>" > $TEMP
+    echo "<table border=\"1\">" >> $TEMP
+    echo "<tr><td>Date</td><td>Time</td><td>Users</td>" >> $TEMP
+    echo "<td>Load</td><td>Free Memory</td><td>%CPU
+    Idle</td></tr>" >> $TEMP
+    cat $FILE | gawk -F, '{
+    printf "<tr><td>%s</td><td>%s</td><td>%s</td>", $1, $2, $3;
+    printf "<td>%s</td><td>%s</td><td>%s</td>\n</tr>\n", $4, $5, $6;
+    }' >> $TEMP
+    echo "</table></body></html>" >> $TEMP
+    $MAIL -a $TEMP -s "Stat Report For $DATE" Ben < /dev/null
+    rm -f $TEMP
+    ```
+  - Sample HTML Code:
+    ```html
+    <html>
+    <body>
+    <h2>Report Title</h2>
+    <table border="1">
+    <tr>
+    <td>Date</td><td>Time</td><td>Users</td>
+    <td>Load</td><td>Free Memory</td><td>%CPU Idle</td>
+    </tr>
+    <tr>
+    <td>02/05/2020</td><td>11:00:00</td><td>4</td>
+    <td>0.26</td><td>57076</td><td>87</td>
+    </tr>
+    </table></body></html>
+    ```
+
 <!-- Maximum temperature of CPU should be 104 degree. -->
 
 ## Part 19 (References)
