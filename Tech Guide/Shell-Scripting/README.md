@@ -2057,443 +2057,476 @@ You can encapsulate your shell script code into a function, which you can then u
 
 > Unfortunately, SED has documentation without any examples, which makes it incomprehensible. But I'm going to explain its features with example.
 
-- **SED (Stream EDitor)**
-  - The sed editor is called a stream editor, as opposed to a regular interactive text editor. In an interactive text editor, such as vim, you interactively use keyboard commands to insert, delete, or replace text in the data. A stream editor edits a stream of data based on a set of rules you supply ahead of time before the editor processes it.
-  - Syntax: `sed OPTIONS SCRIPT FILE`
-  - Editing Commands/Flags:
-    - The sed editor uses a editing commands (shown in Table) that are similar to those you would use for vi and ed.
-      |Command|Functions|
-      |-------|---------|
-      |**d**|Delete Line(s)|
-      |**p**|Print Line(s)|
-      |**r**|Read a File|
-      |**s**|Substitutes One String For Another|
-      |**w**|Writes To a File|
-  - We should use a single quote at the beginning and the end of the script, otherwise shell interprets special characters, and the result will be unexpected.
-  - Sed works on a temporary buffer called - The Pattern Space - it does not change the original input.
-  - The three most commonly used sed operations are:
-    - Printing to STDOUT
-    - Delete from a file
-    - Substitution
-  - Sed Command Options:
-    |Option|Description|
-    |------|-----------|
-    |-e SCRIPT|Add commands specified in the script to the commands run while processing the input|
-    |-f FILE|Add the commands specified in the file to the commands run while processing the input|
-    |-n|Don’t produce output for each command, but wait for the print command|
-  - By default, the sed editor applies the specified commands to the STDIN input stream. This allows you to pipe data directly to the sed editor for processing.
-  - Sed uses the same commands as the ex and vi editors (when running inline mode)
-  - Finally, if you have lots of sed commands you want to process, it’s often easier to store them in a separate file and use the `-f` option to specify the file in the sed command.
+### **SED (Stream EDitor)**
+
+- The sed editor is called a stream editor, as opposed to a regular interactive text editor. In an interactive text editor, such as vim, you interactively use keyboard commands to insert, delete, or replace text in the data. A stream editor edits a stream of data based on a set of rules you supply ahead of time before the editor processes it.
+- Syntax: `sed OPTIONS SCRIPT FILE`
+- Editing Commands/Flags:
+  - The sed editor uses a editing commands (shown in Table) that are similar to those you would use for vi and ed.
+    |Command|Functions|
+    |-------|---------|
+    |**d**|Delete Line(s)|
+    |**p**|Print Line(s)|
+    |**r**|Read a File|
+    |**s**|Substitutes One String For Another|
+    |**w**|Writes To a File|
+- We should use a single quote at the beginning and the end of the script, otherwise shell interprets special characters, and the result will be unexpected.
+- Sed works on a temporary buffer called - The Pattern Space - it does not change the original input.
+- The three most commonly used sed operations are:
+  - Printing to STDOUT
+  - Delete from a file
+  - Substitution
+- Sed Command Options:
+  |Option|Description|
+  |------|-----------|
+  |-e SCRIPT|Add commands specified in the script to the commands run while processing the input|
+  |-f FILE|Add the commands specified in the file to the commands run while processing the input|
+  |-n|Don’t produce output for each command, but wait for the print command|
+- By default, the sed editor applies the specified commands to the STDIN input stream. This allows you to pipe data directly to the sed editor for processing.
+- Sed uses the same commands as the ex and vi editors (when running inline mode)
+- Finally, if you have lots of sed commands you want to process, it’s often easier to store them in a separate file and use the `-f` option to specify the file in the sed command.
+- Examples:
+  ```bash
+  # Example 1
+  echo "This is a test" | sed 's/test/big test/'
+
+  # Example 2
+  $ cat data1
+  The quick brown fox jumps over the lazy dog
+  $ sed -e 's/brown/green/; s/dog/cat/' data1
+  The quick green fox jumps over the lazy cat.
+
+  # Example 3 (Multiline)
+  $ sed -e '
+  s/brown/green/
+  s/fox/elephant/
+  s/dog/cat/' data1
+  The quick green elephant jumps over the lazy cat.
+
+  # Example 4 (Reading editor commands from a file)
+  $ cat SCRIPT1
+  s/brown/green/
+  s/fox/elephant/
+  s/dog/cat/
+  $ sed -f SCRIPT1 data1
+  The quick green elephant jumps over the lazy cat
+
+  # Example 5 (vi commands in sed)
+  $ cat data2
+  1
+  2
+  3
+  4
+  5
+  $ sed '1,3d' data2
+  4
+  5
+  ```
+- Substitution Flags
+  - The substitute command, by default, only replaces the first match in each line. To get the substitute command to work on different occurrences of the text, you must use a substitution flag.
+  - Syntax: `s/PATTERN/REPLACEMENT/FLAGS`
+  - There are differnet types of substitution flags available:
+    - **Number**: Indicating the pattern occurrence for which the Nth match that should be substituted.
+    - **g**: Indicates that new text should be substituted for all occurrences of the existing text.
+    - **p**: Indicates that the contents of the original line should be printed.
+    - **d**: Indicates that the match pattern should be deleted.
+  - The p substitution flag prints a line that contains a matching pattern in the substitute command. It is most often in conjunction with the `-n` sed option. The `-n` option suppresses output from the sed editor. However, the p substitution flag outputs any line that's been modified. Using the two in combination produces output only for lines that have been modified by the substitute command.
   - Examples:
     ```bash
-    # Example 1
-    echo "This is a test" | sed 's/test/big test/'
+    $ cat data3
+    This is a test of the test script.
+    This is the second test of the test script.
+    
+    $ sed 's/test/trial/2' data3
+    This is a test of the trial script.
+    This is the second test of the trial script.
+    
+    $ sed 's/test/trial/g' data3
+    This is a trial of the trial script.
+    This is the second trial of the trial script.
 
-    # Example 2
+    $ cat data4
+    This is a test line.
+    This is a different line.
+    $ sed 's/test/trial/p' data4
+    This is a test line.
+    This is a test line.
+    This is a different line.
+    $ sed -n 's/test/trial/p' data4
+    This is a trial line.
+    $ sed -n 's/test/trial/' data4
+    # No Output because of the absence of p flag
+
+    # Another use for the print command is when you need to see a line
+    # before it gets altered, such as with the substitution or change command.
+    # You can create a script that displays the line before it’s changed:
+    $ cat data7
+    This is line number 1.
+    This is line number 2.
+    This is line number 3.
+    This is line number 4.
+    Line 5
+    Line 6
+    $ sed -n '/3/{
+    p
+    s/line/test/p
+    }' data7
+    This is line 3.
+    This is test 3.
+    ```
+- Replacement Characters
+  - There are times when you run across characters in text strings that aren't easy to use in the substitution pattern. One popular example in the Linux world is the forward slash.
+    ```shell
+    $ head /etc/passwd | sed 's/\/usr\/sbin\/nologin/\/bin\/bash/'
+    root:x:0:0:root:/root:/bin/bash
+    daemon:x:1:1:daemon:/usr/sbin:/bin/bash
+    bin:x:2:2:bin:/bin:/bin/bash
+    sys:x:3:3:sys:/dev:/bin/bash
+    sync:x:4:65534:sync:/bin:/bin/sync
+    games:x:5:60:games:/usr/games:/bin/bash
+    man:x:6:12:man:/var/cache/man:/bin/bash
+    lp:x:7:7:lp:/var/spool/lpd:/bin/bash
+    mail:x:8:8:mail:/var/mail:/bin/bash
+    news:x:9:9:news:/var/spool/news:/bin/bash
+    ```
+  - Since the forward slash is used as the string delimiter, you must use a backslash to escape it. To solve this problem, the sed editor allows you to select a different character for the string delimiter in the substitute command:
+    ```shell
+    $ head /etc/passwd | sed 's|/usr/sbin/nologin|/bin/bash|'
+    root:x:0:0:root:/root:/bin/bash
+    daemon:x:1:1:daemon:/usr/sbin:/bin/bash
+    bin:x:2:2:bin:/bin:/bin/bash
+    sys:x:3:3:sys:/dev:/bin/bash
+    sync:x:4:65534:sync:/bin:/bin/sync
+    games:x:5:60:games:/usr/games:/bin/bash
+    man:x:6:12:man:/var/cache/man:/bin/bash
+    lp:x:7:7:lp:/var/spool/lpd:/bin/bash
+    mail:x:8:8:mail:/var/mail:/bin/bash
+    news:x:9:9:news:/var/spool/news:/bin/bash
+    ```
+- Printing Line Numbers
+  - The equal sign command prints the current line number for the line within the data stream.
+  - Example:
+    ```shell
     $ cat data1
     The quick brown fox jumps over the lazy dog
-    $ sed -e 's/brown/green/; s/dog/cat/' data1
-    The quick green fox jumps over the lazy cat.
+    The quick brown fox jumps over the lazy dog
+    The quick brown fox jumps over the lazy dog
+    The quick brown fox jumps over the lazy dog
+    $ sed '=' data1
+    1
+    The quick brown fox jumps over the lazy dog
+    2
+    The quick brown fox jumps over the lazy dog
+    3
+    The quick brown fox jumps over the lazy dog
+    4
+    The quick brown fox jumps over the lazy dog
+    ```
+- Using Regular Expression
+  - While matching pattern, you can use regular expression which provides more flexibility.
+  - Example:
+    ```bash
+    $ ls -l /dev/sd*
+    brw-rw---- 1 root disk 8, 0 May 28 18:26 /dev/sda
+    brw-rw---- 1 root disk 8, 1 May 28 18:26 /dev/sda1
+    brw-rw---- 1 root disk 8, 2 May 28 18:26 /dev/sda2
+    brw-rw---- 1 root disk 8, 3 May 28 18:26 /dev/sda3
+    brw-rw---- 1 root disk 8, 4 May 28 18:26 /dev/sda4
+    brw-rw---- 1 root disk 8, 16 May 28 18:26 /dev/sdb
+    brw-rw---- 1 root disk 8, 16 May 28 18:26 /dev/sdb1
+    brw-rw---- 1 root disk 8, 32 May 28 18:26 /dev/sdc
+    brw-rw---- 1 root disk 8, 33 May 28 18:26 /dev/sdb1
+    $ ls -l /dev/sd* | sed "s|.*dev/||"
+    sda
+    sda1
+    sda2
+    sda3
+    sda4
+    sdb
+    sdb1
+    sdc
+    sdb1
 
-    # Example 3 (Multiline)
-    $ sed -e '
-    s/brown/green/
-    s/fox/elephant/
-    s/dog/cat/' data1
-    The quick green elephant jumps over the lazy cat.
+    # It replaces any character before dev/ (including dev/) with empty string.
+    # This combination of dot and * provides a pattern to match any number of any characters.
+    ```
+- Using Addresses
+  1. A Numeric Range Of Lines
+      - By default, the commands you use in the sed editor apply to all lines of the text data. If you only want to apply a command to a specific line, or a group of lines, you must use line addressing. Both forms use the same format for specifying the address: `[address]command`
+      - Example:
+        ```bash
+        $ sed '2s/dog/cat/' data1
+        The quick brown fox jumps over the lazy dog
+        The quick brown fox jumps over the lazy cat
+        The quick brown fox jumps over the lazy dog
+        The quick brown fox jumps over the lazy dog
+        $ sed '2,4s/dog/cat/' data1
+        The quick brown fox jumps over the lazy dog
+        The quick brown fox jumps over the lazy cat
+        The quick brown fox jumps over the lazy cat
+        The quick brown fox jumps over the lazy cat
+        ```
+      - If you want to apply a command to a group of lines starting at some point within the text, but continuing to the end of the text, you can use the special address, the dollar sign:
+        ```bash
+        $ sed '2,$s/dog/cat/' data1
+        The quick brown fox jumps over the lazy dog
+        The quick brown fox jumps over the lazy cat
+        The quick brown fox jumps over the lazy cat
+        The quick brown fox jumps over the lazy cat
+        ```      
+  2. A Text Pattern That Filters Out A Line
+      - The other method of restricting which lines a command applies to is a bit more complicated. The sed editor allows you to specify a text pattern that it uses to filter lines for the command. The format for this is: `/pattern/command`
+      - You must encapsulate the pattern you specify in forward slashes. The sed editor applies the command only to lines that contain the text pattern that you specify.
+      - Example:
+        ```bash
+        # Change a default shell for user Ben
+        $ sed '/ben/s/bash/zsh/' /etc/passwd | head
+        ben:x:500:500:Ben Blum:/home/ben:/bin/zsh
+        barbara:x:501:501:Barbara:/home/barbara:/bin/bash
+        katie:x:502:502:Katie:/home/katie:/bin/bash
+        jessica:x:503:503:Jessica:/home/jessica:/bin/bash
+        test:x:504:504:Ima test:/home/test:/bin/bash
+        ```
+      - You can use regular expression in your pattern to create more powerful filters.
+      - You can also process lines between two lines which match a pattern like this: `/pattern1/,/pattern2/command`
+      - It is useful to print the lines between two specific lines in your script.
+      - Example:
+        ```bash
+        $ sed -n '/^daemon/,/^news/p' /etc/passwd
+        daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin                                      
+        bin:x:2:2:bin:/bin:/usr/sbin/nologin                                                 
+        sys:x:3:3:sys:/dev:/usr/sbin/nologin                                                 
+        sync:x:4:65534:sync:/bin:/bin/sync                                                   
+        games:x:5:60:games:/usr/games:/usr/sbin/nologin                                      
+        man:x:6:12:man:/var/cache/man:/usr/sbin/nologin                                      
+        lp:x:7:7:lp:/var/spool/lpd:/usr/sbin/nologin                                         
+        mail:x:8:8:mail:/var/mail:/usr/sbin/nologin                                          
+        news:x:9:9:news:/var/spool/news:/usr/sbin/nologin
 
-    # Example 4 (Reading editor commands from a file)
-    $ cat SCRIPT1
-    s/brown/green/
-    s/fox/elephant/
-    s/dog/cat/
-    $ sed -f SCRIPT1 data1
-    The quick green elephant jumps over the lazy cat
+        $ sed -n '/^root/,/^ben/s/bash/zsh/p' /etc/passwd
+        root:x:0:0:root:/root:/bin/zsh
+        ben:x:1000:1000:Ben,,,:/home/ben:/usr/bin/zsh
+        ```
+- Deleting Lines
+  - If you need to delete specific lines of text in a text stream, there's the delete command, d which deletes any text lines that match the addressing scheme supplied.
+  - Example:
+    ```bash
+    # Delete All Lines
+    $ sed 'd' data1
 
-    # Example 5 (vi commands in sed)
-    $ cat data2
+    # Delete Third Line
+    $ sed '3d' data1
+
+    # Delete Lines 2,3,4
+    $ sed '2,4d' data1
+
+    # Delete Line 2 To The End
+    $ sed '2,$d' /etc/passwd
+    root:x:0:0:root:/root:/bin/zsh
+    ```
+  - The pattern-matching feature of the sed editor also applies to the delete command:
+    ```bash
+    $ cat data5
+    This is line number 1.
+    This is line number 2.
+    This is line number 3.
+    This is line number 4.
+    $ sed '/number 1/d' data5
+    This is line number 2.
+    This is line number 3.
+    This is line number 4.
+
+    $ cat data6
+    This is line number 1.
+    This is line number 2.
+    Line 3
+    Line 4
+    $ sed '/[0-9]$/d' data6
+    This is line number 1.
+    This is line number 2.
+    ```
+  - You can also delete a range of lines using two text patterns, but be careful if you do this. The first pattern you specify "turns on" the line deletion, and the second pattern "turns off" the line deletion. The sed editor deletes any lines between the two specified lines (including the specified lines):
+    ```bash
+    $ sed '/1/,/3/d' data5
+    This is line number 4.
+
+    $ cat data7
+    This is line number 1.
+    This is line number 2.
+    This is line number 3.
+    This is line number 4.
+    Line 5
+    Line 6
+    $ sed '/number 2/,/number 4/d' data7
+    This is line number 1.
+    Line 5
+    Line 6
+    ```
+
+### **GAWK**
+- GAWK is the GNU implementation of AWK. The awk program takes stream editing one step further than the sed editor by providing a programming language instead of just editor commands. Within the programming language you can:
+  - Define variables to store data.
+  - Use arithmetic and string operators to operate on data.
+  - Use structured programming concepts, such as if-then statements and loops, to add logic to your data processing.
+  - Generate formatted reports by extracting data elements within the data file and repositioning them in another order or format.
+- Syntax: `gawk OPTIONS PROGRAM FILE`
+- GAWK Options:
+  |Option|Description|
+  |------|-----------|
+  |-F FILE_SEPERATOR|Specify a file separator for delineating data fields in a line|
+  |-f FILE|Specify a filename to read the program from|
+  |-v VAR=VALUE|Define a variable and default value used in the gawk program|
+- Reading The Program Script From The Command Line
+  - A gawk program script is defined by opening and closing braces. You must place script commands between the two braces. Since the gawk command line assumes that the script is a single text string, you must also enclose your script in single quotation marks: `$ gawk '{print "Hello World!"}'`
+  - When you run the program above, it just waits for text to come in via STDIN. You can exit by pressing Ctrl+D
+- Using Data Field Variables
+  - One of the primary features of gawk is its ability to manipulate data in the text file. It does this by automatically assigning a variable to each data element in a line. By default, gawk assigns the following variables to each data field it detects in the line of text:
+    - **$0** : Represents the entire lines of text.
+    - **$1** : Represents the first data field in the line of text.
+    - **$2** : Represents the second data field in the line of text.
+    - **$n** : Represents the n th data field in the line of text.
+    - **NF** : Represents number of fields.
+    - **$NF** : Represents the the last field.
+  - Each data field is determined in a text line by a field separation character. The default field separation character in gawk is any whitespace character (such as the tab or space characters).
+  - Example:
+    ```shell
+    $ cat data3
+    Line     1 of   test text.
+    Line  2   of test   text.
+    Line    3   of  test   text.
+    $ gawk '{print $2}' data3
     1
     2
     3
-    4
+    $ gawk '{print NF}' data3
     5
-    $ sed '1,3d' data2
-    4
     5
+    5
+    $ gawk '{print $NF}' data3
+    text.
+    text.
+    text.
+    $ gawk '{print $(NF-1)}' data3
+    test
+    test
+    test
     ```
-  - Substitution Flags
-    - The substitute command, by default, only replaces the first match in each line. To get the substitute command to work on different occurrences of the text, you must use a substitution flag.
-    - Syntax: `s/PATTERN/REPLACEMENT/FLAGS`
-    - There are differnet types of substitution flags available:
-      - **Number**: Indicating the pattern occurrence for which the Nth match that should be substituted.
-      - **g**: Indicates that new text should be substituted for all occurrences of the existing text.
-      - **p**: Indicates that the contents of the original line should be printed.
-      - **d**: Indicates that the match pattern should be deleted.
-    - The p substitution flag prints a line that contains a matching pattern in the substitute command. It is most often in conjunction with the `-n` sed option. The `-n` option suppresses output from the sed editor. However, the p substitution flag outputs any line that's been modified. Using the two in combination produces output only for lines that have been modified by the substitute command.
-    - Examples:
-      ```bash
-      $ cat data3
-      This is a test of the test script.
-      This is the second test of the test script.
-      
-      $ sed 's/test/trial/2' data3
-      This is a test of the trial script.
-      This is the second test of the trial script.
-      
-      $ sed 's/test/trial/g' data3
-      This is a trial of the trial script.
-      This is the second trial of the trial script.
-
-      $ cat data4
-      This is a test line.
-      This is a different line.
-      $ sed 's/test/trial/p' data4
-      This is a test line.
-      This is a test line.
-      This is a different line.
-      $ sed -n 's/test/trial/p' data4
-      This is a trial line.
-      $ sed -n 's/test/trial/' data4
-      # No Output because of the absence of p flag
-
-      # Another use for the print command is when you need to see a line
-      # before it gets altered, such as with the substitution or change command.
-      # You can create a script that displays the line before it’s changed:
-      $ cat data7
-      This is line number 1.
-      This is line number 2.
-      This is line number 3.
-      This is line number 4.
-      Line 5
-      Line 6
-      $ sed -n '/3/{
-      p
-      s/line/test/p
-      }' data7
-      This is line 3.
-      This is test 3.
-      ```
-  - Replacement Characters
-    - There are times when you run across characters in text strings that aren't easy to use in the substitution pattern. One popular example in the Linux world is the forward slash.
-      ```shell
-      $ head /etc/passwd | sed 's/\/usr\/sbin\/nologin/\/bin\/bash/'
-      root:x:0:0:root:/root:/bin/bash
-      daemon:x:1:1:daemon:/usr/sbin:/bin/bash
-      bin:x:2:2:bin:/bin:/bin/bash
-      sys:x:3:3:sys:/dev:/bin/bash
-      sync:x:4:65534:sync:/bin:/bin/sync
-      games:x:5:60:games:/usr/games:/bin/bash
-      man:x:6:12:man:/var/cache/man:/bin/bash
-      lp:x:7:7:lp:/var/spool/lpd:/bin/bash
-      mail:x:8:8:mail:/var/mail:/bin/bash
-      news:x:9:9:news:/var/spool/news:/bin/bash
-      ```
-    - Since the forward slash is used as the string delimiter, you must use a backslash to escape it. To solve this problem, the sed editor allows you to select a different character for the string delimiter in the substitute command:
-      ```shell
-      $ head /etc/passwd | sed 's|/usr/sbin/nologin|/bin/bash|'
-      root:x:0:0:root:/root:/bin/bash
-      daemon:x:1:1:daemon:/usr/sbin:/bin/bash
-      bin:x:2:2:bin:/bin:/bin/bash
-      sys:x:3:3:sys:/dev:/bin/bash
-      sync:x:4:65534:sync:/bin:/bin/sync
-      games:x:5:60:games:/usr/games:/bin/bash
-      man:x:6:12:man:/var/cache/man:/bin/bash
-      lp:x:7:7:lp:/var/spool/lpd:/bin/bash
-      mail:x:8:8:mail:/var/mail:/bin/bash
-      news:x:9:9:news:/var/spool/news:/bin/bash
-      ```
-  - Printing Line Numbers
-    - The equal sign command prints the current line number for the line within the data stream.
-    - Example:
-      ```shell
-      $ cat data1
-      The quick brown fox jumps over the lazy dog
-      The quick brown fox jumps over the lazy dog
-      The quick brown fox jumps over the lazy dog
-      The quick brown fox jumps over the lazy dog
-      $ sed '=' data1
-      1
-      The quick brown fox jumps over the lazy dog
-      2
-      The quick brown fox jumps over the lazy dog
-      3
-      The quick brown fox jumps over the lazy dog
-      4
-      The quick brown fox jumps over the lazy dog
-      ```
-  - Using Regular Expression
-    - While matching pattern, you can use regular expression which provides more flexibility.
-    - Example:
-      ```bash
-      $ ls -l /dev/sd*
-      brw-rw---- 1 root disk 8, 0 May 28 18:26 /dev/sda
-      brw-rw---- 1 root disk 8, 1 May 28 18:26 /dev/sda1
-      brw-rw---- 1 root disk 8, 2 May 28 18:26 /dev/sda2
-      brw-rw---- 1 root disk 8, 3 May 28 18:26 /dev/sda3
-      brw-rw---- 1 root disk 8, 4 May 28 18:26 /dev/sda4
-      brw-rw---- 1 root disk 8, 16 May 28 18:26 /dev/sdb
-      brw-rw---- 1 root disk 8, 16 May 28 18:26 /dev/sdb1
-      brw-rw---- 1 root disk 8, 32 May 28 18:26 /dev/sdc
-      brw-rw---- 1 root disk 8, 33 May 28 18:26 /dev/sdb1
-      $ ls -l /dev/sd* | sed "s|.*dev/||"
-      sda
-      sda1
-      sda2
-      sda3
-      sda4
-      sdb
-      sdb1
-      sdc
-      sdb1
-
-      # It replaces any character before dev/ (including dev/) with empty string.
-      # This combination of dot and * provides a pattern to match any number of any characters.
-      ```
-  - Using Addresses
-    1. A Numeric Range Of Lines
-        - By default, the commands you use in the sed editor apply to all lines of the text data. If you only want to apply a command to a specific line, or a group of lines, you must use line addressing. Both forms use the same format for specifying the address: `[address]command`
-        - Example:
-          ```bash
-          $ sed '2s/dog/cat/' data1
-          The quick brown fox jumps over the lazy dog
-          The quick brown fox jumps over the lazy cat
-          The quick brown fox jumps over the lazy dog
-          The quick brown fox jumps over the lazy dog
-          $ sed '2,4s/dog/cat/' data1
-          The quick brown fox jumps over the lazy dog
-          The quick brown fox jumps over the lazy cat
-          The quick brown fox jumps over the lazy cat
-          The quick brown fox jumps over the lazy cat
-          ```
-        - If you want to apply a command to a group of lines starting at some point within the text, but continuing to the end of the text, you can use the special address, the dollar sign:
-          ```bash
-          $ sed '2,$s/dog/cat/' data1
-          The quick brown fox jumps over the lazy dog
-          The quick brown fox jumps over the lazy cat
-          The quick brown fox jumps over the lazy cat
-          The quick brown fox jumps over the lazy cat
-          ```      
-    2. A Text Pattern That Filters Out A Line
-        - The other method of restricting which lines a command applies to is a bit more complicated. The sed editor allows you to specify a text pattern that it uses to filter lines for the command. The format for this is: `/pattern/command`
-        - You must encapsulate the pattern you specify in forward slashes. The sed editor applies the command only to lines that contain the text pattern that you specify.
-        - Example:
-          ```bash
-          # Change a default shell for user Ben
-          $ sed '/ben/s/bash/zsh/' /etc/passwd | head
-          ben:x:500:500:Ben Blum:/home/ben:/bin/zsh
-          barbara:x:501:501:Barbara:/home/barbara:/bin/bash
-          katie:x:502:502:Katie:/home/katie:/bin/bash
-          jessica:x:503:503:Jessica:/home/jessica:/bin/bash
-          test:x:504:504:Ima test:/home/test:/bin/bash
-          ```
-        - You can use regular expression in your pattern to create more powerful filters.
-        - You can also process lines between two lines which match a pattern like this: `/pattern1/,/pattern2/command`
-        - It is useful to print the lines between two specific lines in your script.
-        - Example:
-          ```bash
-          $ sed -n '/^daemon/,/^news/p' /etc/passwd
-          daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin                                      
-          bin:x:2:2:bin:/bin:/usr/sbin/nologin                                                 
-          sys:x:3:3:sys:/dev:/usr/sbin/nologin                                                 
-          sync:x:4:65534:sync:/bin:/bin/sync                                                   
-          games:x:5:60:games:/usr/games:/usr/sbin/nologin                                      
-          man:x:6:12:man:/var/cache/man:/usr/sbin/nologin                                      
-          lp:x:7:7:lp:/var/spool/lpd:/usr/sbin/nologin                                         
-          mail:x:8:8:mail:/var/mail:/usr/sbin/nologin                                          
-          news:x:9:9:news:/var/spool/news:/usr/sbin/nologin
-
-          $ sed -n '/^root/,/^ben/s/bash/zsh/p' /etc/passwd
-          root:x:0:0:root:/root:/bin/zsh
-          ben:x:1000:1000:Ben,,,:/home/ben:/usr/bin/zsh
-          ```
-  - Deleting Lines
-    - If you need to delete specific lines of text in a text stream, there's the delete command, d which deletes any text lines that match the addressing scheme supplied.
-    - Example:
-      ```bash
-      # Delete All Lines
-      $ sed 'd' data1
-
-      # Delete Third Line
-      $ sed '3d' data1
-
-      # Delete Lines 2,3,4
-      $ sed '2,4d' data1
-
-      # Delete Line 2 To The End
-      $ sed '2,$d' /etc/passwd
-      root:x:0:0:root:/root:/bin/zsh
-      ```
-    - The pattern-matching feature of the sed editor also applies to the delete command:
-      ```bash
-      $ cat data5
-      This is line number 1.
-      This is line number 2.
-      This is line number 3.
-      This is line number 4.
-      $ sed '/number 1/d' data5
-      This is line number 2.
-      This is line number 3.
-      This is line number 4.
-
-      $ cat data6
-      This is line number 1.
-      This is line number 2.
-      Line 3
-      Line 4
-      $ sed '/[0-9]$/d' data6
-      This is line number 1.
-      This is line number 2.
-      ```
-    - You can also delete a range of lines using two text patterns, but be careful if you do this. The first pattern you specify "turns on" the line deletion, and the second pattern "turns off" the line deletion. The sed editor deletes any lines between the two specified lines (including the specified lines):
-      ```bash
-      $ sed '/1/,/3/d' data5
-      This is line number 4.
-
-      $ cat data7
-      This is line number 1.
-      This is line number 2.
-      This is line number 3.
-      This is line number 4.
-      Line 5
-      Line 6
-      $ sed '/number 2/,/number 4/d' data7
-      This is line number 1.
-      Line 5
-      Line 6
-      ```
-
-- **GAWK**
-  - GAWK is the GNU implementation of AWK. The awk program takes stream editing one step further than the sed editor by providing a programming language instead of just editor commands. Within the programming language you can:
-    - Define variables to store data.
-    - Use arithmetic and string operators to operate on data.
-    - Use structured programming concepts, such as if-then statements and loops, to add logic to your data processing.
-    - Generate formatted reports by extracting data elements within the data file and repositioning them in another order or format.
-  - Syntax: `gawk OPTIONS PROGRAM FILE`
-  - GAWK Options:
-    |Option|Description|
-    |------|-----------|
-    |-F FILE_SEPERATOR|Specify a file separator for delineating data fields in a line|
-    |-f FILE|Specify a filename to read the program from|
-    |-v VAR=VALUE|Define a variable and default value used in the gawk program|
-  - Reading The Program Script From The Command Line
-    - A gawk program script is defined by opening and closing braces. You must place script commands between the two braces. Since the gawk command line assumes that the script is a single text string, you must also enclose your script in single quotation marks: `$ gawk '{print "Hello World!"}'`
-    - When you run the program above, it just waits for text to come in via STDIN. You can exit by pressing Ctrl+D
-  - Using Data Field Variables
-    - One of the primary features of gawk is its ability to manipulate data in the text file. It does this by automatically assigning a variable to each data element in a line. By default, gawk assigns the following variables to each data field it detects in the line of text:
-      - **$0** : Represents the entire lines of text.
-      - **$1** : Represents the first data field in the line of text.
-      - **$2** : Represents the second data field in the line of text.
-      - **$n** : Represents the n th data field in the line of text.
-      - **NF** : Represents number of fields.
-      - **$NF** : Represents the the last field.
-    - Each data field is determined in a text line by a field separation character. The default field separation character in gawk is any whitespace character (such as the tab or space characters).
-    - Example:
-      ```shell
-      $ cat data3
-      Line     1 of   test text.
-      Line  2   of test   text.
-      Line    3   of  test   text.
-      $ gawk '{print $2}' data3
-      1
-      2
-      3
-      $ gawk '{print NF}' data3
-      5
-      5
-      5
-      $ gawk '{print $NF}' data3
-      text.
-      text.
-      text.
-      $ gawk '{print $(NF-1)}' data3
-      test
-      test
-      test
-      ```
-    - If you're reading a file that uses a different field separation character, you can specify it by using the `-F` option:
-      ```bash
-      $ gawk -F: '{print $1 " -> " $3}' /etc/passwd | head
-      root -> 0
-      daemon -> 1
-      bin -> 2
-      sys -> 3
-      sync -> 4
-      games -> 5
-      man -> 6
-      lp -> 7
-      mail -> 8
-      news -> 9
-      ```
-  - Using Multiple Commands In The Program Script
-    - To use multiple commands in the program script specified on the command line, just place a semicolon between each command:
-    - Example:
-      ```bash
-      $ echo "My name is Microsoft" | gawk '{$4="Linux";print $0}'
-      My name is Linux
-      ```
-  - Reading The Program From A File
-    - Example of single-line script:
-      ```bash
-      # Example 1
-      $ cat script5
-      { print "Shell of " $1 " is " $NF }
-      $ gawk -F: -f script5 /etc/passwd | head
-      Shell of root is /bin/bash
-      Shell of daemon is /usr/sbin/nologin
-      Shell of bin is /usr/sbin/nologin
-      Shell of sys is /usr/sbin/nologin
-      Shell of sync is /bin/sync
-      Shell of games is /usr/sbin/nologin
-      Shell of man is /usr/sbin/nologin
-      Shell of lp is /usr/sbin/nologin
-      Shell of mail is /usr/sbin/nologin
-      Shell of news is /usr/sbin/nologin
-      ```
-    - Example of multi-line script:
-      ```bash
-      $ cat script10
-      {
-        text1="Shell of "
-        text2=" is "
-        print text1 $1 text2 $NF
-      }
-      $ gawk -F: -f script10 /etc/passwd
-      Shell of root is /bin/bash
-      Shell of daemon is /usr/sbin/nologin
-      Shell of bin is /usr/sbin/nologin
-      Shell of sys is /usr/sbin/nologin
-      Shell of sync is /bin/sync
-      Shell of games is /usr/sbin/nologin
-      Shell of man is /usr/sbin/nologin
-      Shell of lp is /usr/sbin/nologin
-      Shell of mail is /usr/sbin/nologin
-      Shell of news is /usr/sbin/nologin
-      ```
-  - Running Scripts Before Processing Data
-    - The gawk program also allows you to specify when the program script is run. By default, gawk reads a line of text from the input, then executes the program script on the data in the line of text. Sometimes you may need to run a script before processing data, such as to create a header section for a report. To do that, you use the BEGIN keyword. This keyword forces gawk to execute the program script specified after the BEGIN keyword before reading the data: `gawk 'BEGIN {print "Hello World!"}'`
-    - If you want to process data with a normal program script, you must define the program using another script section: `gawk 'BEGIN {print "Hello World!"} {print $0}'`
-  - Running Scripts After Processing Data:
-    - Similarly to the BEGIN keyword, the END keyword allows you to specify a program script that gawk executes after reading the data: `gawk 'BEGIN {print "Hello World!"} {print $0} END {print "BYE"}'`
-  - Example (Advanced):
+  - If you're reading a file that uses a different field separation character, you can specify it by using the `-F` option:
     ```bash
-    # Write a gawk program script to produce below output:
-    $ head /etc/passwd | gawk -f script20
-    The list of users and their shells
-    Userid         Shell
-    -------   ------------
-    root     /bin/bash
-    daemon     /usr/sbin/nologin
-    bin     /usr/sbin/nologin
-    sys     /usr/sbin/nologin
-    sync     /bin/sync
-    games     /usr/sbin/nologin
-    man     /usr/sbin/nologin
-    lp     /usr/sbin/nologin
-    mail     /usr/sbin/nologin
-    news     /usr/sbin/nologin
-    End of the list
+    $ gawk -F: '{print $1 " -> " $3}' /etc/passwd | head
+    root -> 0
+    daemon -> 1
+    bin -> 2
+    sys -> 3
+    sync -> 4
+    games -> 5
+    man -> 6
+    lp -> 7
+    mail -> 8
+    news -> 9
+    ```
+- Using Multiple Commands In The Program Script
+  - To use multiple commands in the program script specified on the command line, just place a semicolon between each command:
+  - Example:
+    ```bash
+    $ echo "My name is Microsoft" | gawk '{$4="Linux";print $0}'
+    My name is Linux
+    ```
+- Reading The Program From A File
+  - Example of single-line script:
+    ```bash
+    # Example 1
+    $ cat script5
+    { print "Shell of " $1 " is " $NF }
+    $ gawk -F: -f script5 /etc/passwd | head
+    Shell of root is /bin/bash
+    Shell of daemon is /usr/sbin/nologin
+    Shell of bin is /usr/sbin/nologin
+    Shell of sys is /usr/sbin/nologin
+    Shell of sync is /bin/sync
+    Shell of games is /usr/sbin/nologin
+    Shell of man is /usr/sbin/nologin
+    Shell of lp is /usr/sbin/nologin
+    Shell of mail is /usr/sbin/nologin
+    Shell of news is /usr/sbin/nologin
+    ```
+  - Example of multi-line script:
+    ```bash
+    $ cat script10
+    {
+      text1="Shell of "
+      text2=" is "
+      print text1 $1 text2 $NF
+    }
+    $ gawk -F: -f script10 /etc/passwd
+    Shell of root is /bin/bash
+    Shell of daemon is /usr/sbin/nologin
+    Shell of bin is /usr/sbin/nologin
+    Shell of sys is /usr/sbin/nologin
+    Shell of sync is /bin/sync
+    Shell of games is /usr/sbin/nologin
+    Shell of man is /usr/sbin/nologin
+    Shell of lp is /usr/sbin/nologin
+    Shell of mail is /usr/sbin/nologin
+    Shell of news is /usr/sbin/nologin
+    ```
+- Running Scripts Before Processing Data
+  - The gawk program also allows you to specify when the program script is run. By default, gawk reads a line of text from the input, then executes the program script on the data in the line of text. Sometimes you may need to run a script before processing data, such as to create a header section for a report. To do that, you use the BEGIN keyword. This keyword forces gawk to execute the program script specified after the BEGIN keyword before reading the data: `gawk 'BEGIN {print "Hello World!"}'`
+  - If you want to process data with a normal program script, you must define the program using another script section: `gawk 'BEGIN {print "Hello World!"} {print $0}'`
+- Running Scripts After Processing Data:
+  - Similarly to the BEGIN keyword, the END keyword allows you to specify a program script that gawk executes after reading the data: `gawk 'BEGIN {print "Hello World!"} {print $0} END {print "BYE"}'`
+- Example (Advanced):
+  ```bash
+  # Write a gawk program script to produce below output:
+  $ head /etc/passwd | gawk -f script20
+  The list of users and their shells
+  Userid         Shell
+  -------   ------------
+  root     /bin/bash
+  daemon     /usr/sbin/nologin
+  bin     /usr/sbin/nologin
+  sys     /usr/sbin/nologin
+  sync     /bin/sync
+  games     /usr/sbin/nologin
+  man     /usr/sbin/nologin
+  lp     /usr/sbin/nologin
+  mail     /usr/sbin/nologin
+  news     /usr/sbin/nologin
+  End of the list
 
-    # Answer
+  # Answer
+  $ cat script20
+  BEGIN {
+    print "The list of users and their shells"
+    print "Userid         Shell"
+    print "-------   ------------"
+    FS=":"
+  }
+  {
+    print $1 "     " $NF
+  }
+  END {
+    print "End of the list"
+  }
+  ```
+- Formatted Printing:
+  - Syntax: `printf "FORMAT STRING", var1, var2, ...`
+  - Examples:
+    ```bash
+    # Example 1
+    $ cat /etc/passwd | gawk -F":" '{printf "%d %20s\n", $3, $1}'
+    0                 root
+    1               daemon
+    2                  bin
+    3                  sys
+    4                 sync
+    5                games
+    6                  man
+    7                   lp
+    8                 mail
+    9                 news
+
+    # Example 2 (Last example with formatted printing)
     $ cat script20
     BEGIN {
       print "The list of users and their shells"
@@ -2502,60 +2535,28 @@ You can encapsulate your shell script code into a function, which you can then u
       FS=":"
     }
     {
-      print $1 "     " $NF
+      printf "%10s\t%20s\n", $1, $NF
     }
     END {
       print "End of the list"
     }
+
+    $ head /etc/passwd | gawk -f script20
+    The list of users and their shells
+    Userid         Shell
+    -------   ------------
+          root                 /bin/bash
+        daemon         /usr/sbin/nologin
+            bin         /usr/sbin/nologin
+            sys         /usr/sbin/nologin
+          sync                 /bin/sync
+          games         /usr/sbin/nologin
+            man         /usr/sbin/nologin
+            lp         /usr/sbin/nologin
+          mail         /usr/sbin/nologin
+          news         /usr/sbin/nologin
+    End of the list
     ```
-  - Formatted Printing:
-    - Syntax: `printf "FORMAT STRING", var1, var2, ...`
-    - Examples:
-      ```bash
-      # Example 1
-      $ cat /etc/passwd | gawk -F":" '{printf "%d %20s\n", $3, $1}'
-      0                 root
-      1               daemon
-      2                  bin
-      3                  sys
-      4                 sync
-      5                games
-      6                  man
-      7                   lp
-      8                 mail
-      9                 news
-
-      # Example 2 (Last example with formatted printing)
-      $ cat script20
-      BEGIN {
-        print "The list of users and their shells"
-        print "Userid         Shell"
-        print "-------   ------------"
-        FS=":"
-      }
-      {
-        printf "%10s\t%20s\n", $1, $NF
-      }
-      END {
-        print "End of the list"
-      }
-
-      $ head /etc/passwd | gawk -f script20
-      The list of users and their shells
-      Userid         Shell
-      -------   ------------
-            root                 /bin/bash
-          daemon         /usr/sbin/nologin
-             bin         /usr/sbin/nologin
-             sys         /usr/sbin/nologin
-            sync                 /bin/sync
-           games         /usr/sbin/nologin
-             man         /usr/sbin/nologin
-              lp         /usr/sbin/nologin
-            mail         /usr/sbin/nologin
-            news         /usr/sbin/nologin
-      End of the list
-      ```
 
 ## Part 17 (Regular Expression or Regex)
 
