@@ -1,5 +1,11 @@
 # Shell Scripting
 
+> The minimum knowledge of your Linux and Unix systems should be LPIC 1 to understand shell scripting.
+
+> This note is for SysAdmins or DevOps Engineers, so most of the commands of this course run on RedHat-based distributions (RedHat, CentOS), Debian-based distributions (Debian, Ubuntu), openSUSE, and Oracle Linux.
+
+> I used bash as a default shell for these commands. You may have some different outputs based on your default shell.
+
 - [Shell Scripting](#shell-scripting)
   - [Part 01 (Linux Review)](#part-01-linux-review)
   - [Part 02 (Linux Commands)](#part-02-linux-commands)
@@ -22,12 +28,6 @@
   - [Part 17 (Regular Expression or Regex)](#part-17-regular-expression-or-regex)
   - [Part 18 (SysAdmin's Power)](#part-18-sysadmins-power)
   - [Part 19 (References)](#part-19-references)
-
-> The minimum knowledge of your Linux and Unix systems should be LPIC 1 to understand shell scripting.
-
-> This note is for SysAdmins or DevOps Engineers, so most of the commands of this course run on RedHat-based distributions (RedHat, CentOS), Debian-based distributions (Debian, Ubuntu), openSUSE, and Oracle Linux.
-
-> I used bash as a default shell for these commands. You may have some different outputs based on your default shell.
 
 ## Part 01 (Linux Review)
 
