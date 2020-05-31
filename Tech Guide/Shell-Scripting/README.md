@@ -1,5 +1,28 @@
 # Shell Scripting
 
+- [Shell Scripting](#shell-scripting)
+  - [Part 01 (Linux Review)](#part-01-linux-review)
+  - [Part 02 (Linux Commands)](#part-02-linux-commands)
+  - [Part 03 (Shell Script Basics)](#part-03-shell-script-basics)
+  - [Part 04 (Variables)](#part-04-variables)
+  - [Part 05 (Special Characters)](#part-05-special-characters)
+  - [Part 06 (Strings)](#part-06-strings)
+  - [Part 07 (Redirection)](#part-07-redirection)
+  - [Part 08 (Mathematics)](#part-08-mathematics)
+  - [Part 09 (Conditional Tasks)](#part-09-conditional-tasks)
+  - [Part 10 (Repetitive Tasks)](#part-10-repetitive-tasks)
+  - [Part 11 (Interactive Scripts)](#part-11-interactive-scripts)
+  - [Part 12 (Script Control)](#part-12-script-control)
+  - [Part 13 (Functions)](#part-13-functions)
+  - [Part 14 (Formatted Printing)](#part-14-formatted-printing)
+  - [Part 15 (Colors in Scripts)](#part-15-colors-in-scripts)
+  - [Part 16 (Stream Editors)](#part-16-stream-editors)
+    - [SED (Stream EDitor)](#sed-stream-editor)
+    - [GAWK](#gawk)
+  - [Part 17 (Regular Expression or Regex)](#part-17-regular-expression-or-regex)
+  - [Part 18 (SysAdmin's Power)](#part-18-sysadmins-power)
+  - [Part 19 (References)](#part-19-references)
+
 > The minimum knowledge of your Linux and Unix systems should be LPIC 1 to understand shell scripting.
 
 > This note is for SysAdmins or DevOps Engineers, so most of the commands of this course run on RedHat-based distributions (RedHat, CentOS), Debian-based distributions (Debian, Ubuntu), openSUSE, and Oracle Linux.
@@ -2057,7 +2080,7 @@ You can encapsulate your shell script code into a function, which you can then u
 
 > Unfortunately, SED has documentation without any examples, which makes it incomprehensible. But I'm going to explain its features with example.
 
-### **SED (Stream EDitor)**
+### SED (Stream EDitor)
 
 - The sed editor is called a stream editor, as opposed to a regular interactive text editor. In an interactive text editor, such as vim, you interactively use keyboard commands to insert, delete, or replace text in the data. A stream editor edits a stream of data based on a set of rules you supply ahead of time before the editor processes it.
 - Syntax: `sed OPTIONS SCRIPT FILE`
@@ -2363,7 +2386,7 @@ You can encapsulate your shell script code into a function, which you can then u
     Line 6
     ```
 
-### **GAWK**
+### GAWK
 - GAWK is the GNU implementation of AWK. The awk program takes stream editing one step further than the sed editor by providing a programming language instead of just editor commands. Within the programming language you can:
   - Define variables to store data.
   - Use arithmetic and string operators to operate on data.
