@@ -352,6 +352,9 @@ Shell Scripting is an interpreter and cross-platform programming language.
       - To search for more than one type at once, you can supply the combined list of type letters separated by a comma or `,`
     - `-uid N` : File's numeric user ID is N.
     - `-user uname` : File is owned by user uname (numeric user ID allowed).
+    - `mtime` : Modification Time
+      - `+N` : It means from the begin time until N days ago
+      - `-N` : It means from now to N days ago or The last N days
 - `locate` : Find files by name
   - `-b` or `--basename` : Match only the base name against the specified patterns.  This is the opposite of `--wholename`.
   - `-c` or `--count` : Instead of writing file names on standard output, write the number of matching entries only.
@@ -3024,6 +3027,19 @@ One of the Linux system administrators' core responsibilities is to ensure that 
     </tr>
     </table></body></html>
     ```
+- Search/Find and Remove some files
+  > WARNING! Please be careful with these commands.
+
+  > Unlike Microsoft Windows, Linux doesn't care if your files are in use or not. If you delete something, even if it is in use, Linux deletes it without question. So I implore you to be careful. (I had a bad experience from `rm -rf` command)
+
+  > These commands usually used for log files or temporary files.
+
+  1. `find DIRECTORY -type f -name *.tmp | while read line; do rm $line; done`
+  2. `find DIRECTORY -type f -name *.tmp -exec rm -f {} \;`
+  3. `find DIRECTORY -type f -name *.tmp -delete`
+  4. `find DIRECTORY -type f -name *.tmp | xargs rm -f`
+  5. `find DIRECTORY -type f -name *.tmp -print0 | xargs -I {} -0 rm -v "{}"`
+  6. ```rm `find DIRECTORY -type f -name *.tmp` ```
 
 <!-- Maximum temperature of CPU should be 104 degree. -->
 
