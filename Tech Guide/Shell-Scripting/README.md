@@ -2159,11 +2159,11 @@ You can encapsulate your shell script code into a function, which you can then u
     $ cat data3
     This is a test of the test script.
     This is the second test of the test script.
-    
+
     $ sed 's/test/trial/2' data3
     This is a test of the trial script.
     This is the second test of the trial script.
-    
+
     $ sed 's/test/trial/g' data3
     This is a trial of the trial script.
     This is the second trial of the trial script.
@@ -2296,7 +2296,7 @@ You can encapsulate your shell script code into a function, which you can then u
         The quick brown fox jumps over the lazy cat
         The quick brown fox jumps over the lazy cat
         The quick brown fox jumps over the lazy cat
-        ```      
+        ```
   2. A Text Pattern That Filters Out A Line
       - The other method of restricting which lines a command applies to is a bit more complicated. The sed editor allows you to specify a text pattern that it uses to filter lines for the command. The format for this is: `/pattern/command`
       - You must encapsulate the pattern you specify in forward slashes. The sed editor applies the command only to lines that contain the text pattern that you specify.
@@ -2316,14 +2316,14 @@ You can encapsulate your shell script code into a function, which you can then u
       - Example:
         ```bash
         $ sed -n '/^daemon/,/^news/p' /etc/passwd
-        daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin                                      
-        bin:x:2:2:bin:/bin:/usr/sbin/nologin                                                 
-        sys:x:3:3:sys:/dev:/usr/sbin/nologin                                                 
-        sync:x:4:65534:sync:/bin:/bin/sync                                                   
-        games:x:5:60:games:/usr/games:/usr/sbin/nologin                                      
-        man:x:6:12:man:/var/cache/man:/usr/sbin/nologin                                      
-        lp:x:7:7:lp:/var/spool/lpd:/usr/sbin/nologin                                         
-        mail:x:8:8:mail:/var/mail:/usr/sbin/nologin                                          
+        daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin                             
+        bin:x:2:2:bin:/bin:/usr/sbin/nologin                                         
+        sys:x:3:3:sys:/dev:/usr/sbin/nologin                                         
+        sync:x:4:65534:sync:/bin:/bin/sync                                           
+        games:x:5:60:games:/usr/games:/usr/sbin/nologin                              
+        man:x:6:12:man:/var/cache/man:/usr/sbin/nologin                              
+        lp:x:7:7:lp:/var/spool/lpd:/usr/sbin/nologin                                 
+        mail:x:8:8:mail:/var/mail:/usr/sbin/nologin                                  
         news:x:9:9:news:/var/spool/news:/usr/sbin/nologin
 
         $ sed -n '/^root/,/^ben/s/bash/zsh/p' /etc/passwd
@@ -2570,16 +2570,170 @@ You can encapsulate your shell script code into a function, which you can then u
     -------   ------------
           root                 /bin/bash
         daemon         /usr/sbin/nologin
-            bin         /usr/sbin/nologin
-            sys         /usr/sbin/nologin
+           bin         /usr/sbin/nologin
+           sys         /usr/sbin/nologin
           sync                 /bin/sync
-          games         /usr/sbin/nologin
-            man         /usr/sbin/nologin
+         games         /usr/sbin/nologin
+           man         /usr/sbin/nologin
             lp         /usr/sbin/nologin
           mail         /usr/sbin/nologin
           news         /usr/sbin/nologin
     End of the list
     ```
+- Advanced GAWK:
+  > Most of these titles below extracted from the manual page of gawk. So I recommend to read it accurately.
+
+  - Built-in Variables:
+    - To reference the first data field in the record, you use the `$1` variable. To reference the second data field, you use the `$2` variable, and so on.
+    - The **FS** (Field Separator) and **OFS** (Output Field Separator) variables define how your gawk program handles data fields in the data stream.
+    - **NF** is the total number of data fields in the data file.
+    - Example:
+      ```bash
+      $ gawk 'BEGIN{FS=":";OFS=" => "}{print $1,$NF}' /etc/passwd
+      root => /bin/bash
+      daemon => /usr/sbin/nologin
+      bin => /usr/sbin/nologin
+      sys => /usr/sbin/nologin
+      sync => /bin/sync
+      games => /usr/sbin/nologin
+      ben => /bin/csh
+      ```
+  - User-Defined Variables:
+    - Just like any other self-respecting programming language, gawk allows you to define your own variables for use within the program code.
+    - Example:
+      ```bash
+      $ gawk '
+      BEGIN{
+        str="This is a test"
+      }'
+      # Output: This is a test
+
+      $ gawk 'BEGIN{x=4;x=x*2+3; print x}'
+      11
+      ```
+  - Using Patterns:
+    - The gawk program supports several types of matching patterns to filter data records, similar to how the sed editor does.
+  - Regular Expressions:
+    - When using a regular expression, the regular expression must appear before the left beace of the program script that it controls.
+    - Example:
+      ```bash
+      $ cat data1
+      line-00
+      line-01
+      line-10
+      line-11
+      line-111
+
+      $ gawk 'BEGIN{FS="-"} /11/{print $2}' data1
+      11
+      111
+      ```
+  - Mathematical Functions:
+    |Function|Description|
+    |--------|-----------|
+    |`sin(x)`|The sine of x, with x specified in radians|
+    |`cos(x)`|The cosine of x, with x specified in radians|
+    |`exp(x)`|The exponential of x|
+    |`int(x)`|The integer part of x, truncated toward 0|
+    |`log(x)`|The natural logarithm of x|
+    |`rand()`|A random floating point value larger than 0 and less than 1|
+    |`sqrt(x)`|The square root of x|
+  - The If-Statement
+    - Examples:
+      ```bash
+      # Example 1
+      $ cat data2
+      10
+      4
+      43
+      17
+      21
+      $ gawk '{if ($1 > 20) print $1}' data2
+      43
+      21
+
+      # Example 2
+      if ($1 > 20)
+      {
+        X = $1 * 2
+        print X
+      } else
+      {
+        X = $1 / 2
+        print X
+      }
+      # Now you can put this multi-line if-statement in
+      # single-line and put it in your gawk command
+      ```
+  - The While Statement
+    - In programming, a loop is a part of a program that can be executed two or more times in succession. The while statement is the simplest looping statement in gawk. It repeatedly executes a statement as long as a condition is true.
+    - Syntax:
+      ```bash
+      while (CONDITION)
+        BODY/COMMAND(S)
+      ```
+    - Example:
+      ```bash
+      gawk '
+      {
+          i = 1
+          while (i <= 3) {
+              print $i
+              i++
+          }
+      }' FILE
+      ```
+  - The Do-While Statement
+    - The do loop is a variation of the while looping statement. The do loop executes the body once and then repeats the body as long as the condition is true.
+    - Syntax:
+      ```bash
+      do
+        BODY/COMMAND(S)
+      while (CONDITION)
+      ```
+    - Example:
+      ```bash
+      gawk '
+      {
+        i = 1
+        do {
+            print $0
+            i++
+        } while (i <= 10)
+      }' FILE
+      ```
+  - The For Statement
+    - The for statement makes it more convenient to count iterations of a loop.
+    - Syntax:
+      ```bash
+      for (INITIALIZATION; CONDITION; INCREMENT)
+        BODY/COMMAND(S)
+      ```
+    - The initialization, condition, and increment parts are arbitrary gawk expressions, and body stands for any gawk statement.
+    - Example:
+      ```bash
+      gawk '
+      {
+        for (i = 1 ; i <= 3 ; i++)
+          print $i
+      }' FILE
+      ```
+    - Remember that in most cases, a for loop is an abbreviation for a while loop, as shown here:
+      ```bash
+      INITIALIZATION
+      while (CONDITION) {
+        BODY/COMMAND(S)
+        INCREMENT
+      }
+      ```
+    - There is an alternative version of the for loop, for iterating over all the indices of an array:
+      ```bash
+      for (i in array)
+        DO SOMETHING WITH array[i]
+      ```
+  - The Break and Continue Statement
+    - The break statement jumps out of the innermost for, while, or do loop that encloses it.
+    - Similar to break, the continue statement is used only inside for, while, and do loops. It skips over the rest of the loop body, causing the next cycle around the loop to begin immediately. Contrast this with break, which jumps out of the loop altogether.
 
 ## Part 17 (Regular Expression or Regex)
 
@@ -2760,6 +2914,8 @@ You can encapsulate your shell script code into a function, which you can then u
 
 ## Part 18 (SysAdmin's Power)
 
+> Remember that this part is only for improving your shell scripting, because there are lots of adcanced programs that do monitoring, logging, configuration management, etc. for you with ease.
+
 There's no place where shell script programming is more useful than for the Linux system administrator. The typical Linux system administrator has many jobs that need to be done daily, from monitoring disk space and users to backing up important files. Shell scripts can make the life of the system administrator much easier!
 
 One of the Linux system administrators' core responsibilities is to ensure that the system is running correctly. So, there are lots of different system statistics that you must monitor. Creating automated shell scripts to monitor specific situations can be a lifesaver.
@@ -2802,7 +2958,7 @@ One of the Linux system administrators' core responsibilities is to ensure that 
   - There are a few different commands that you can use to extract CPU and memory information for the system.
   - CPU Load Averages: `uptime | sed 's/.*average://' | gawk '{print $1 $2 $3}'`
   - **`vmstat` or Virtual Memory Statistics**:
-    - Another great command for extracting system information is the `vmstat` command. 
+    - Another great command for extracting system information is the `vmstat` command.
     - The first time you run the `vmstat` command, it displays the average values since the last reboot. To get the current statistics, you must run the `vmstat` command with these command line parameters: `vmstat 1 2`
     - The `vmstat` Output Symbols:
       |Symbol|Description|
@@ -2876,3 +3032,4 @@ One of the Linux system administrators' core responsibilities is to ensure that 
 1. [Signals](https://www.computerhope.com/unix/signals.htm)
 2. [Bash Color and Formatting](https://misc.flogisoft.com/bash/tip_colors_and_formatting)
 3. Primary Shell [Link1](https://www.thegeekstuff.com/2008/09/bash-shell-take-control-of-ps1-ps2-ps3-ps4-and-prompt_command/) and [Link2](https://linoxide.com/how-tos/change-bash-prompt-variable-ps1/)
+4. [GAWK Manual Page](https://www.gnu.org/software/gawk/manual/gawk.html)
