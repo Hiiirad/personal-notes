@@ -2917,7 +2917,7 @@ You can encapsulate your shell script code into a function, which you can then u
 
 ## Part 18 (SysAdmin's Power)
 
-> Remember that this part is only for improving your shell scripting, because there are lots of adcanced programs that do monitoring, logging, configuration management, etc. for you with ease.
+> Remember that this part is only for improving your shell scripting and has educational purposes because there are lots of advanced programs that do monitoring, logging, configuration management, etc. for you with ease.
 
 There's no place where shell script programming is more useful than for the Linux system administrator. The typical Linux system administrator has many jobs that need to be done daily, from monitoring disk space and users to backing up important files. Shell scripts can make the life of the system administrator much easier!
 
@@ -3040,7 +3040,42 @@ One of the Linux system administrators' core responsibilities is to ensure that 
   4. `find DIRECTORY -type f -name *.tmp | xargs rm -f`
   5. `find DIRECTORY -type f -name *.tmp -print0 | xargs -I {} -0 rm -v "{}"`
   6. ```rm `find DIRECTORY -type f -name *.tmp` ```
+- Example (Advanced):
+  - It is important that you read manual page of `last` command and `mutt` command for this example.
+  ```bash
+  #!/bin/bash
+  # 1. Show last 10 person logged in to our server
+  # 2. Show us USERNAME, USER ID, GROUPNAME, LAST LOGIN DATE
+  # 3. Format output in HTML and EMAIL to Admin
+  TEMPFILE=~/tmpfile.html
+  > $TEMPFILE
 
+  echo "<html>" >> $TEMPFILE
+  echo "<body>" >> $TEMPFILE
+  echo "<table border=1>" >> $TEMPFILE
+
+  last | head -10 > ~/tmpfile
+
+  echo "<tr><td>User Name</td><td>User ID</td><td>Group Name</td><td>Login Date</td></tr>" >> $TEMPFILE
+
+  while read line
+  do
+      echo "<tr>" >> $TEMPFILE
+      USER_NAME=`echo $line | gawk '{print $1}'`
+      USER_ID=`cat /etc/passwd | grep $USER_NAME | gawk -F: '{print $3}'`
+      GROUP_ID=`cat /etc/passwd | grep $USER_NAME | gawk -F: '{print $4}'`
+      GROUP_NAME=`cat /etc/group | grep ":${GROUP_ID}:" | gawk -F: '{print $1}'`
+      LOGIN_TIME=`echo $line | gawk '{print $4" "$5" "$6" "$7}'`
+      echo "<td>$USER_NAME</td><td>$USER_ID</td><td>$GROUP_NAME</td><td>$LOGIN_TIME</td>" >> $TEMPFILE
+      echo "</tr>" >> $TEMPFILE
+  done < ~/tmpfile
+
+  echo "</table>" >> $TEMPFILE
+  echo "</body>" >> $TEMPFILE
+  echo "</html>" >> $TEMPFILE
+
+  mutt -s "SUBJECT" -c "CC.email@fake.com" -b "BCC.email@fake.com" -a $TEMPFILE
+  ```
 <!-- Maximum temperature of CPU should be 104 degree. -->
 
 ## Part 19 (References)
