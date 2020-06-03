@@ -1363,6 +1363,38 @@ There are three different ways to perform mathematical operations in your shell 
     - Remember, each of the parameters is separated by a space, so the shell interpreted the space as just separating the two values. To include a space as a parameter value, you must use quotation marks (either single or double quotation marks).
     - `basename $0` : Program name
     - `dirname $0` : Program full path = `pwd` of program
+    - **`eval`** : Execute arguments as a shell command. Combine ARGs into a single string, use the result as input to the shell, and execute the resulting commands.
+      - Exit Status: Returns exit status of command or success if command is null.
+      - Example (Advanced):
+        ```bash
+        $ set -- one two three
+        $ echo $1
+        one
+        $ echo $2
+        two
+        $ echo $3
+        three
+        # So, set command also helps us define the positional parameter.
+        # Another parameter defined: n=2
+        # What if we want to get a positional parameter with n ?
+        # Now, we want to print something like
+        # echo $$n
+        # But it isn't what we wanted
+        # So let me help you other wrong answers:
+        # echo ${$n}
+        # echo ${`echo $n`}
+        # So, let me give you a hint...
+        # Type a command that prints this: ${2}
+        # The answer would be:
+        # echo \${$n}
+        # Now eval help us evaluate the value of another parameter
+        $ eval echo \${$n}
+        two
+        # We got through this example to learn eval
+        # But there's another solution:
+        $ echo ${!n}
+        two
+        ```
   - **Testing Parameters**
     - You need to be careful when using command line parameters in your shell scripts. If the script runs without the parameters, bad things can happen.
     - Based on your need for parameters, you can use `-n` or `-z` from [string comparison](#part-09-conditional-tasks) on `$1`
