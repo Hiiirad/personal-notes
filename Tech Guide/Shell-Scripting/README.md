@@ -3072,7 +3072,26 @@ One of the Linux system administrators' core responsibilities is to ensure that 
   4. `find DIRECTORY -type f -name *.tmp | xargs rm -f`
   5. `find DIRECTORY -type f -name *.tmp -print0 | xargs -I {} -0 rm -v "{}"`
   6. ```rm `find DIRECTORY -type f -name *.tmp` ```
-- Example (Advanced):
+- Example (Report of Network Interfaces):
+  ```bash
+  #!/bin/bash
+  # New kernel version doesn't have ifconfig command by default.
+  # It replaced with ip command.
+  # But as a system administrator you have to
+  # Know how to work with ifconfig command
+  TMP_FILE=`mktemp -t`
+  echo "Interface | IP | MAC | Flags"
+  ifconfig | sed -n '/^[a-z]/p' | gawk '{print $1}' | while read line
+  do
+    ifconfig $line > $TMP_FILE
+    IP=`cat $TMP_FILE | sed -n '/?/p' | gawk '{print $2}' | sed 's/addr://'`
+    MAC=`cat $TMP_FILE | sed -n '/?/p' | gawk '{print $NF}'`
+    FLAGS=`cat $TMP_FILE | sed -n '/?/p' | sed 's/^ *//'`
+    echo "$line | $IP | $MAC | $FLAGS"
+  done
+  rm -f $TMP_FILE
+  ```
+- Example (Advanced) (HTML Report of Users):
   - It is important that you read manual page of `last` command and `mutt` command for this example.
   ```bash
   #!/bin/bash
