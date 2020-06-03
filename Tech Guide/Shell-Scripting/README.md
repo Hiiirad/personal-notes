@@ -3135,3 +3135,4 @@ One of the Linux system administrators' core responsibilities is to ensure that 
 2. [Bash Color and Formatting](https://misc.flogisoft.com/bash/tip_colors_and_formatting)
 3. Primary Shell [Link1](https://www.thegeekstuff.com/2008/09/bash-shell-take-control-of-ps1-ps2-ps3-ps4-and-prompt_command/) and [Link2](https://linoxide.com/how-tos/change-bash-prompt-variable-ps1/)
 4. [GAWK Manual Page](https://www.gnu.org/software/gawk/manual/gawk.html)
+5. [Linux From Scratch or LFS](http://www.linuxfromscratch.org/)
