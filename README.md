@@ -12,9 +12,9 @@ What I'm working on:
 - [x] [Regex](Tech%20Guide/Regex/README.md)
 - [x] [Tmux](Tech%20Guide/Tmux/README.md)
 - [x] [Docker](Tech%20Guide/Docker/README.md)
+- [x] [Shell Scripting](Tech%20Guide/Shell-Scripting/README.md)
 - [ ] Docker Swarm
 - [ ] Kubernetes
-- [ ] [Shell Scripting](Tech%20Guide/Shell-Scripting/README.md)
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change or add.
