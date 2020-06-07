@@ -145,6 +145,9 @@ Shell Scripting is an interpreter and cross-platform programming language.
 - Shell startup file: (Executed for login shell)
   - `/etc/profile` : System-wide default environment settings.
   - `~/.bash_profile` : User-specific bash environment default settings.
+- Shell Execution Flowchart
+
+  ![Shell Execution Flowchart](Images/Shell_Execution_Flowchart.png)
 - Initialization Files: (Executed for login and interactive shell)
   - `/etc/bashrc` : System-wide functions and aliases for bash
   - `~/.bashrc` : User-specific initialization files
