@@ -1337,6 +1337,53 @@ There are three different ways to perform mathematical operations in your shell 
       echo $a
     done
     ```
+- **Forever Loops**
+  - While
+    ```bash
+    while true
+    do
+      COMMANDS
+    done
+
+    # OR
+
+    while:
+    do
+      COMMANDS
+    done
+    ```
+  - C-Style For
+    ```bash
+    for (( ; ; ))
+    do
+      COMMANDS
+    done
+    ```
+  - **Why Forever Loops?** In real life, you’re not ever going to want to loop forever, but running until it’s time to go home, the work is done, or you run into a problem is not at all unusual. Any loop that is constructed as an infinite loop can also be set up to be exited depending on various circumstances.
+    ```bash
+    #!/bin/bash
+    # This script would keep processing data until 5 p.m.
+    # or the first time it checks the time after 5 p.m.
+    while true
+    do
+      if [ `date +%H` -ge 17 ]
+      then
+        exit
+      fi
+      COMMANDS
+    done
+
+    # OR use break instead of exit
+
+    for (( ; ; ))
+    do
+      if [ `date +%H` -ge 17 ]
+      then
+        break
+      fi
+      COMMANDS
+    done
+    ```
 
 ## Part 11 (Interactive Scripts)
 
