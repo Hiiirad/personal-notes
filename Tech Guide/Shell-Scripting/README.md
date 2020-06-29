@@ -1364,12 +1364,8 @@ There are three different ways to perform mathematical operations in your shell 
     #!/bin/bash
     # This script would keep processing data until 5 p.m.
     # or the first time it checks the time after 5 p.m.
-    while true
+    while [ `date +%H` -lt 17 ]
     do
-      if [ `date +%H` -ge 17 ]
-      then
-        exit
-      fi
       COMMANDS
     done
 
