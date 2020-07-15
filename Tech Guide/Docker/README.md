@@ -422,7 +422,7 @@ docker run --entrypoint NEW_COMMAND SERVICE PARAMETER
 ## Part 08 (Networking)
 
 When you install Docker, it creates 3 networks by default:
-1. **Bridge**: is the default network a container gets attached to.
+1. **Bridge**: is the default network that a container attached to it.
 ```bash
 docker run SERVICE
 docker run ubuntu
