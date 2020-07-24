@@ -27,8 +27,8 @@ Tmux abbreviated from [**Terminal Multiplexer**](https://en.wikipedia.org/wiki/T
 ## Part 02 (Installation)
 | OS | Command |
 | --- | --- |
-| MacOS  | `brew install tmux`  |
-| FreeBSD  | `sudo pkg install tmux`  |
+| MacOS | `brew install tmux` |
+| FreeBSD | `sudo pkg install tmux` |
 | Debian-based | `sudo apt install tmux` |
 | Fedora-based | `sudo yum install tmux` or `sudo dnf install tmux` |
 | Arch Linux | `sudo pacman -S tmux` |
@@ -38,7 +38,7 @@ There is a useful theme for showing windows name, date, etc. at the bottom of th
 
 ## Part 03 (Terminology)
 
-- **Session:**  The highest-level entity residing in the server instance. Server instances are forked to the background upon starting a fresh instance and reconnected to when reattaching sessions. Your interaction with Tmux will have at least one session running. A named collection of one or more windows.
+- **Session:** The highest-level entity residing in the server instance. Server instances are forked to the background upon starting a fresh instance and reconnected to when reattaching sessions. Your interaction with Tmux will have at least one session running. A named collection of one or more windows.
 - **Window:** A single screen within Tmux, similar to tabs in terminal applications. At any given time, a client will attach to a single window.
 - **Pane:** A portion of a window running a single process, e.g., Vim, zsh, man, etc. Panes can be oriented either vertically or horizontally and resized as needed.
 
