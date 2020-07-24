@@ -342,14 +342,14 @@ Shell Scripting is an interpreter and cross-platform programming language.
       - `k` : for Kibibytes (KiB, units of 1024 bytes)
       - `M` : for Mebibytes (MiB, units of 1024 * 1024 = 1048576 bytes)
       - `G` : for Gibibytes (GiB, units of 1024 * 1024 * 1024 = 1073741824 bytes)
-      - The + and - prefixes signify greater than and less than, as usual; i.e., the exact size of N units does not match.  Bear in mind that the size is rounded up to the next unit. Therefore -size -1M is  not  equivalent to -size -1048576c. The former only matches empty files, the latter matches files from 0 to 1,048,575 bytes.
+      - The + and - prefixes signify greater than and less than, as usual; i.e., the exact size of N units does not match. Bear in mind that the size is rounded up to the next unit. Therefore -size -1M is not equivalent to -size -1048576c. The former only matches empty files, the latter matches files from 0 to 1,048,575 bytes.
     - `-type C` : File is of type C (To search for more than one type at once, you can supply the combined list of type letters separated by a comma)
       - `b` : block (buffered) special
       - `c` : character (unbuffered) special
       - `d` : directory
       - `p` : named pipe (FIFO)
       - `f` : regular file
-      - `l` : symbolic link; this is never true if the `-L` option or the `-follow` option is in effect, unless the symbolic link is broken.  If you want to search for symbolic links when `-L` is in effect, use `-xtype`.
+      - `l` : symbolic link; this is never true if the `-L` option or the `-follow` option is in effect, unless the symbolic link is broken. If you want to search for symbolic links when `-L` is in effect, use `-xtype`.
       - `s` : socket
       - `D` : door (Solaris)
       - To search for more than one type at once, you can supply the combined list of type letters separated by a comma or `,`
@@ -359,7 +359,7 @@ Shell Scripting is an interpreter and cross-platform programming language.
       - `+N` : It means from the begin time until N days ago
       - `-N` : It means from now to N days ago or The last N days
 - `locate` : Find files by name
-  - `-b` or `--basename` : Match only the base name against the specified patterns.  This is the opposite of `--wholename`.
+  - `-b` or `--basename` : Match only the base name against the specified patterns. This is the opposite of `--wholename`.
   - `-c` or `--count` : Instead of writing file names on standard output, write the number of matching entries only.
   - `-i` or `--ignore-case` : Ignore case distinctions when matching patterns.
   - `-p` or `--ignore-spaces` : Ignore punctuation and spaces when matching patterns.
@@ -2397,14 +2397,14 @@ You can encapsulate your shell script code into a function, which you can then u
       - Example:
         ```bash
         $ sed -n '/^daemon/,/^news/p' /etc/passwd
-        daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin                             
-        bin:x:2:2:bin:/bin:/usr/sbin/nologin                                         
-        sys:x:3:3:sys:/dev:/usr/sbin/nologin                                         
-        sync:x:4:65534:sync:/bin:/bin/sync                                           
-        games:x:5:60:games:/usr/games:/usr/sbin/nologin                              
-        man:x:6:12:man:/var/cache/man:/usr/sbin/nologin                              
-        lp:x:7:7:lp:/var/spool/lpd:/usr/sbin/nologin                                 
-        mail:x:8:8:mail:/var/mail:/usr/sbin/nologin                                  
+        daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+        bin:x:2:2:bin:/bin:/usr/sbin/nologin
+        sys:x:3:3:sys:/dev:/usr/sbin/nologin
+        sync:x:4:65534:sync:/bin:/bin/sync
+        games:x:5:60:games:/usr/games:/usr/sbin/nologin
+        man:x:6:12:man:/var/cache/man:/usr/sbin/nologin
+        lp:x:7:7:lp:/var/spool/lpd:/usr/sbin/nologin
+        mail:x:8:8:mail:/var/mail:/usr/sbin/nologin
         news:x:9:9:news:/var/spool/news:/usr/sbin/nologin
 
         $ sed -n '/^root/,/^ben/s/bash/zsh/p' /etc/passwd
