@@ -514,13 +514,21 @@ backtick characters:
   - If you’re in a child process and unset a global environment variable, it only applies to the child process. The global environment variable is still available in the parent process.
 - Single Quote vs Double Quote:
   - Using double quotes to show a string of characters allow any variables in the quotes to be resolved.
-  ```bash
-  VAR1=test
-  echo "The value of var1 is $VAR1"
-  # OUTPUT: The value of var1 is test
-  echo 'The value of var1 is $VAR1'
-  # OUTPUT: The value of var1 is $VAR1
-  ```
+    ```bash
+    VAR1=test
+    echo "The value of var1 is $VAR1"
+    # OUTPUT: The value of var1 is test
+    echo 'The value of var1 is $VAR1'
+    # OUTPUT: The value of var1 is $VAR1
+    ```
+  - Take care to expand local variables and environment variables within quotes if they could contain whitespace. As an innocuous example, consider using `echo` to print some user input:
+    ```bash
+    INPUT="String  with   strange    whitespace."
+    echo $INPUT
+    # OUTPUT: String with strange whitespace.
+    echo "$INPUT"
+    # OUTPUT: String  with   strange    whitespace.
+    ```
 - `readonly` : Use the readonly command to make variables and functions readonly. You cannot change the value of variables.
   ```bash
   readonly VAR
