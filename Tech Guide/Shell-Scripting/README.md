@@ -508,7 +508,8 @@ backtick characters:
   ```bash
   VAR1=testing
   unset VAR1
-  echo VAR1   # No output
+  echo VAR1
+  # No output
   ```
   - When referencing the environment variable in the unset command, remember **not to use the dollar sign or `$` before variable name**.
   - If you’re in a child process and unset a global environment variable, it only applies to the child process. The global environment variable is still available in the parent process.
