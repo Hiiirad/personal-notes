@@ -246,7 +246,7 @@ We can use Docker on Windows with these 2 options to run a Linux container on a 
       docker run -v DIR_CONTAINER SERVICE
       docker run -v /var/lib/mysql mysql
       ```
-  3. Named Volumes: This is the upgraded version of Anonymous Volumes which we named a volume on our host machine. **(Recommended, even in docker-compose)**
+  3. Named Volumes: This is the upgraded version of Anonymous Volumes, which we called a volume on our host machine. In this format, you can assign single data for multiple instances of a container to share the same data. **(Recommended, even in docker-compose)**
       ```
       docker run -v NAME:DIR_CONTAINER SERVICE
       docker run -v customer_mysql:/var/lib/mysql mysql
