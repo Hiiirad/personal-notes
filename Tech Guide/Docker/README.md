@@ -30,6 +30,7 @@
   - [Part 14 (Terminology)](#part-14-terminology)
   - [Part 15 (References)](#part-15-references)
 
+---
 ## Part 01 (Introduction)
 
 > You can check [Docker's Roadmap](https://github.com/docker/roadmap/projects/1).
@@ -61,6 +62,7 @@ Container vs Image:
 - Containers are running instances of images that are isolated and have their env. and sets of processes.
 - Images (Package + Template + Plan) -> It is used to create one or more containers
 
+---
 ## Part 02 (Docker Overview)
 Docker Editions:
 - Community (Free)
@@ -148,6 +150,7 @@ We can use Docker on Windows with these 2 options to run a Linux container on a 
 - Remember, that all of this is to be able to run Linux container on Mac.
 - Up to this point, there are no Mac-based images or containers.
 
+---
 ## Part 03 (Commands)
 - Run = Start a container or run a container from an image. If the image is not present on the host, it will go to _dockerhub_ and pull the image down. (Only the first time) Container will run in fg (foreground) or technically in _attach mode_.
   ```
@@ -210,6 +213,7 @@ We can use Docker on Windows with these 2 options to run a Linux container on a 
   docker attach NAME/ID
   ```
 
+---
 ## Part 04 (Run)
 - Run with specific version/tag. Default tag will be latest version
   ```
@@ -232,10 +236,21 @@ We can use Docker on Windows with these 2 options to run a Linux container on a 
   docker run -p 8080:3001 redis
   ```
 - Volume Mapping. The docker container has its own isolated filesystem and any changes to any files happen within the container. Sometimes we need a persistent data, so we need o map a directory outside the container on the docker host to a directory inside the container. We use `-v` (Volume) option. `DIR_HOST` is a directory outside docker host which docker mount it inside docker host which we call it `DIR_CONTAINER`.
-  ```
-  docker run -v DIR_HOST:DIR_CONTAINER SERVICE
-  docker run -v /opt/sql/data:/var/lib/mysql mysql
-  ```
+  1. Host Volumes
+      ```
+      docker run -v DIR_HOST:DIR_CONTAINER SERVICE
+      docker run -v /opt/sql/data:/var/lib/mysql mysql
+      ```
+  2. Anonymous Volumes: The host directory will automatically created by Docker at `/var/lib/docker/volumes/random-hash/_data`
+      ```
+      docker run -v DIR_CONTAINER SERVICE
+      docker run -v /var/lib/mysql mysql
+      ```
+  3. Named Volumes: This is the upgraded version of Anonymous Volumes which we named a volume on our host machine. **(Recommended, even in docker-compose)**
+      ```
+      docker run -v NAME:DIR_CONTAINER SERVICE
+      docker run -v customer_mysql:/var/lib/mysql mysql
+      ```
 - Inspect Container. If you would like to see additional details about a specific container use inspect command. It will give you more information than `docker ps` command. This command will give you all details of a container in a JSON format.
   ```
   docker inspect NAME/ID
@@ -254,6 +269,7 @@ We can use Docker on Windows with these 2 options to run a Linux container on a 
   ```
 
 
+---
 ## Part 05 (Environment Variables)
 - An environment variable is a variable whose value is set outside the program, typically through a functionality built into the operating system or microservice. An environment variable is made up of a name/value pair, and any number may be created and available for reference at a point in time.
 - Assignments:
@@ -270,6 +286,7 @@ docker run -e VARIABLE=value NAME/ID
 - To deploy multiple containers with different Environment Variable, you should run docker command multiple times and set different Environment Variables each time.
 - If you want to find the list of environment variables set on a running container, you should use `docker inspect NAME/ID` and look for `ENV` under `Config` section.
 
+---
 ## Part 06 (Docker Image)
 
 ### Chapter 1 (Create an Image Using Commit)
@@ -389,6 +406,7 @@ You can easily export a docker image into the raw tar format.
 But let's have a deeper look inside by decompressing the tar file. Based on the number of layers that your docker image has, you'll see them with their representative digest string.
 More importantly, there are two files called _manifest.json_ and _repositories_, which indicate the parent docker image, Repo tags, and the layer precedence.
 
+---
 ## Part 07 (CMD vs ENTRYPOINT)
 
 Who defines what process runs within the container? If you look at the Dockerfile for popular Docker images like NGINX, you will see an instruction called CMD, which stands for Command that defines the program that will run within the container. When it starts for the NGINX image, it is the `CMD["nginx"]` command, and for the MySQL image, it is the `CMD["mysqld"]` command.
@@ -422,6 +440,7 @@ You can even modify the `ENTRYPOINT` during runtime using this command:
 docker run --entrypoint NEW_COMMAND SERVICE PARAMETER
 ```
 
+---
 ## Part 08 (Networking)
 
 When you install Docker, it creates 3 networks by default:
@@ -547,6 +566,7 @@ docker run -d -p 3000:3000 --net=FRONTEND-NETWORK CENTOS/NODEJS-4-CENTOS7
 ```
 We just created a separate network with a _Node.js_ application that communicates with our existing _Redis_ instance which you can test it using `curl localhost:3000`
 
+---
 ## Part 09 (Storage)
 > This part (Storage) is an advanced topic. You can skip it if you want to learn the basics.
 
@@ -613,6 +633,7 @@ Maintaining the layered architecture, creating a writable layer moving files acr
 The selection of the storage driver depends on the underlying OS being used. For example, in Ubuntu, the default storage driver is **AUFS**, whereas this storage driver is not available on other operating systems like Fedora or CentOS. In that case, device-mapper may be a better option. Docker will choose the best storage driver available automatically based on the operating system. The different storage drivers also provide different performance and stability characteristics. So you may want to choose one that fits the needs of your application and your organization. If you would like to read more on any of these storage drivers, read this document about [select a storage driver](https://docs.docker.com/storage/storagedriver/select-storage-driver/).
 
 
+---
 ## Part 10 (Compose)
 > In this section, we're going to work with YAML file (.yml or .yaml extension). It's essential to understand YAML before start reading this part.
 
@@ -802,6 +823,7 @@ The scale option allows you to specify the service and then the number of instan
   docker-compose scale WEB=1
   ```
 
+---
 ## Part 11 (Registry)
 
 What is a registry?<br>
@@ -852,6 +874,7 @@ docker pull localhost:5000/MY-IMAGE
 docker pull IP:5000/MY-IMAGE
 ```
 
+---
 ## Part 12 (Engine)
 > This part is an advanced topic. You can skip it if you want to learn the basics because we're going to look at Docker's architecture in detail.
 
@@ -896,6 +919,7 @@ docker run --cpus=0.5 SERVICE
 docker run --memory=100m SERVICE
 ```
 
+---
 ## Part 13 (Docker Orchestration)
 
 Let's understand what container orchestration is. So far, in this course, we've seen that with Docker, you can run a single instance of the application with a simple `docker run` command. In this case, to run a node.js based application, you're on the `docker run nodejs` command, but that's just one instance of your application on one Docker host. What happens when the number of users increases, and that instance is no longer able to handle the load?<br>
@@ -1003,6 +1027,7 @@ kubectl run MY-APP --image=MY-APP --replicas=500
 
 Well that's all we have for now—a quick introduction to Kubernetes and this architecture. You can find a complete course on this repository.
 
+---
 ## Part 14 (Terminology)
 
 - **Images**: The file system and configuration of our application which used to create containers.
@@ -1014,6 +1039,7 @@ Well that's all we have for now—a quick introduction to Kubernetes and this ar
 - **Node**: An instance of the Docker Engine connected to the Swarm. Nodes are either managers or workers. Managers schedules which containers to run where. Workers execute the tasks. By default, Managers are also workers.
 
 
+---
 ## Part 15 (References)
 
 1. [Docker Documentation Samples](https://docs.docker.com/samples/)
