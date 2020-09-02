@@ -296,11 +296,11 @@ Let’s start running an interactive shell in a ubuntu container:
 ```bash
 docker container run -ti ubuntu bash
 ```
-To customize things a little bit, we will install a package called [figlet](figlet.org) in this container.
+To customize things a little bit, we will install a package called [figlet](https://www.figlet.org) in this container.
 
 ```bash
-apt-get update
-apt-get install -y figlet
+apt update
+apt install -y figlet
 figlet "hello docker"
 ```
 
