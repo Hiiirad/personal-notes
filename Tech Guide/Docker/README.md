@@ -261,7 +261,7 @@ We can use Docker on Windows with these 2 options to run a Linux container on a 
   ```
 - Container Live Statistics. Launches a terminal window which refreshes itself with live data from the container, indicating 3 main runtime metrics, such as CPU usage, memory and Network I/O consumption
   ```bash
-  docker stats CONTAINER
+  docker stats ID/NAME
   ```
   The built-in Docker allows you to provide multiple names/ids and display their stats within a single window if you have more than one running.
   ```bash
