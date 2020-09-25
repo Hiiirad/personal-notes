@@ -184,7 +184,6 @@ We can use Docker on Windows with these 2 options to run a Linux container on a 
   docker run --name test --rm -d busybox sh -c "while true; do $(echo date); sleep 1; done"
   docker logs -f --until=5s test
   ```
-
 - Remove an image. You must ensure that no containers are running off of that image before attempting to remove the image. You must stop and delete all dependant containers to be able to delete an image.
   ```
   docker rmi NAME
@@ -228,6 +227,11 @@ We can use Docker on Windows with these 2 options to run a Linux container on a 
   ```
   docker run --rm -it SERVICE:TAG
   ```
+- Restart Policy: To configure the restart policy for a container, use the `--restart` flag when using the `docker run` command. Note that, `--restart` has conflict with `--rm` and you have to choose one of these options to run your container. The value of the `--restart` flag can be any of the following:
+  - **`no`**: Do not automatically restart the container. (This is the default option)
+  - **`on-failure`**: Restart the container if it exits due to an error, which manifests as a non-zero exit code.
+  - **`always`**: Always restart the container if it stops. If it is manually stopped, it is restarted only when Docker daemon restarts or the container itself is manually restarted.
+  - **`unless-stopped`**: Similar to always, except that when the container is stopped (manually or otherwise), it is not restarted even after Docker daemon restarts.
 - Port Mapping / Port Publishing. Every docker container gets an IP assigned by default. Docker container IP is 172.17.1.2:3000 and Docker host IP is 192.168.1.25 so, you can map their port like below. You can even run multiple instances of your application and map them to different ports on the Docker host or you can run your application on a single port and map them to a different port. Remember, you cannot map to the same port on the Docker host more than once.
   ```
   docker run -p USER_PORT:CONTAINER_PORT SERVICE
