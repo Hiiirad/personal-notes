@@ -16,6 +16,7 @@
   - [Part 09: Client Libraries](#part-09-client-libraries)
   - [Part 10: References](#part-10-references)
 
+---
 ## Part 01: The Basics
 [Prometheus](https://prometheus.io) is an open-source **monitoring** and **alerting** tool. It collects data abou aplications and systems and allows you to **visualize** the data and issue alerts based on the data.
 
@@ -48,6 +49,7 @@ While Prometheus is a great tool for a variety of use cases, it is important to 
 - **100% Accuracy** (e.g., per-request billing): Prometheus is designed to operate even under failure conditions. This means it will continue to provide data even if new data is not available due to failure and outages. If you need 100% up-to-the-minute accuracy, such as in the case of per request billing, Prometheus may not be the best tool to use.
 - **Non Time-Series Data** (e.g., log aggregation): Prometheus is built to monitor time-series metrics, especially data that is numeric. It is not the best choice for collecting more generic types of data such as system logs.
 
+---
 ## Part 02: Installation and Configuration
 
 ### Installation Options:
@@ -101,27 +103,35 @@ While Prometheus is a great tool for a variety of use cases, it is important to 
 
 
 
+---
 ## Part 03: Prometheus Data (Data Model for Storing Data + Query Language to Interact with Prometheus Data)
 
 
+---
 ## Part 04: Visualization 
 
 
+---
 ## Part 05: Collecting Metrics
 
 
+---
 ## Part 06: Alerting
 
 
+---
 ## Part 07: Advanced Concepts (HA and Federation)
 
 
+---
 ## Part 08: Security
 
 
+---
 ## Part 09: Client Libraries
 
 
+---
 ## Part 10: References
 
 1. [Official Prometheus Documentation](https://prometheus.io/docs/)
