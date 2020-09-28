@@ -101,7 +101,7 @@ While Prometheus is a great tool for a variety of use cases, it is important to 
 
 ### Configuration
 
-
+Prometheus configuration file format is YAML.
 
 ---
 ## Part 03: Prometheus Data (Data Model for Storing Data + Query Language to Interact with Prometheus Data)
