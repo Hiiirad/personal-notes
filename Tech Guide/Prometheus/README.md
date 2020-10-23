@@ -60,7 +60,7 @@ While Prometheus is a great tool for a variety of use cases, it is important to 
     sudo useradd -M -r -s /bin/false prometheus
     sudo mkdir /etc/prometheus /var/lib/prometheus
     # Now download the latest version
-    tar xzf PROMETHEUS.tar.gz PROMETHEUS/
+    tar xzf PROMETHEUS.tar.gz
     sudo cp PROMETHEUS/{prometheus,promtool} /usr/local/bin/
     sudo chown prometheus:prometheus /usr/local/bin/{prometheus,promtool}
     sudo cp -r PROMETHEUS/{consoles,console_libraries} /etc/prometheus/
@@ -101,7 +101,19 @@ While Prometheus is a great tool for a variety of use cases, it is important to 
 
 ### Configuration
 
-Prometheus configuration file format is YAML.
+- Prometheus configuration file format is YAML.
+- Reloading the Configuration:
+  1. Restarting Prometheus: `systemctl restart prometheus`
+  2. Reloading Prometheus: `systemctl reload prometheus`
+  3. Send SIGHUP to Prometheus Process: `killall -HUP prometheus`
+- Read configuration file from URL: `curl localhost:9090/api/v1/status/config`
+
+Exporters:
+- A Prometheus exporter is any application that exposes metric data in a format that can be controlled (or "scraped") by the Prometheus server.
+
+Scrape Config:
+- The *scrape_config* section of the Prometheus config file provides a list of targets the Prometheus server will scrape, such as a Node Exporter running on a Linux machine.
+- Prometheus server will scrape these targets periodically to collect metric data.
 
 ---
 ## Part 03: Prometheus Data (Data Model for Storing Data + Query Language to Interact with Prometheus Data)
