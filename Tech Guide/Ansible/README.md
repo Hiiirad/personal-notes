@@ -153,7 +153,17 @@ Running an Ansible playbook is quite simple. You can use `ansible-playbook FILE.
 ### Roles
 
 ---
-## Part 06 (References)
+## Part 06 (Ansible Terminology)
+
+- Control Node: Machine with Ansible installed
+- Managed Node: Machines that you manage with Ansible
+- Inventory: List of managed nodes, default file location is `/etc/ansible/hosts`
+- Modules: Unit of code that Ansible executes
+- Tasks: Unit of action in Ansible
+- Playbooks: Ordered list of tasks
+
+---
+## Part 07 (References)
 
 1. [Ansible Documentation](https://docs.ansible.com/)
 2. [YAML](https://yaml.org/)
