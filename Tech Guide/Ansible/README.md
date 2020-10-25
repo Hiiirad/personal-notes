@@ -70,8 +70,8 @@ IP/HOST
 ```
 
 Use simple modules to run commands on the servers:
-1. `ansible -m ping all`
-2. `ansible -m shell -a 'free -m' all`
+1. `ansible -m ping all` or `ansible all -m ping`
+2. `ansible -m shell -a 'free -m' all` or `ansible all -m shell -a 'free -m'`
 
 ---
 ## Part 04 (Ansible Playbooks)
@@ -135,28 +135,39 @@ fruit: ['Apple', 'Orange', 'Mango']
 
 Example:
 ```yaml
+---
 # Simple Ansible Playbook
+# Whatever host you choose must be added to Inventory File
+- hosts: ALL
+  tasks:
+  - name: This is a basic connectivity test
+    ping:
+...
+```
+Example:
+```yaml
+---
 -
-    name: Test1
-    # Whatever host you choose must be added to Inventory File
-    hosts: localhost
-    tasks:
-        - name: Execute command 'date'
-          command: date
-        - name: Execute script on server
-          command: test_script.sh
+  name: Test1
+  hosts: localhost
+  tasks:
+      - name: Execute command 'date'
+        command: date
+      - name: Execute script on server
+        command: test_script.sh
 -
-    name: Test2
-    hosts: localhost
-    tasks:
-        - name: Install web service
-          yum:
-            name: httpd
-            state: present
-        - name: Start web service
-          services:
-            name: httpd
-            state: started
+  name: Test2
+  hosts: localhost
+  tasks:
+      - name: Install web service
+        yum:
+          name: httpd
+          state: present
+      - name: Start web service
+        services:
+          name: httpd
+          state: started
+...
 ```
 
 You can see the list of all modules using **`ansible-doc -l`** command on your terminal.
