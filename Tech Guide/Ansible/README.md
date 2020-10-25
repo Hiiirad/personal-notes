@@ -49,7 +49,29 @@ Setup Password-less SSH Connection:
 ---
 ## Part 03 (Ansible Inventory Files)
 
-Inventory file contains the list of all the servers which you want to perform some tasks on them.
+Inventory file (host file) contains the list of all the servers which you want to perform some tasks on them.
+
+It's good to separate servers on their different purposes, and add all servers on a section so that you can access all of them at once.
+
+Example of `/etc/ansible/hosts`:
+```
+[DEV]
+IP/HOST
+IP/HOST
+
+[PROD]
+IP/HOST
+IP/HOST
+
+[ALL]
+IP/HOST
+IP/HOST
+IP/HOST
+```
+
+Use simple modules to run commands on the servers:
+1. `ansible -m ping all`
+2. `ansible -m shell -a 'free -m' all`
 
 ---
 ## Part 04 (Ansible Playbooks)
