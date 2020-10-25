@@ -38,24 +38,73 @@ Features of Ansible:
 1. It's agentless, so you don't need to install and manage an agent on the servers you need to run ansible on.
 2. It uses SSH to establish secure connections.
 3. It follows push bases architecture.
-4. It is built on top of python, so has a lot of functionalities of python in-built.
+4. It is built on top of python, so it has a lot of functionalities of python in-built.
 
 
 ---
 ## Part 03 (Ansible Inventory Files)
 
+Inventory file contains the list of all the servers which you want to perform some tasks on them.
+
 ---
 ## Part 04 (Ansible Playbooks)
-
-All Ansible playbooks are written in YAML.
-- YAML: YAML Ain't Markup Language
-- YAML is a human friendly data serialization standard for all programming languages.
 
 A playbook is a single yaml file containing a set of plays. A play defines a set of activities or tasks to be run on a single or a group of hosts. Task examples:
 - Execute a command
 - Run a script
 - Install a package
 - Shutdown/Restart
+
+All Ansible playbooks are written in YAML.
+- YAML: YAML Ain't Markup Language
+- YAML is a human friendly data serialization standard for all programming languages.
+- YAML files should end in .yaml or .yml
+- YAML is case sensitive.
+- YAML does not allow the use of tabs. Spaces are used instead, as tabs are not universally supported.
+
+YAML Tutorial:
+```yaml
+---
+# Yaml file starts with 3 dashes/hyphens
+# Scalar/Variable
+Title: "This is a tutorial"
+Page: 15
+Price: 12.35
+For_sale: yes
+
+# Sequence/List
+- toy
+- animal
+
+# Nested Sequence/List
+- toy
+ - car
+ - plane
+ - doll
+- animal
+ - cat
+ - dog
+
+# Mapping (Exactly like Key:Value pair)
+Drink: cold_drink
+
+# Mapping with a sequence
+Cold_drinks:
+ - Coke
+ - Pepsi
+  - Pepsi Max
+ - Sprite
+Hot_drinks:
+ - Tea
+ - Coffee
+ - Milk
+
+# Flow Collection (Exactly like Key:Values)
+fruit: ['Apple', 'Orange', 'Mango']
+
+# Yaml file ends with 3 dots
+...
+```
 
 Example:
 ```yaml
