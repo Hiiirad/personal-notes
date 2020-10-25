@@ -11,8 +11,35 @@ Why Ansible:
 - Application Deployment
 - Security Compliance
 
+Benefits of Automation:
+1. Infrastructure Configuration
+    - Improve overall infrastructure performance and compliance
+    - Maintain consistent configuration
+    - Detect and maintain approprate patch levels (Increase the security of the systems)
+2. Operation and Process
+    - Increase efficiency and consistency
+    - Automate manual tasks
+    - Minimize human errors
+3. Performance and Availability
+    - Gain understanding into your workloads
+    - Understand dependencies
+    - Anticipate capacity requirements
+    - Auto scale seamlessly
+
+Configuration Management Tools:
+- Ansible (**Push Method**: Push configuration to different servers)
+- Chef (**Pull Method**: Pull configurations from different servers)
+- Puppet (**Pull Method**: Pull configurations from different servers)
+
 ---
 ## Part 02 (Ansible Basics)
+
+Features of Ansible:
+1. It's agentless, so you don't need to install and manage an agent on the servers you need to run ansible on.
+2. It uses SSH to establish secure connections.
+3. It follows push bases architecture.
+4. It is built on top of python, so has a lot of functionalities of python in-built.
+
 
 ---
 ## Part 03 (Ansible Inventory Files)
@@ -22,8 +49,7 @@ Why Ansible:
 
 All Ansible playbooks are written in YAML.
 - YAML: YAML Ain't Markup Language
-- YAML is a human friendly data serialization
-  standard for all programming languages.
+- YAML is a human friendly data serialization standard for all programming languages.
 
 A playbook is a single yaml file containing a set of plays. A play defines a set of activities or tasks to be run on a single or a group of hosts. Task examples:
 - Execute a command
