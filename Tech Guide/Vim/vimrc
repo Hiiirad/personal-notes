@@ -1,0 +1,10 @@
+set number
+set encoding=utf-8
+syntax on
+set wrap linebreak nolist
+set hlsearch
+set autoindent
+set shiftwidth=4
+set expandtab
+set history=1000
+set undolevels=1000
