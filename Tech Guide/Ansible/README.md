@@ -51,7 +51,7 @@ Setup Password-less SSH Connection:
 
 Inventory file (host file) contains the list of all the servers which you want to perform some tasks on them.
 
-It's good to separate servers on their different purposes, and add all servers on a section so that you can access all of them at once.
+It's good to separate servers for their specific purposes on different groups, and add all servers in a single group so that you can access all of them at once.
 
 Example of `/etc/ansible/hosts`:
 ```
@@ -72,6 +72,27 @@ IP/HOST
 Use simple modules to run commands on the servers:
 1. `ansible -m ping all` or `ansible all -m ping`
 2. `ansible -m shell -a 'free -m' all` or `ansible all -m shell -a 'free -m'`
+
+Inventory Management Deep Dive:
+- Patterns: `dev[1-4].example.com` or `dev[h-m].example.com` or `dev[1:4].example.com` or `dev[h:m].example.com`
+- Privilege Escalation / Various levels of access
+  - Host Variables: `dev.example.com ansible_user=john`
+- Connections
+  - Different port for SSH: `dev.example.com:2222`
+  - Access locally: `dev.example.com ansible_connection=local` or `dev.example.com ansible_connection=ssh`
+  - Open a port for specific program: `dev.example.com http_port=80`
+- Group Variables (Assign variable for specific group once)
+  ```
+  [DEV:vars]
+  proxy_server=proxy.example.com
+  ```
+- Supergroups: contains multiple groups
+  ```
+  [NAME_OF_SUPERGROUP:children]
+  DEV
+  PROD
+  ```
+- Using non-default inventory file: `ansible-playbook -i /ADDRESS/OF/hosts /ADDRESS/OF/FILE.yml`
 
 ---
 ## Part 04 (Ansible Playbooks)
