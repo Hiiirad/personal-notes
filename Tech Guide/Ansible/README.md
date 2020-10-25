@@ -40,6 +40,11 @@ Features of Ansible:
 3. It follows push bases architecture.
 4. It is built on top of python, so it has a lot of functionalities of python in-built.
 
+Setup Password-less SSH Connection:
+- Public-Private key encryption
+- Generate keys using `ssh-keygen` command
+- Transfer keys using `ssh-copy-id` command: `ssh-copy-id USER@SERVER_IP`
+- Validate
 
 ---
 ## Part 03 (Ansible Inventory Files)
