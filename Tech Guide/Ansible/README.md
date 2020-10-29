@@ -56,17 +56,21 @@ It's good to separate servers for their specific purposes on different groups, a
 Example of `/etc/ansible/hosts`:
 ```
 [DEV]
-IP/HOST
-IP/HOST
+IP/HOST/localhost
+IP/HOST/localhost
 
 [PROD]
-IP/HOST
-IP/HOST
+IP/HOST/localhost
+IP/HOST/localhost
+
+[MAIL]
+IP/HOST/localhost
+IP/HOST/localhost
 
 [ALL]
-IP/HOST
-IP/HOST
-IP/HOST
+IP/HOST/localhost
+IP/HOST/localhost
+IP/HOST/localhost
 ```
 
 Use simple modules to run commands on the servers:
@@ -78,9 +82,13 @@ Inventory Management Deep Dive:
 - Privilege Escalation / Various levels of access
   - Host Variables: `dev.example.com ansible_user=john`
 - Connections
-  - Different port for SSH: `dev.example.com:2222`
+  - Windows / Linux: `dev.example.com ansible_connection=winrm` or `prod.example.com ansible_connection=ssh` or `mail.example.com ansible_connection=localhost`
+  - Different port for SSH: `dev.example.com:2222` or `dev.example.com ansible_port=2345`
   - Access locally: `dev.example.com ansible_connection=local` or `dev.example.com ansible_connection=ssh`
   - Open a port for specific program: `dev.example.com http_port=80`
+  - SSH Password: `dev.example.com ansible_ssh_pass=PASSWORD`
+    - There's a better way for managing password instead of storing in a plain text file which is not recommended in production environment. **Ansible Vault** stores passwords in an encrypted format.
+    - The best way to connect servers with each other is sharing SSH-Keys.
 - Group Variables (Assign variable for specific group once)
   ```
   [DEV:vars]
@@ -91,6 +99,11 @@ Inventory Management Deep Dive:
   [NAME_OF_SUPERGROUP:children]
   DEV
   PROD
+
+  [all_servers:children]
+  DEV
+  PROD
+  MAIL
   ```
 - Using non-default inventory file: `ansible-playbook -i /ADDRESS/OF/hosts /ADDRESS/OF/FILE.yml`
 
