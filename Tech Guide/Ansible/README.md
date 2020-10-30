@@ -328,7 +328,36 @@ Example of defining variables:
 
 ### Conditionals
 
+Conditional statements in Ansible is like programming languages. You can use *and*, *or*, *==*, *!=*, *when*, and etc.
 
+Example 1:
+```yaml
+-
+  name: Start Services
+  hosts: all_servers
+  tasks:
+    - service: name=mysql state=started
+      when: ansible_host == "db.company.com"
+    
+    - service: name=httpd state=started
+      when: ansible_connection == "web1.company.com" or ansible_connection "web2.company.com"
+```
+
+Example 2:
+```yaml
+-
+  name: Check status of service and email if it's down
+  hosts: localhost
+  tasks:
+    - command: service https status
+      register: command_output
+
+    - mail:
+        to: Admins <admin@company.com>
+        subject: Service Alert
+        body: 'Service {{ ansible_hostname }} is down!'
+      when: command_output.stdout.find('down') != -1
+```
 
 ### Loops
 
