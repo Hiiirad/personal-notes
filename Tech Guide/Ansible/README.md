@@ -219,7 +219,10 @@ You can see the list of all modules using **`ansible-doc -l`** command on your t
 Running an Ansible playbook is quite simple. You can use `ansible-playbook FILE.yml` command to execute your Ansible playbook, or you can get help from `ansible-playbook --help` command in your terminal.
 
 ---
-## Part 05 (Ansible Concepts)
+## Part 05 (Ansible Modules)
+
+---
+## Part 06 (Ansible Concepts)
 
 ### Variables
 
@@ -230,7 +233,7 @@ Running an Ansible playbook is quite simple. You can use `ansible-playbook FILE.
 ### Roles
 
 ---
-## Part 06 (Ansible Terminology)
+## Part 07 (Ansible Terminology)
 
 - Control Node: Machine with Ansible installed
 - Managed Node: Machines that you manage with Ansible
@@ -240,7 +243,7 @@ Running an Ansible playbook is quite simple. You can use `ansible-playbook FILE.
 - Playbooks: Ordered list of tasks
 
 ---
-## Part 07 (References)
+## Part 08 (References)
 
 1. [Ansible Documentation](https://docs.ansible.com/)
 2. [YAML](https://yaml.org/)
