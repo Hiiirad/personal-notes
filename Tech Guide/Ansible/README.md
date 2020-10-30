@@ -380,7 +380,66 @@ Example:
 
 ### Roles
 
+There's a large playbook file with hundreds lines of code. It's frustrating to maintain, change, and support it.
+We must cut this huge file into smaller files and use a single master playbook to control these files using `- include <playbook name>` in the master playbook.
 
+Example:
+```yaml
+# setup_applications_debian.yml (2000 lines of code)
+# we must separate it into smaller files.
+# 1. update_servers.yml (500 lines of code)
+# 2. install_dependencies.yml (500 lines of code)
+# 3. configure_webservers.yml (500 lines of code)
+# 4. start_applications.yml (500 lines of code)
+
+# The master configuration file is:
+- include update_servers.yml
+- include install_dependencies.yml
+- include configure_webservers.yml
+- include start_applications.yml
+```
+
+Note that, we can include tasks and variables in a different files as well.
+
+It is recommended that we make a *roles* directory inside our Ansible directory and follow *Role Directory Structure*, because ansible can understand and extract every data that it needs to complete the tasks.
+
+```yaml
+-
+  name: Set Firewall Configuration
+  hosts: web
+  roles:
+    - webservers
+```
+
+Sample Role Directory Structure:
+
+```
+inventory.txt
+master_configuration.yml
+roles/
+    common/
+        tasks/
+            main.yml
+        handlers/
+        library/
+        files/
+        templates/
+        vars/
+            main.yml
+        defaults/
+        meta/
+    webservers/
+        files/
+        templates/
+        tasks/
+            main.yml
+        handlers/
+        vars/
+            main.yml
+        default/
+        meta/
+    
+```
 
 ---
 ## Part 07 (Ansible Terminology)
