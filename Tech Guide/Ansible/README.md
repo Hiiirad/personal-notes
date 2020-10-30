@@ -221,6 +221,89 @@ Running an Ansible playbook is quite simple. You can use `ansible-playbook FILE.
 ---
 ## Part 05 (Ansible Modules)
 
+Ansible modules categorized into various groups based on their functionality:
+- System
+  - User
+  - Group
+  - Hostname
+  - Iptables
+  - Lvg
+  - Lvol
+  - Make
+  - Mount
+  - Ping Timezone
+  - Systemd
+  - Service
+  - etc.
+- Commands
+  - Command
+  - Except
+  - Raw
+  - Script
+  - Shell
+  - etc.
+- Files
+  - Acl
+  - Archive
+  - Copy
+  - File
+  - Find
+  - Lineinfile
+  - Replace
+  - Stat
+  - Template
+  - Unarchive
+  - etc.
+- Database
+  - MongoDB
+  - Microsoft SQL Server (mssql)
+  - MySQL
+  - PostgreSQL
+  - ProxySQL
+  - Vertica
+  - etc.
+- Cloud
+  - Amazon
+  - Atomic
+  - Azure
+  - Centrylink
+  - Cloudscale
+  - Cloudstack
+  - Digital Ocean
+  - Docker
+  - Google
+  - Linode
+  - Openstack
+  - Rackspace
+  - Smartos
+  - Softlayer
+  - VMware
+  - etc.
+- Windows
+  - Win_copy
+  - Win_command
+  - Win_domain
+  - Win_file
+  - Win_iis_website
+  - Win_msg
+  - Win_msi
+  - Win_package
+  - Win_ping
+  - Win_path
+  - Win_robocopy
+  - Win_regedit
+  - Win_shell
+  - Win_service
+  - Win_user
+  - etc.
+- etc.
+
+Deep-Dive into some useful modules:
+- Command: Executes a command on a remote node
+- Script: Run a local script on a remote node after transferring it
+- Service: Manage services on a system such as start, stop, or restart
+- Lineinfile: Search for a line in a file and replace it or add it if it doesn't exist.
+
 ---
 ## Part 06 (Ansible Concepts)
 
