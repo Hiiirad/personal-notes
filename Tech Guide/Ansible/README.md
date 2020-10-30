@@ -87,7 +87,7 @@ Inventory Management Deep Dive:
   - Access locally: `dev.example.com ansible_connection=local` or `dev.example.com ansible_connection=ssh`
   - Open a port for specific program: `dev.example.com http_port=80`
   - SSH Password: `dev.example.com ansible_ssh_pass=PASSWORD`
-    - There's a better way for managing password instead of storing in a plain text file which is not recommended in production environment. **Ansible Vault** stores passwords in an encrypted format.
+    - There's a better way for managing password instead of storing in a plain text file which is not recommended in production environment. **Ansible Vault** stores passwords in an encrypted format. Check `ansible-vault --help` command.
     - The best way to connect servers with each other is sharing SSH-Keys.
 - Group Variables (Assign variable for specific group once)
   ```
@@ -115,6 +115,15 @@ A playbook is a single yaml file containing a set of plays. A play defines a set
 - Run a script
 - Install a package
 - Shutdown/Restart
+- Deploy number of VMs on cloud
+- Provision Storage to all VMs
+- Setup network configuration
+- Setup cluster configuration
+- Configure Web-Server/Database
+- Setup Load-Balancing between web server VMs
+- Setup monitoring components
+- Update CMDB database with new VM information
+- etc.
 
 All Ansible playbooks are written in YAML.
 - YAML: YAML Ain't Markup Language
@@ -144,7 +153,7 @@ For_sale: yes
  - doll
 - animal
  - cat
- - dog
+ - dog 
 
 # Mapping (Exactly like Key:Value pair)
 Drink: cold_drink
@@ -188,7 +197,7 @@ Example:
       - name: Execute command 'date'
         command: date
       - name: Execute script on server
-        command: test_script.sh
+        script: test_script.sh
 -
   name: Test2
   hosts: localhost
@@ -198,9 +207,10 @@ Example:
           name: httpd
           state: present
       - name: Start web service
-        services:
+        service:
           name: httpd
           state: started
+# command, script, yum, and service are some of Ansible's modules.
 ...
 ```
 
