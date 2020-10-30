@@ -309,11 +309,34 @@ Deep-Dive into some useful modules:
 
 ### Variables
 
+The format we are using to define variables called **Jinja2 Templating**.
+
+If the variable is in the middle of a sentence, the single quote around the curly braces are not required.
+
+Example of defining variables:
+```yaml
+-
+  name: add DNS server to resolv.conf
+  hosts: localhost
+  vars:
+    dns_server: 8.8.8.8
+  tasks:
+    - lineinfile:
+      path: /etc/resolv.conf
+      line: 'nameserver {{ dns_server }}'
+```
+
 ### Conditionals
+
+
 
 ### Loops
 
+
+
 ### Roles
+
+
 
 ---
 ## Part 07 (Ansible Terminology)
