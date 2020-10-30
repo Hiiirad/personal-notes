@@ -311,7 +311,7 @@ Deep-Dive into some useful modules:
 
 The format we are using to define variables called **Jinja2 Templating**.
 
-If the variable is in the middle of a sentence, the single quote around the curly braces are not required.
+If the variable is in the middle of a sentence, a single quote around the double curly braces are not required.
 
 Example of defining variables:
 ```yaml
@@ -361,7 +361,22 @@ Example 2:
 
 ### Loops
 
-
+Example:
+```yaml
+-
+  name: Install Packages
+  hosts: localhost
+  tasks:
+    - yum: name='{{ item }}' state=present
+      with_items:
+        - httpd
+        - wget
+        - curl
+        - gcc
+        - make
+        - htop
+        - python3-pip
+```
 
 ### Roles
 
