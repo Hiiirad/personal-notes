@@ -440,9 +440,27 @@ roles/
         meta/
     
 ```
+---
+## Part 07 (Advanced Topics)
+
+### Preparing Windows Server
+
+
+### Ansible-Galaxy
+
+
+### Patterns
+
+
+### Dynamic Inventory
+
+
+### Developing Custom Modules
+
+
 
 ---
-## Part 07 (Ansible Terminology)
+## Part 08 (Ansible Terminology)
 
 - Control Node: Machine with Ansible installed
 - Managed Node: Machines that you manage with Ansible
@@ -452,7 +470,7 @@ roles/
 - Playbooks: Ordered list of tasks
 
 ---
-## Part 08 (References)
+## Part 09 (References)
 
 1. [Ansible Documentation](https://docs.ansible.com/)
 2. [YAML](https://yaml.org/)
