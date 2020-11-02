@@ -445,19 +445,40 @@ roles/
 
 ### Preparing Windows Server
 
+- Ansible Control Machine can only be Linux.
+- Windows machines can be targets of Ansible and thus be part of automation.
+- Ansible connects to a windows machine using **winrm**.
+- Requirements:
+  - *pywinrm* module should be installed on the Ansible Control Machine. `pip install pywinrm`
+  - Setup **winrm** with a powershell script provided and recommended by Ansible. (*ConfigureRemotingForAnsible.ps1*)
+  - Different modes of authentication: Basic/Certificate/Kerberos/NTLM/CredSSP
 
 ### Ansible-Galaxy
 
+[Galaxy](https://galaxy.ansible.com) is your hub for finding, reusing and sharing the best Ansible content.
 
 ### Patterns
 
+You can use wildcards in your Ansible-Playbook for the hosts you choose. Examples:
+- `Host1, Host2, Host3`
+- `Group1, Host1`
+- `Host*`
+- `*.company.com`
+- `192.168.100.*`
+- `webserver[2:5]`
+- `database[3:]`
+- `firewall[:4]`
+- `~(web|db).*\.company\.com`
 
 ### Dynamic Inventory
 
+It's not necessary to always define a inventory information in these files. Because the *inventory.txt* is a static file and you will have to change that manually. If you need to integrate ansible with any other source of inventory in your environment, then you will need to make this inventory dynamic.
+
+Ansible supports having dynamic inventory files. You just need to specify your script instead of your inventory file. You can check some of the scripts at the Ansible documentation site.
 
 ### Developing Custom Modules
 
-
+You need to write a Python program and place it in the modules directory on your server. The program though has to be written in a particular format. You can get the template to start with from the Ansible documentation site.
 
 ---
 ## Part 08 (Ansible Terminology)
