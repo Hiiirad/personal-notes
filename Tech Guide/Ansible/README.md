@@ -76,6 +76,7 @@ IP/HOST/localhost
 Use simple modules to run commands on the servers:
 1. `ansible -m ping all` or `ansible all -m ping`
 2. `ansible -m shell -a 'free -m' all` or `ansible all -m shell -a 'free -m'`
+3. Fact Check: `ansible dev -m setup` or `ansible -m setup dev`
 
 Inventory Management Deep Dive:
 - Patterns: `dev[1-4].example.com` or `dev[h-m].example.com` or `dev[1:4].example.com` or `dev[h:m].example.com`
