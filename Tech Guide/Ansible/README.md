@@ -81,6 +81,12 @@ Inventory Management Deep Dive:
 - Patterns: `dev[1-4].example.com` or `dev[h-m].example.com` or `dev[1:4].example.com` or `dev[h:m].example.com`
 - Privilege Escalation / Various levels of access
   - Host Variables: `dev.example.com ansible_user=john`
+  - PrivEsc:
+    - `become`: Allows you to force privilege escalation. *This Command is equivalent to ansible_sudo or ansible_su*
+    - `become_method`: Allows you to set privilege escalation method.
+    - `become_user`: Allows you to set the user you become through privilege escalation. *This Command is equivalent to ansible_sudo_user or ansible_su_user*
+    - `become_pass`: Allows you to set the privilege escalation password. *This Command is equivalent to ansible_sudo_pass or ansible_su_pass*
+    - `become_flags`: Allows you to use specific flags for the tasks or role. One common use is to change the user to nobody when the shell is set to nologin.
 - Connections
   - Windows / Linux: `dev.example.com ansible_connection=winrm` or `prod.example.com ansible_connection=ssh` or `mail.example.com ansible_connection=localhost`
   - Different port for SSH: `dev.example.com:2222` or `dev.example.com ansible_port=2345`
@@ -219,6 +225,12 @@ Example:
 You can see the list of all modules using **`ansible-doc -l`** command on your terminal.
 
 Running an Ansible playbook is quite simple. You can use `ansible-playbook FILE.yml` command to execute your Ansible playbook, or you can get help from `ansible-playbook --help` command in your terminal.
+
+### Idempotency
+
+An operation is idempotent if the result of performing it once is exactly the same as the result of performing it repeatedly without any intervening actions.
+
+It's important to have idempotent machine, because the system needs to have a consistent state after running a playbook for multiple times.
 
 ---
 ## Part 05 (Ansible Modules)
