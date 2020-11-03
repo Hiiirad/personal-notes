@@ -125,6 +125,8 @@ A playbook is a single yaml file containing a set of plays. A play defines a set
 - Update CMDB database with new VM information
 - etc.
 
+![Ansible Playbook](Images/ansible-playbook.png)
+
 All Ansible playbooks are written in YAML.
 - YAML: YAML Ain't Markup Language
 - YAML is a human friendly data serialization standard for all programming languages.
