@@ -341,6 +341,23 @@ Example of defining variables:
       line: 'nameserver {{ dns_server }}'
 ```
 
+Ansible has 3 types of variables:
+1. Dictionary
+2. List
+3. Ansible Unsafe Text
+
+Example of variable types:
+```yaml
+- hosts: dev
+  gather_facts: yes
+  tasks:
+  - debug:
+    msg:
+    - "Type of ansible_cmdline variable is: {{ ansible_cmdline | type_debug }}"
+    - "Type of ansible_all_ipv4_addresses variable is: {{ ansible_all_ipv4_addresses | type_debug }}"
+    - "Type of ansible_architecture variable is: {{ ansible_architecture | type_debug }}"
+```
+
 ### Conditionals
 
 Conditional statements in Ansible is like programming languages. You can use *and*, *or*, *==*, *!=*, *when*, and etc.
