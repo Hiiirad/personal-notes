@@ -26,10 +26,87 @@ Benefits of Automation:
     - Anticipate capacity requirements
     - Auto scale seamlessly
 
-Configuration Management Tools:
-- Ansible (**Push Method**: Push configuration to different servers)
+### Configuration Management Tools
 - Chef (**Pull Method**: Pull configurations from different servers)
 - Puppet (**Pull Method**: Pull configurations from different servers)
+- Ansible (**Push Method**: Push configuration to different servers)
+
+1. Availability
+
+|DevOps Tools|Availability (in case of server failure)|
+|------------|----------------------------------------|
+|Chef|Backup Server|
+|Puppet|Alternative Master|
+|Ansible|Secondary Instance|
+
+2. Configuration Language
+
+|DevOps Tools|Configuration Language|Learning Level|
+|------------|----------------------|--------------|
+|Chef|Ruby DSL|Difficult|
+|Puppet|Ruby, Puppet DSL, Embedded Ruby (ERB), DSL|Difficult|
+|Ansible|Python, Yaml|Simple|
+
+3. Setup and Installation
+
+|DevOps Tools|Architecture|Ease of Setup and Installation|
+|------------|------------|------------------------------|
+|Chef|Master-Agent|Difficult and complex due to Chef workstation|
+|Puppet|Master-Agent|Difficult due to certificate signing between master and agent|
+|Ansible|Only Master (Agentless)|Easy|
+
+4. Ease of Management
+
+|DevOps Tools|Configuration|Ease of Management|
+|------------|------------|-------------------|
+|Chef|Pull|Difficult|
+|Puppet|Pull|Difficult|
+|Ansible|Push and Pull|Easy|
+
+5. Scalability
+
+|DevOps Tools|Scalability|
+|------------|------------|
+|Chef|High|
+|Puppet|High|
+|Ansible|Very High|
+
+6. Interoperability
+
+|DevOps Tools|Interoperability|
+|------------|----------------|
+|Chef|Chef Server should be on Linux/Unix; Workstation and Chef Client support Windows|
+|Puppet|Puppet Master should be on Linux/Unix; Puppet Agent or Client supports Windows|
+|Ansible|Ansible Server should be on Linux/Unix; Client machines support Windows|
+
+7. Pricing
+
+|DevOps Tools|Pricing|Pricing|
+|------------|-------|-------|
+|Chef|High|USD 13700/year for up to 100 nodes|
+|Puppet|Medium|USD 11200-19900/year for up to 100 nodes|
+|Ansible|Low|USD 10000/year for up to 100 nodes|
+
+8. Tool Capabilities
+
+- Chef
+  - Continuous delivery with automated workflow
+  - Compliance and security management
+  - Infrastructure automation
+- Puppet
+  - Orchestration
+  - Automated provisioning
+  - Code and node management
+  - Configuration automation
+  - Simple visualization and reporting
+  - High transparency
+  - Role-based access control
+- Ansible
+  - Simple orchestration
+  - Streamlined provisioning
+  - Continuous delivery with automated workflow
+  - App deployment
+  - Security and compliance integration into automated processes
 
 ---
 ## Part 02 (Ansible Basics)
@@ -143,8 +220,6 @@ All Ansible playbooks are written in YAML.
 
 YAML Tutorial:
 ```yaml
----
-# Yaml file starts with 3 dashes/hyphens
 # Scalar/Variable
 Title: "This is a tutorial"
 Page: 15
@@ -180,25 +255,19 @@ Hot_drinks:
 
 # Flow Collection (Exactly like Key:Values)
 fruit: ['Apple', 'Orange', 'Mango']
-
-# Yaml file ends with 3 dots
-...
 ```
 
 Example:
 ```yaml
----
 # Simple Ansible Playbook
 # Whatever host you choose must be added to Inventory File
 - hosts: ALL
   tasks:
   - name: This is a basic connectivity test
     ping:
-...
 ```
 Example:
 ```yaml
----
 -
   name: Test1
   hosts: localhost
@@ -220,7 +289,6 @@ Example:
           name: httpd
           state: started
 # command, script, yum, and service are some of Ansible's modules.
-...
 ```
 
 You can see the list of all modules using **`ansible-doc -l`** command on your terminal.
@@ -470,7 +538,6 @@ roles/
             main.yml
         default/
         meta/
-    
 ```
 ---
 ## Part 07 (Advanced Topics)
@@ -527,3 +594,4 @@ You need to write a Python program and place it in the modules directory on your
 
 1. [Ansible Documentation](https://docs.ansible.com/)
 2. [YAML](https://yaml.org/)
+3. [Configuration Managemenet Tools Comparison](https://www.veritis.com/blog/chef-vs-puppet-vs-ansible-comparison-of-devops-management-tools/)
