@@ -15,7 +15,7 @@ Benefits of Automation:
 1. Infrastructure Configuration
     - Improve overall infrastructure performance and compliance
     - Maintain consistent configuration
-    - Detect and maintain approprate patch levels (Increase the security of the systems)
+    - Detect and maintain appropriate patch levels (Increase the security of the systems)
 2. Operation and Process
     - Increase efficiency and consistency
     - Automate manual tasks
@@ -392,7 +392,7 @@ Deep-Dive into some useful modules:
 
 ### Variables
 
-The format we are using to define variables called **Jinja2 Templating**.
+The format we are using to define variables called **Jinja2 Template**.
 
 If the variable is in the middle of a sentence, a single quote around the double curly braces are not required.
 
@@ -579,6 +579,19 @@ Ansible supports having dynamic inventory files. You just need to specify your s
 
 You need to write a Python program and place it in the modules directory on your server. The program though has to be written in a particular format. You can get the template to start with from the Ansible documentation site.
 
+### Managing Return Values using Register
+
+- Common type of return values
+  - `backup_file`: For those modules that implement `backup=no|yes` when manipulating files, a path to the backup file created.
+  - `changed`: A boolean indicating if the task had to make changes.
+  - `failed`: A boolean that indicates if the task was failed or not.
+  - `invocation`: Information on how to module was invoked.
+  - `msg`: A string with a generic message relayed to the user.
+  - `stderr`: Some modules execute command line utilities or are geared for executing commands directly (raw, shell, command, etc.), this field contains the error output of these utilities.
+  - `stderr_lines`: When `stderr` is returned we also always provide this field which is a list of strings, one item per line from the original.
+  - `stdout`: Some modules execute command line utilities or are geared for executing commands directly (raw, shell, command, etc.), this field contains the normal output of these utilities.
+  - `stdout_lines`: When `stdout` is returned, Ansible always provides a list of strings, each containing one item per line from the original output.
+
 ---
 ## Part 08 (Ansible Terminology)
 
@@ -594,4 +607,4 @@ You need to write a Python program and place it in the modules directory on your
 
 1. [Ansible Documentation](https://docs.ansible.com/)
 2. [YAML](https://yaml.org/)
-3. [Configuration Managemenet Tools Comparison](https://www.veritis.com/blog/chef-vs-puppet-vs-ansible-comparison-of-devops-management-tools/)
+3. [Configuration Management Tools Comparison](https://www.veritis.com/blog/chef-vs-puppet-vs-ansible-comparison-of-devops-management-tools/)
