@@ -115,7 +115,7 @@ Features of Ansible:
 1. It's agentless, so you don't need to install and manage an agent on the servers you need to run ansible on.
 2. It uses SSH to establish secure connections.
 3. It follows push bases architecture.
-4. It is built on top of python, so it has a lot of functionalities of python in-built.
+4. It is built on top of python, so it has a lot of functionalities of python built-in.
 
 Setup Password-less SSH Connection:
 - Public-Private key encryption
