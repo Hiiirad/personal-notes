@@ -18,12 +18,12 @@
 
 ---
 ## Part 01: The Basics
-[Prometheus](https://prometheus.io) is an open-source **monitoring** and **alerting** tool. It collects data abou aplications and systems and allows you to **visualize** the data and issue alerts based on the data.
+[Prometheus](https://prometheus.io) is an open-source **monitoring** and **alerting** tool. It collects data about applications and systems and allows you to **visualize** the data and issue alerts based on the data.
 
-**Monitoring** is an important component of DevOps automation. To manage a robust and complex infrastructure, you need to be able to quickly and easily understant what is happening in your systems.
+**Monitoring** is an important component of DevOps automation. To manage a robust and complex infrastructure, you need to be able to quickly and easily understand what is happening in your systems.
 
 High Level Use Cases:
-- **Metric Collection**: Coolect important metrics about your systems and applications in one place.
+- **Metric Collection**: Collect important metrics about your systems and applications in one place.
 - **Visualization**: Build dashboards that provide an overview of the health of your systems.
 - **Alerting**: Send you an email or mobile notification when something is broken.
 
