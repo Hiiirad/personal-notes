@@ -110,10 +110,70 @@ While Prometheus is a great tool for a variety of use cases, it is important to 
 
 Exporters:
 - A Prometheus exporter is any application that exposes metric data in a format that can be controlled (or "scraped") by the Prometheus server.
+- Configure Node Exporter:
+  ```bash
+  # Create a user on the server you want to monitor
+  sudo useradd -M -r -s /bin/false node_exporter
+
+  # Download Node Exporter Binary from Prometheus website and extract it
+  wget "LINK"
+  tar xvzf node_exporter.tar.gz
+
+  # Copy the binary file to suitable location for the system
+  sudo cp node_exporter /usr/local/bin/
+
+  # Change ownership of the binary to node_exporter user
+  sudo chown node_exporter:node_exporter /usr/local/bin/node_exporter
+
+  # Create a system service for the node_exporter
+  sudo cat >> /etc/systemd/system/node_exporter.service << EOF
+  [Unit]
+  Description= Prometheus Node Exporter
+  Wants=network-online.target
+  After=network-online.target
+
+  [Service]
+  User=node_exporter
+  Group=node_exporter
+  Type=simple
+  ExecStart=/usr/local/bin/node_exporter
+
+  [Install]
+  WantedBy=multi-user.target
+  EOF
+
+  sudo systemctl daemon-reload
+  sudo systemctl start node_exporter
+  sudo systemctl enable node_exporter
+
+  # Check connection of the Node Exporter
+  curl localhost:9100/metrics
+  ```
 
 Scrape Config:
 - The *scrape_config* section of the Prometheus config file provides a list of targets the Prometheus server will scrape, such as a Node Exporter running on a Linux machine.
 - Prometheus server will scrape these targets periodically to collect metric data.
+- We need to add the Node Exporter specification to Prometheus configuration file:
+  ```yaml
+  # Start of /etc/prometheus/prometheus.yml config file
+  .
+  .
+  .
+  scrape_configs:
+    # Prometheus server
+    - job_name: 'prometheus'
+      static_configs:
+      - targets: ['localhost:9090']
+    # Node Exporter Servers
+    - job_name: 'NAME_OF_SERVER'
+      static_configs:
+      - targets: ['PRIVATE_IP:9100']
+  .
+  .
+  .
+  # End of /etc/prometheus/prometheus.yml config file
+  ```
+- Don't forget to restart/reload the prometheus service.
 
 ---
 ## Part 03: Prometheus Data (Data Model for Storing Data + Query Language to Interact with Prometheus Data)
