@@ -209,7 +209,7 @@ Metric types are not represented in any special way in a Prometheus server, but 
   - prometheus_http_request_duration_seconds_bucket{le="1.0"}
   - prometheus_http_request_duration_seconds_sum
   - prometheus_http_request_duration_seconds_count
-- **Summary** : A summary is similar to a histogram, but it exposes metrics in the form of quantiles instead of buckets. While buckets divide values based on specific boundaries, quantiles divide values based on the percentiles into which they fall. Like histograms, summaries also expose the *_sum* and *_count* metrics. This value represents the number of HTTP requests whose duration falls within the 95th percentile of all requests or the top 5% longest requests: prometheus_http_request_duration_seconds{quantile="0.95"}
+- **Summary** : A summary is similar to a histogram, but it exposes metrics in the form of quantiles instead of buckets. While buckets divide values based on specific boundaries, quantiles divide values based on the percentiles into which they fall. Like histograms, summaries also expose the *_sum* and *_count* metrics. This value represents the number of HTTP requests whose duration falls within the 95th percentile of all requests or the top 5% longest requests: prometheus_http_request_duration_seconds{quantile="0.95"} or go_gc_duration_seconds
 
 ---
 ## Part 04: Visualization 
