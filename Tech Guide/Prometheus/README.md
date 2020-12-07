@@ -8,6 +8,9 @@
     - [Installation Options:](#installation-options)
     - [Configuration](#configuration)
   - [Part 03: Prometheus Data (Data Model for Storing Data + Query Language to Interact with Prometheus Data)](#part-03-prometheus-data-data-model-for-storing-data--query-language-to-interact-with-prometheus-data)
+    - [Metric Names](#metric-names)
+    - [Metric Labels](#metric-labels)
+    - [Metric Types](#metric-types)
   - [Part 04: Visualization](#part-04-visualization)
   - [Part 05: Collecting Metrics](#part-05-collecting-metrics)
   - [Part 06: Alerting](#part-06-alerting)
@@ -178,6 +181,35 @@ Scrape Config:
 ---
 ## Part 03: Prometheus Data (Data Model for Storing Data + Query Language to Interact with Prometheus Data)
 
+- Prometheus is built around storing time-series data.
+- Time-series data consists of a series of values associated with different points in time.
+- Every metric in Prometheus tracks a particular value over time.
+
+### Metric Names
+Every metric in Prometheus has a metric name. THe metric name refers to the general feature of a system or application that is being measured.
+
+An example of a metric name: node_cpu_seconds_total
+
+Note that the metric name merely refers to the feature being measured. Metric names do not point to a specific data value but potentially a collection of many values.
+
+### Metric Labels
+Prometheus uses labels to provide a dimensional data model. This means we can use labels to specify additional things, such as which node's CPU usage is being represented.
+
+A unique combination of a metric name and a set of labels identifies a particular set of time-series data. This example uses a label *(It can have more labels)* called CPU to refer to usage of a specific CPU: node_cpu_seconds_total{cpu="0"}
+
+### Metric Types
+Metric types refer to different ways in which exporters represent the metric data they provide.
+
+Metric types are not represented in any special way in a Prometheus server, but it is important to understand them in order to properly interpret your metrics.
+
+- **Counter** : A counter is a single number that can only increase or be reset to zero. Counters represent cumulative values. Examples: Number of application restarts, Number of HTTP requests served by an application, etc. Example in querying: node_cpu_seconds_total[5m]
+- **Gauge** : A gauge is a single number that can increase and decrease over time. Examples: CPU/Memory usage, current active threads, number of concurrent HTTP requests, etc. Example in querying: node_memory_MemAvailable_bytes
+- **Histogram** : A histogram counts the number of observation/events that fall into a set of configurable buckets, each with its own separate time series. A histogram will use labels to differentiate between buckets. The below example provides the number of HTTP requests whose duration falls into each bucket. Histogram also include separate metric names to expose the *_sum* of all observed values and the total *_count* of events.
+  - prometheus_http_request_duration_seconds_bucket{le="0.3"}
+  - prometheus_http_request_duration_seconds_bucket{le="1.0"}
+  - prometheus_http_request_duration_seconds_sum
+  - prometheus_http_request_duration_seconds_count
+- **Summary** : A summary is similar to a histogram, but it exposes metrics in the form of quantiles instead of buckets. While buckets divide values based on specific boundaries, quantiles divide values based on the percentiles into which they fall. Like histograms, summaries also expose the *_sum* and *_count* metrics. This value represents the number of HTTP requests whose duration falls within the 95th percentile of all requests or the top 5% longest requests: prometheus_http_request_duration_seconds{quantile="0.95"}
 
 ---
 ## Part 04: Visualization 
