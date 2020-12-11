@@ -11,6 +11,8 @@
     - [Metric Names](#metric-names)
     - [Metric Labels](#metric-labels)
     - [Metric Types](#metric-types)
+    - [Querying](#querying)
+      - [Selectors](#selectors)
   - [Part 04: Visualization](#part-04-visualization)
   - [Part 05: Collecting Metrics](#part-05-collecting-metrics)
   - [Part 06: Alerting](#part-06-alerting)
@@ -210,6 +212,19 @@ Metric types are not represented in any special way in a Prometheus server, but 
   - prometheus_http_request_duration_seconds_sum
   - prometheus_http_request_duration_seconds_count
 - **Summary** : A summary is similar to a histogram, but it exposes metrics in the form of quantiles instead of buckets. While buckets divide values based on specific boundaries, quantiles divide values based on the percentiles into which they fall. Like histograms, summaries also expose the *_sum* and *_count* metrics. This value represents the number of HTTP requests whose duration falls within the 95th percentile of all requests or the top 5% longest requests: prometheus_http_request_duration_seconds{quantile="0.95"} or go_gc_duration_seconds
+
+### Querying
+Querying allows you to access and work with your metric data in Prometheus.
+
+You can use PromQL (Prometheus Query Language) to write queries and retrieve useful information from the metric data collected by Prometheus.
+
+You can use Prometheus queries in a variety of ways to obtain and work with data:
+- Expression browser
+- Prometheus HTTP API
+- Visualization tools such as Grafana
+
+#### Selectors
+
 
 ---
 ## Part 04: Visualization 
