@@ -324,3 +324,4 @@ You can use Prometheus queries in a variety of ways to obtain and work with data
 ## Part 10: References
 
 1. [Official Prometheus Documentation](https://prometheus.io/docs/)
+2. [Collection of Prometheus Alerting Rules](https://github.com/samber/awesome-prometheus-alerts)
