@@ -90,6 +90,7 @@ While Prometheus is a great tool for a variety of use cases, it is important to 
         --storage.tsdb.path /var/lib/prometheus/ \
         --web.console.templates=/etc/prometheus/consoles \
         --web.console.libraries=/etc/prometheus/console_libraries
+    ExecReload=/bin/kill -HUP $MAINPID
 
     [Install]
     WantedBy=multi-user.target
@@ -154,6 +155,75 @@ Exporters:
   # Check connection of the Node Exporter
   curl localhost:9100/metrics
   ```
+- Create a service for init based servers (Centos 6)
+  ```bash
+  # Command Usage: sudo service node_exporter status|stop|start
+  sudo cat >> /etc/init.d/node_exporter << EOF
+  #!/bin/bash
+  OPTIONS=`cat /etc/sysconfig/node_exporter`
+  RETVAL=0
+  PROG="node_exporter"
+  EXEC="/usr/local/bin/node_exporter"
+  LOCKFILE="/var/lock/subsys/$PROG"
+  LOGFILE=/var/log/node_exporter.log
+  ErrLOGFILE=/var/log/node_exporter_error.log
+
+  # Source function library.
+  if [ -f /etc/rc.d/init.d/functions ]; then
+    . /etc/rc.d/init.d/functions
+  else
+    echo "/etc/rc.d/init.d/functions is not exists"
+    exit 0
+  fi
+
+  start() {
+    if [ -f $LOCKFILE ]
+    then
+      echo "$PROG is already running!"
+    else
+      echo -n "Starting $PROG: "
+      nohup $EXEC $OPTIONS > $LOGFILE 2> $ErrLOGFILE &
+      RETVAL=$?
+      [ $RETVAL -eq 0 ] && touch $LOCKFILE && success || failure
+      echo
+      return $RETVAL
+    fi
+  }
+
+  stop() {
+    echo -n "Stopping $PROG: "
+    killproc $EXEC
+    RETVAL=$?
+    [ $RETVAL -eq 0 ] && rm -r $LOCKFILE && success || failure
+    echo
+  }
+
+  restart ()
+  {
+    stop
+    sleep 1
+    start
+  }
+
+  case "$1" in
+    start)
+      start
+      ;;
+    stop)
+      stop
+      ;;
+    status)
+      status $PROG
+      ;;
+    restart)
+      restart
+      ;;
+    *)
+      echo "Usage: $0 {start|stop|restart|status}"
+      exit 1
+  esac
+  exit $RETVAL
+  ```
 
 Scrape Config:
 - The *scrape_config* section of the Prometheus config file provides a list of targets the Prometheus server will scrape, such as a Node Exporter running on a Linux machine.
@@ -204,14 +274,14 @@ Metric types refer to different ways in which exporters represent the metric dat
 
 Metric types are not represented in any special way in a Prometheus server, but it is important to understand them in order to properly interpret your metrics.
 
-- **Counter** : A counter is a single number that can only increase or be reset to zero. Counters represent cumulative values. Examples: Number of application restarts, Number of HTTP requests served by an application, etc. Example in querying: node_cpu_seconds_total[5m]
-- **Gauge** : A gauge is a single number that can increase and decrease over time. Examples: CPU/Memory usage, current active threads, number of concurrent HTTP requests, etc. Example in querying: node_memory_MemAvailable_bytes
+- **Counter** : A counter is a single number that can only increase or be reset to zero. Counters represent cumulative values. Examples: Number of application restarts, Number of HTTP requests served by an application, etc. Example in querying: `node_cpu_seconds_total[5m]`
+- **Gauge** : A gauge is a single number that can increase and decrease over time. Examples: CPU/Memory usage, current active threads, number of concurrent HTTP requests, etc. Example in querying: `node_memory_MemAvailable_bytes`
 - **Histogram** : A histogram counts the number of observation/events that fall into a set of configurable buckets, each with its own separate time series. A histogram will use labels to differentiate between buckets. The below example provides the number of HTTP requests whose duration falls into each bucket. Histogram also include separate metric names to expose the *_sum* of all observed values and the total *_count* of events.
-  - prometheus_http_request_duration_seconds_bucket{le="0.3"}
-  - prometheus_http_request_duration_seconds_bucket{le="1.0"}
-  - prometheus_http_request_duration_seconds_sum
-  - prometheus_http_request_duration_seconds_count
-- **Summary** : A summary is similar to a histogram, but it exposes metrics in the form of quantiles instead of buckets. While buckets divide values based on specific boundaries, quantiles divide values based on the percentiles into which they fall. Like histograms, summaries also expose the *_sum* and *_count* metrics. This value represents the number of HTTP requests whose duration falls within the 95th percentile of all requests or the top 5% longest requests: prometheus_http_request_duration_seconds{quantile="0.95"} or go_gc_duration_seconds
+  - `prometheus_http_request_duration_seconds_bucket{le="0.3"}`
+  - `prometheus_http_request_duration_seconds_bucket{le="1.0"}`
+  - `prometheus_http_request_duration_seconds_sum`
+  - `prometheus_http_request_duration_seconds_count`
+- **Summary** : A summary is similar to a histogram, but it exposes metrics in the form of quantiles instead of buckets. While buckets divide values based on specific boundaries, quantiles divide values based on the percentiles into which they fall. Like histograms, summaries also expose the *_sum* and *_count* metrics. This value represents the number of HTTP requests whose duration falls within the 95th percentile of all requests or the top 5% longest requests: `prometheus_http_request_duration_seconds{quantile="0.95"}` or `go_gc_duration_seconds`
 
 ### Querying
 Querying allows you to access and work with your metric data in Prometheus.
