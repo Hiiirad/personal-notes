@@ -27,7 +27,8 @@
     - [GAWK](#gawk)
   - [Part 17 (Regular Expression or Regex)](#part-17-regular-expression-or-regex)
   - [Part 18 (SysAdmin's Power)](#part-18-sysadmins-power)
-  - [Part 19 (References)](#part-19-references)
+  - [Part 19 (Bash Tricks)](#part-19-bash-tricks)
+  - [Part 20 (References)](#part-20-references)
 
 ## Part 01 (Linux Review)
 
@@ -3166,14 +3167,14 @@ One of the Linux system administrators' core responsibilities is to ensure that 
 
   while read line
   do
-      echo "<tr>" >> $TEMPFILE
-      USER_NAME=`echo $line | gawk '{print $1}'`
-      USER_ID=`cat /etc/passwd | grep $USER_NAME | gawk -F: '{print $3}'`
-      GROUP_ID=`cat /etc/passwd | grep $USER_NAME | gawk -F: '{print $4}'`
-      GROUP_NAME=`cat /etc/group | grep ":${GROUP_ID}:" | gawk -F: '{print $1}'`
-      LOGIN_TIME=`echo $line | gawk '{print $4" "$5" "$6" "$7}'`
-      echo "<td>$USER_NAME</td><td>$USER_ID</td><td>$GROUP_NAME</td><td>$LOGIN_TIME</td>" >> $TEMPFILE
-      echo "</tr>" >> $TEMPFILE
+    echo "<tr>" >> $TEMPFILE
+    USER_NAME=`echo $line | gawk '{print $1}'`
+    USER_ID=`cat /etc/passwd | grep $USER_NAME | gawk -F: '{print $3}'`
+    GROUP_ID=`cat /etc/passwd | grep $USER_NAME | gawk -F: '{print $4}'`
+    GROUP_NAME=`cat /etc/group | grep ":${GROUP_ID}:" | gawk -F: '{print $1}'`
+    LOGIN_TIME=`echo $line | gawk '{print $4" "$5" "$6" "$7}'`
+    echo "<td>$USER_NAME</td><td>$USER_ID</td><td>$GROUP_NAME</td><td>$LOGIN_TIME</td>" >> $TEMPFILE
+    echo "</tr>" >> $TEMPFILE
   done < ~/tmpfile
 
   echo "</table>" >> $TEMPFILE
@@ -3184,10 +3185,95 @@ One of the Linux system administrators' core responsibilities is to ensure that 
   ```
 <!-- Maximum temperature of CPU should be 104 degree. -->
 
-## Part 19 (References)
+## Part 19 (Bash Tricks)
+- Change a part (some parts) from the last command
+  ```bash
+  sudo systemctl status sshd
+  # change status to start
+  !!:/status/start/
+  ```
+- History command
+  ```bash
+  $ history 4
+  1001  vi /etc/ssh/sshd_config
+  1002  ls -ltrh
+  1003  tail audit.log
+  1004  history 4
+
+  # You can rerun your command with the history sequence of that command
+  $ !1003
+
+  # You can rerun your command with the beginning of it
+  $ !vi
+  ```
+- History Control
+  ```bash
+  # Ignore spaces at the beginning of the line and store the command
+  $ export HISTCONTROL=$HISTCONTROL:ignorespace
+  # Ignore duplicate commands
+  $ export HISTCONTROL=$HISTCONTROL:ignoredups
+  # Ignore both of them
+  $ export HISTCONTROL=$HISTCONTROL:ignoreboth
+  ```
+- Remove a hostory command
+  ```bash
+  # Delete a single command
+  $ history -d 1002
+  # Delete all history
+  $ history -c
+  ```
+- Fix the wrong address
+  ```bash
+  $ mv /path/to/wrongfile /some/other/place
+  mv: cannot stat '/path/to/wrongfile': No such file or directory
+  
+  $ mv /path/to/rightfile !$
+  $ mv /path/to/rightfile /some/other/place
+  ```
+- Change Directory
+  ```bash
+  $ pwd
+  /home/$USER
+
+  $ ls some/very/long/path/to/some/directory
+
+  $ cd $_
+  $ pwd
+  /home/$USER/some/very/long/path/to/some/directory
+  ```
+- Rename Files
+  ```bash
+  # Change all .txt files to .log
+  $ for file in ./*.txt ; do mv -v "$file" "${$file%.*}.log" ; done
+  renamed './file10.txt' -> './file10.log'
+  renamed './file1.txt' -> './file1.log'
+  renamed './file2.txt' -> './file2.log'
+  renamed './file3.txt' -> './file3.log'
+  renamed './file4.txt' -> './file4.log'
+  ```
+- Copy/Move/Rename a file/directory with a new name in a safe way
+  ```bash
+  $ cp /etc/sysconfig/network-scripts/ifcfg-eth0{,.backup}
+  ```
+- Generate a Random Password
+  ```bash
+  # Solution 1
+  $ openssl rand -base64 $LENGTH_OF_PASSWORD
+
+  # Solution 2
+  $ cat /dev/urandom | tr -dc [:alnum:] | head -c $LENGTH_OF_PASSWORD ; echo
+  $ cat /dev/urandom | tr -dc [:graph:] | head -c $LENGTH_OF_PASSWORD ; echo
+  ```
+- Sort IPs in a file:
+  ```bash
+  $ sort -t . -k 1,1n -k 2,2n -k 3,3n -k 4,4n IP_FILE
+  ```
+
+## Part 20 (References)
 
 1. [Signals](https://www.computerhope.com/unix/signals.htm)
 2. [Bash Color and Formatting](https://misc.flogisoft.com/bash/tip_colors_and_formatting)
 3. Primary Shell [Link1](https://www.thegeekstuff.com/2008/09/bash-shell-take-control-of-ps1-ps2-ps3-ps4-and-prompt_command/) and [Link2](https://linoxide.com/how-tos/change-bash-prompt-variable-ps1/)
 4. [GAWK Manual Page](https://www.gnu.org/software/gawk/manual/gawk.html)
 5. [Linux From Scratch or LFS](http://www.linuxfromscratch.org/)
+6. [curl and wget Tips and Tricks](https://www.redhat.com/sysadmin/tips-tricks-curl-wget)
