@@ -3277,3 +3277,4 @@ One of the Linux system administrators' core responsibilities is to ensure that 
 4. [GAWK Manual Page](https://www.gnu.org/software/gawk/manual/gawk.html)
 5. [Linux From Scratch or LFS](http://www.linuxfromscratch.org/)
 6. [curl and wget Tips and Tricks](https://www.redhat.com/sysadmin/tips-tricks-curl-wget)
+7. [Comprehensive Linux Cheatsheet](https://gto76.github.io/linux-cheatsheet/)
