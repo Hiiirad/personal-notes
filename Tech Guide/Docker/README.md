@@ -636,6 +636,10 @@ Maintaining the layered architecture, creating a writable layer moving files acr
 
 The selection of the storage driver depends on the underlying OS being used. For example, in Ubuntu, the default storage driver is **AUFS**, whereas this storage driver is not available on other operating systems like Fedora or CentOS. In that case, device-mapper may be a better option. Docker will choose the best storage driver available automatically based on the operating system. The different storage drivers also provide different performance and stability characteristics. So you may want to choose one that fits the needs of your application and your organization. If you would like to read more on any of these storage drivers, read this document about [select a storage driver](https://docs.docker.com/storage/storagedriver/select-storage-driver/).
 
+**Differences between `-v` and `--mount` behavior:**
+- Because the `-v` and `--volume` flags have been a part of Docker for a long time, their behavior cannot be changed. This means that there is one behavior that is different between `-v` and `--mount`.
+- If you use `-v` or `--volume` to bind-mount a file or directory that does not yet exist on the Docker host, `-v` creates the endpoint for you. It is always created as a **directory**.
+- If you use `--mount` to bind-mount a **file** or **directory** that does not yet exist on the Docker host, Docker does not automatically create it for you, but generates an error.
 
 ---
 ## Part 10 (Compose)
