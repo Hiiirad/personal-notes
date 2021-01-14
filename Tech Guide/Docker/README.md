@@ -298,7 +298,7 @@ docker run -e VARIABLE=value NAME/ID
 Let’s start running an interactive shell in a ubuntu container:
 
 ```bash
-docker container run -ti ubuntu bash
+docker container run -it ubuntu bash
 ```
 To customize things a little bit, we will install a package called [figlet](https://www.figlet.org) in this container.
 
