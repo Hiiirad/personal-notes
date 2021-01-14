@@ -239,7 +239,7 @@ We can use Docker on Windows with these 2 options to run a Linux container on a 
   docker run -p 443:3001 redis
   docker run -p 8080:3001 redis
   ```
-- Volume Mapping. The docker container has its own isolated filesystem and any changes to any files happen within the container. Sometimes we need a persistent data, so we need o map a directory outside the container on the docker host to a directory inside the container. We use `-v` (Volume) option. `DIR_HOST` is a directory outside docker host which docker mount it inside docker host which we call it `DIR_CONTAINER`.
+- Volume Mapping. The docker container has its own isolated filesystem and any changes to any files happen within the container. Sometimes we need a persistent data, so we need to map a directory outside the container on the docker host to a directory inside the container. We use `-v` (Volume) option. `DIR_HOST` is a directory outside docker host which docker mount it inside docker host which we call it `DIR_CONTAINER`.
   1. Host Volumes
       ```
       docker run -v DIR_HOST:DIR_CONTAINER SERVICE
