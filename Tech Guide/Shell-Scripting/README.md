@@ -386,6 +386,8 @@ Shell Scripting is an interpreter and cross-platform programming language.
       - You can see a list of them using `stty -a`.
       - Stty (Set TeleTYpe) is a command that changes keyboard and monitor commands. For example, it can change rows and columns of monitor, speed of keyboard, etc.
   - Where filename is optional and if not specified it is assumed to be **typescript**.
+  - Capture/Record: `script --append --quiet --timing=LOG_FILE.log OUTPUT_FILE`
+  - Playback: `scriptreplay --timing=LOG_FILE.log OUTPUT_FILE.txt`
 - `dd` :
   - Convert and Copy a file
   - `if=` : Input File (If it doesn't provided in command, it gets from STDIN)
