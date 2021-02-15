@@ -227,8 +227,9 @@ Shell Scripting is an interpreter and cross-platform programming language.
 - Shell variables can contain different sizes based on your system. You can see your system's limitations with `xargs --show-limits` command.
 - Primary Shells (Check `man bash`):
   1. Primary Shell 1 (`echo $PS1`): The first prompt you see when you open a shell/terminal.
-  2. Primary Shell 2 (`echo $PS2`): The prompt when you use inline input redirection.
+  2. Primary Shell 2 (`echo $PS2`): The prompt when you use inline input redirection or continuation prompt that you saw after typing an incomplete command.
   3. Primary Shell 3 (`echo $PS3`): The prompt when you use select to create a text menu.
+  4. Primary Shell 4 (`echo $PS4`): PS4 is the debugging trace line prefix.
 - Signals:
   - Signal is a notification, a message sent by either operating system or some application to our program. Signals are a mechanism for one-way asynchronous notifications. A signal may be sent from the kernel to a process, from a process to another process, or from a process to itself. Signal typically alert a process to some event, such as a segmentation fault, or the user pressing Ctrl-C. Linux kernel implements about 30 signals. Each signal identified by a number, from 1 to 31. Signals don't carry any argument and their names are mostly self explanatory.
     ![System Call](Images/SysCall.png)
