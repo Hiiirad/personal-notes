@@ -2827,6 +2827,60 @@ You can encapsulate your shell script code into a function, which you can then u
   - The Break and Continue Statement
     - The break statement jumps out of the innermost for, while, or do loop that encloses it.
     - Similar to break, the continue statement is used only inside for, while, and do loops. It skips over the rest of the loop body, causing the next cycle around the loop to begin immediately. Contrast this with break, which jumps out of the loop altogether.
+  - Advance Example 1 (Change Delimiter of a CSV file):
+    ```bash
+    # Sample CSV file
+    # id,col1,col2,col3
+    # i1,1,2,3
+    # i2,4,5,6
+    # i3,9,8,7
+
+    gawk '{$1=$1}1' FS="," OFS="\t" file.csv > file.txt
+
+    # Output:
+    # id  col1	col2  col3
+    # i1  1	    2     3
+    # i2  4     5     6
+    # i3  9     8     7
+    ```
+  - Advance Example 2 (Transform Horizontal values to Vertical):
+    ```bash
+    # Sample:
+    # a b c d
+
+    gawk '{for(i=1;i<=NF;i++){print $i}}' file_h.txt > file_v.txt
+
+    # Output:
+    # a
+    # b
+    # c
+    # d
+    ```
+  - Advance Example 3 (Transform Vertical values to Horizontal):
+    ```bash
+    # Sample:
+    # a
+    # b
+    # c
+    # d
+
+    cat file_v.txt | tr '\n' ' ' | gawk '{$1=$1}1' FS=" " OFS="\t" > file_h_.txt
+
+    # Output:
+    # a b c d
+    ```
+  - Advance Example 4 (Sum of values in a column):
+    ```bash
+    # Sample File:
+    # i1	John	43  male
+    # i2	Mary	27  female
+    # i3	Alex	60  nogender
+    # i4	Chris	53  female
+    
+    gawk 'BEGIN{FS="\t";count=0}{if(NR>1){count+=$3}}END{print count}' file.txt
+
+    # Output: 183
+    ```
 
 ## Part 17 (Regular Expression or Regex)
 
