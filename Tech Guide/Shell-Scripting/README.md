@@ -3324,6 +3324,12 @@ One of the Linux system administrators' core responsibilities is to ensure that 
 - Sort IPs in a file:
   ```bash
   $ sort -t . -k 1,1n -k 2,2n -k 3,3n -k 4,4n IP_FILE
+  $ sort -V IP_FILE
+  ```
+- Prettify JSON file
+  ```
+  $ cat FILE.json | jq
+  $ cat FILE.json | python -m json.tool
   ```
 
 ## Part 20 (References)
