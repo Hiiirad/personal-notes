@@ -12,6 +12,7 @@ What I'm working on:
 - [ ] Docker Swarm
 - [x] [Git](Tech%20Guide/Git/README.md)
 - [ ] Kubernetes
+- [ ] [Linux Troubleshooting](Tech%20Guide/Linux/README.md)
 - [ ] [Prometheus](Tech%20Guide/Prometheus/README.md)
 - [x] [Regex](Tech%20Guide/Regex/README.md)
 - [x] [Shell/Bash Scripting](Tech%20Guide/Shell-Scripting/README.md)
