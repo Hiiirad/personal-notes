@@ -142,7 +142,7 @@
 
 - **/home**
 
-    All users use home to store their files and shit. 
+    All users use home to store their files. 
 
 - **/boot**
 
