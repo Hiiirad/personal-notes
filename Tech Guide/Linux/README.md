@@ -238,7 +238,7 @@ last -i: Show the login of a specific ip
 last -t 20210110220101: Show login information before 20210110220101
 ```
 
-Check who has the sudo privilage
+Check who has the sudo privilege
 
 ```bash
 more /etc/sudoers | grep -v "^#\|^$" | grep "ALL=(ALL)"
@@ -257,7 +257,7 @@ ssh -T root@192.168.1.1 /bin/bash -i
 ssh -o UserKnownHostsFile=/dev/null -T root@192.168.1.1 /bin/bash -if
 ```
 
-If you need to hide your activity whitin your SSH Connection:
+If you need to hide your activity in your SSH Connection:
 
 ```bash
 #Turn off history recording
