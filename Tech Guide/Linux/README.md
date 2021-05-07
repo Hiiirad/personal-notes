@@ -3,67 +3,67 @@
   - [Part 01 (Linux Main Directories)](#linux-main-directories)
   - [Part 02 (Log Directories)](#log-directories)
   - [Part 03 (Useful Commands)](#useful-directories)
-  
+
 ## Part 01 (Linux Main Directories)
 
--   **/ (root)**
+- **/ (root)**
 
     Every file and project starts here. 
     Only root has a limit under the target. 
     This directory is different from the `/root` directory,
     which is the home directory of the root user. 
 
--	**/bin**
+- **/bin**
 
     Contains binary-to-run files. 
     All the commands used by the system are here.
-    
+
     Such as: `ls`, `ping`, `grep`, `cp`, `ps`, etc.
 
--	**/sbin**  (System Binary Document)
+- **/sbin**  (System Binary Document)
 
     Just like `/bin`, `/sbin` also contains binary executable files.  
     However, commands under this directory are typically used by the system management. 
-    
+
     For example: `iptables`, `reboot`, `fdisk`, `ifconfig`, `swapon` command.   
 
--	**/etc** (Configuration Document)
+- **/etc** (Configuration Document)
 
     Contains the profiles and configurations required by all programs. 
     It also contains a database of the programs.
-    
+
     For example: `/etc/resolv.conf`, `/etc/logrotate.conf`
 
--	**/dev** Document
+- **/dev** Document
 
     These include terminals, USB, or any other devices connected to the system. 
 
     Example:`/dev/tty1`, `/dev/usbmon0`
 
--	**/proc** (Process message)
+- **/proc** (Process message)
 
     Files under this directory basically includes information about the on-going process. For example: information about a specific pid that is included in the `/proc/pid` file.  
 
--	**/var**
+- **/var**
 
     Contains variable data like system logging files, mail and printer spool directories, and transient and temporary files. Some portions of `/var` are not shareable between different systems. For instance, `/var/log`, `/var/lock`, and `/var/run`.
 
     Some of the most important /var subdirectories are listed below:
-  
+
     - `/var/backups`: 
-    
+
         Directory containing backups of various key system files such as `/etc/shadow`, `/etc/group`, `/etc/inetd.conf` and `dpkg.status`. They are normally renamed to something like `dpkg.status.0`, `group.bak`, `gshadow.bak`, `inetd.conf.bak`, `passwd.bak`, `shadow.bak`
 
     - `/var/cache`: 
-    
+
         Is intended for cached data from applications. Such data is locally generated as a result of time-consuming I/O or calculation.
 
     - `/var/cache/man`: 
-    
+
         A cache for man pages that are formatted on demand. 
 
     - `/var/cache/'PACKAGE-NAME'`: 
-    
+
         Package specific cache data.
 
     - `/var/cache/www`: 
@@ -71,116 +71,114 @@
         WWW proxy or cache data.
 
     - `/var/db`: 
-    
+
         Data bank store.
 
     - `/var/lib`: 
-    
+
         Holds dynamic data libraries/files like rpm/dpkg databases.
 
     - `/var/lock`: 
-    
+
         Many programs follow a convention to create a lock file in `/var/lock` to indicate that they are using a particular device or file. This directory holds those lock files (for some devices) and hopefully other programs will notice the lock file and won't attempt to use the device or file.
 
     - `/var/log`: 
-    
+
         Log files from the system and various programs/services, especially login (`/var/log/wtmp`, which logs all logins and logouts into the system) and syslog (/var/log/messages, where all kernel and system program message are usually stored). Files in `/var/log` can often grow significantly, and may require cleaning at regular intervals. Something that is now normally managed via log rotation utilities such as 'logrotate'.
 
     - `/var/log/auth.log`: 
-    
+
         Record of all logins and logouts by normal users and system processes.
 
     - `/var/log/btmp`: 
-    
+
         Log of all attempted bad logins to the system. Accessed via `lastb` command.
 
     - `/var/log/dmesg`: 
-        
+
         Kernel ring buffer. The content of this file is referred to by the dmesg command.
 
     - `/var/log/messages`: 
-    
+
         System logs.
 
     - `/var/log/wtmp`: 
-        
+
         Log of all users who have logged into and out of the system. The last command can be used to access a human readable form of this file. It also lists every connection and run-level change.
 
     - `/var/log/syslog`:
-    
+
          The 'system' log file. The contents of this file is managed via the syslogd daemon which more often than not takes care of all log manipulation on most systems.
 
     - `/var/run`: 
-    
+
         Contains the process identification files (PIDs) of system services and other information about the system that is valid until the system is next booted. For example, `/var/run/utmp` contains information about users currently logged in.
 
--   **/tmp** (Temporary Files)
+- **/tmp** (Temporary Files)
 
     This directory contains mostly files that are required temporarily. Many programs use this to create lock files and for temporary storage of data. Do not remove files from this directory unless you know exactly what you are doing! 
-    
-    
--   **/usr** (Universal/User System Resources)
+
+- **/usr** (Universal/User System Resources)
 
     - `/usr`:
-    
+
         usually contains by far the largest share of data on a system. Hence, this is one of the most important directories in the system as it contains all the user binaries, their documentation, libraries, header files, etc.
 
     - `/usr/bin`: 
-    
+
         contains the binary files of the programs. If you can't find a binary file in /bin, look at /usr/bin. Example: `awk`, `scp`, ... 
-    
+
     - `/usr/sbin`: 
-    
+
         contains a binary file for the system management binaries. If you can't find a system binary file in /sbin, check out /usr/sbin. Examples: `cron`, `sshd`, `useradd`, `userdel`. 
 
     - `/usr/lib`: 
-    
+
         contains `/usr/bin` and `/usr/sbin` libraries.   
-    
+
     - `/usr/local`: 
-    
+
         contains the user program for the source installation. For example, when you install Apache from the source, it will be settle in `/usr/local/apache2`.   
 
--	**/home**
+- **/home**
 
     All users use home to store their files and shit. 
 
--	**/boot**
+- **/boot**
 
     Contains files that are associated with the OS boot process. Also, the initrd, vmlinux, and grub files of the kernel are located under this directory.   
 
--	**/lib** 
+- **/lib** 
 
     The /lib directory contains kernel modules and those shared library images (the C programming code library) needed to boot the system and run the commands in the root filesystem, ie. by binaries in /bin and /sbin. Libraries are readily identifiable through their filename extension of *.so. Windows equivalent to a shared library would be a DLL (dynamically linked library) file. 
 
     - `/lib/'machine-architecture'`: 
-    
+
         Contains platform/architecture dependent libraries.
 
     - `/lib/iptables`: 
-    
+
         iptables shared library files.
 
     - `/lib/kbd`: 
-    
+
         Contains various keymaps.
 
     - `/lib/modules/'kernel-version'`: 
-    
+
         The home of all the kernel modules. 
 
     - `/lib/security`: 
-    
+
         PAM library files.
 
--	**/opt**  Additional applications
-    
+- **/opt**  Additional applications
+
     This directory is reserved for all the software and add-on packages that are not part of the default installation. 
 
--	**/mnt**
+- **/mnt**
 
     This is a generic mount point under which you mount your file-systems or devices. Mounting is the process by which you make a filesystem available to the system. After mounting your files will be accessible under the mount-point. 
-
 
  - **/srv**  (Services)
 
@@ -202,10 +200,7 @@
 | `/var/log/wtmp` | TODO |
 | `/var/tun/ulmp` | Information about the user that was previously logged in.|
 
-
-
 ## Part 03 (Useful Commands)
-
 
 Check Who is the boss in the system:
 
@@ -330,6 +325,3 @@ Interpretation of scheduled tasks:
 */15 *	 *	 *	 *	 Command
 
 ```
-
-
-
