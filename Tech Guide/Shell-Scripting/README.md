@@ -2,7 +2,7 @@
 
 > The minimum knowledge of your Linux and Unix systems should be LPIC 1 to understand shell scripting.
 
-> This note is for SysAdmins or DevOps Engineers, so most of the commands of this course run on RedHat-based distributions (RedHat, CentOS), Debian-based distributions (Debian, Ubuntu), openSUSE, and Oracle Linux.
+> This note is for SysAdmins or DevOps Engineers, so most of the commands of this course run on RedHat-based distributions (RedHat, CentOS), Debian-based distributions (Debian, Ubuntu), BSD-based, openSUSE, and Oracle Linux.
 
 > I used bash as a default shell for these commands. You may have some different outputs based on your default shell.
 
@@ -3252,6 +3252,7 @@ One of the Linux system administrators' core responsibilities is to ensure that 
 - History command
   ```bash
   $ history 4
+  1000  ls /home/$USER/ 
   1001  vi /etc/ssh/sshd_config
   1002  ls -ltrh
   1003  tail audit.log
@@ -3262,6 +3263,28 @@ One of the Linux system administrators' core responsibilities is to ensure that 
 
   # You can rerun your command with the beginning of it
   $ !vi
+
+  # You can modify the last command you executed with the last argument
+  $ tail /var/log/audit.log
+  $ tail -f !$
+  $ tail -f /var/log/audit.log
+
+  $ mv /path/to/wrongfile /some/other/place
+  mv: cannot stat '/path/to/wrongfile': No such file or directory
+  
+  $ mv /path/to/rightfile !$
+  $ mv /path/to/rightfile /some/other/place
+
+  # You can modify the last command you executed with the first argument
+  $ mv /path/to/someplace /path/to/wrongfile
+  mv: cannot stat '/path/to/wrongfile': No such file or directory
+  
+  $ mv !^ /path/to/rightfile
+  $ mv /path/to/someplace /path/to/rightfile
+
+  # You can modify the arguments you want for the last command you executed
+  $ cp /path/to/file1 /path/to/file5 /path/to/file3 /path/to/file4 /path/to/destination
+  $ cp !^ /path/to/file2 !cp:3 !cp:4 !$
   ```
 - History Control
   ```bash
@@ -3279,13 +3302,17 @@ One of the Linux system administrators' core responsibilities is to ensure that 
   # Delete all history
   $ history -c
   ```
-- Fix the wrong address
+- Run a single command with another user's privilege
   ```bash
-  $ mv /path/to/wrongfile /some/other/place
-  mv: cannot stat '/path/to/wrongfile': No such file or directory
-  
-  $ mv /path/to/rightfile !$
-  $ mv /path/to/rightfile /some/other/place
+  $ apt update && apt full-upgrade -y
+  $ su -c "!!" root
+  ```
+- Logical Not !
+  ```bash
+  # Delete all the files in current directory except 2.txt file
+  $ rm !(2.txt)
+  # Delete all the files in current directory pdf files
+  $ rm !(*.pdf)
   ```
 - Change Directory
   ```bash
