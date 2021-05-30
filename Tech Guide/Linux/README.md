@@ -202,31 +202,7 @@
 
 ## Part 03 (Useful Commands)
 
-Check Who is the boss in the system:
-
-```bash
-awk -F: '$3==0{print 1}' /etc/passwd
-```
-
-Account information that can be logged in remotely
-
-```bash
-awk '/$1|$6/{print 1}' /etc/shadow
-```
-
-Check who is trying to login into your Linux systems
-
-```bash
-grep "root failed password" /var/log/auth.log | awk '{print 11}' | sort | uniq -c | sort -nr
-```
-
-The successful login date, user name and IP
-
-```bash
-grep "root failed password" /var/log/auth.log | awk '{print 11}' | sort | uniq -c | sort -nr
-```
-
-**lastList** , Logs the user information of the recent and previous login attempts.
+**lastList**, Logs the user information of the recent and previous login attempts.
 
 ```bash
 last [-R] [-num] [ -n num] [-adiowx] [ -f file] [ -t YYYYMMDDHHMMSS] [name...] [tty...]
@@ -241,12 +217,10 @@ last -t 20210110220101: Show login information before 20210110220101
 Check who has the sudo privilege
 
 ```bash
-more /etc/sudoers | grep -v "^#\|^$" | grep "ALL=(ALL)"
-```
+cat /etc/sudoers | grep -v "^#\|^$" | grep "ALL=(ALL)"
 
-Matching Defaults entries for root on OS
+# or
 
-```bash
 sudo -l
 ```
 
@@ -272,49 +246,49 @@ If you need to hide your activity in your SSH Connection:
 View the process file information corresponding to pid
 
 ```bash
-ps -ef | grep "process name" 
 # gives you the PID of desired process 
+ps -ef | grep "process name" 
 
-ls -l /proc/$PID/ 
 # You can view detailed process information
+ls -l /proc/$PID/ 
 
-file /proc/$PID/exe 
 # ($PID is the corresponding pid number)
+file /proc/$PID/exe 
 
-cd /proc/$PID 
 # can enter the process directory
+cd /proc/$PID 
 
-which XXXX 
 # Look which folder the program is in XXXX to represent the program name
+which XXXX 
 
-lsof /usr/bin/* 
 # View the list of running processes under a path
+lsof /usr/bin/* 
 
-pidof /usr/bin/* 
 # View the pid of the process running under a certain path
+pidof /usr/bin/* 
 ```
 
 View scheduled tasks
 ```bash
-crontab -l 
 # View current user scheduled tasks
+crontab -l 
 
-cat /etc/crontab 
 # Check whether there is a scheduled task
+cat /etc/crontab 
 
+# Check if there are files for other scheduled tasks in the folder	
 ls -al /var/spool/cron/*
 cat /var/spool/cron/* 
-# Check if there are files for other scheduled tasks in the folder	
 
-ls -al /etc/cron.d/*
-for u in `cat /etc/passwd |cut -d ":" -f1`;do crontab -l -u $u; done 
 # View all users' scheduled tasks
+ls -al /etc/cron.d/*
+for u in `cat /etc/passwd |cut -d ":" -f1`;do crontab -l -u ${u}; done 
 
-crontab -r 
 # Delete scheduled tasks on the surface
+crontab -r 
 
-crontab -e
 # Edit the scheduled tasks
+crontab -e
 ```
 
 Interpretation of scheduled tasks:
@@ -323,5 +297,4 @@ Interpretation of scheduled tasks:
 *   *   *   *   *   command 
 # (indicates that it runs every 15 minutes)
 */15 *	 *	 *	 *	 Command
-
 ```
