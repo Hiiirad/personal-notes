@@ -12,14 +12,12 @@
 
 ## Session 00 (Basic Info)
 
-Kubernetes used for stateless containers/softwares -> rook
-
-Helm is not coming in exam.
-
 Exams (66 is Pass):
 - CKAD (Certified Kubernetes Application Developer)
 - CKA (Certified Kubernetes Administrator)
 - CKS (Certified Kubernetes Security Specialist)
+
+Helm is not coming in exam.
 
 Solutions:
 - Persistent storage (NFS)
@@ -32,7 +30,7 @@ Config and support of microservices is hard and frustrating.
 - Scale Up: Increase Resources -> Vertical
 - Scale Out: Increase Number of Instance or Servers -> Horizontal
 
-- Distributed Tracing System:
+Distributed Tracing System:
   - Jaeger
   - OpenTracing
   - Zipkin
@@ -47,6 +45,8 @@ Container Runtime:
   - Memory
   - CPU
 - LXC -> Manage CGroup and Namespace
+
+Kubernetes used for stateless containers/softwares
 
 Moby Project (Before Docker) -> Depends on LXC -> In the end changed to containerd
 
