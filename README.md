@@ -11,7 +11,7 @@ What I'm working on:
 - [x] [Docker](Tech%20Guide/Docker/README.md)
 - [ ] Docker Swarm
 - [x] [Git](Tech%20Guide/Git/README.md)
-- [ ] Kubernetes
+- [ ] [Kubernetes](Tech%20Guide/Kubernetes/README.md)
 - [ ] [Linux Troubleshooting](Tech%20Guide/Linux/README.md)
 - [ ] [Prometheus](Tech%20Guide/Prometheus/README.md)
 - [x] [Regex](Tech%20Guide/Regex/README.md)
