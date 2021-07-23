@@ -19,14 +19,11 @@ Exams (66 is Pass):
 
 Helm is not coming in exam.
 
-Solutions:
-- Persistent storage (NFS)
-- ...
-
-Zero time upgrade
+Zero time upgrade!
 
 Config and support of microservices is hard and frustrating.
 
+Expanding The Infrastructure Resources:
 - Scale Up: Increase Resources -> Vertical
 - Scale Out: Increase Number of Instance or Servers -> Horizontal
 
@@ -153,9 +150,11 @@ Tools to Install K8s:
 - kOps / Kubernetes Operations -> use for clouds (AWS and ...). It doesn't use for on-premise
 - Kubespray -> Install K8s with Ansible on GCE, Azure, OpenStack, AWS, vSphere, Packet (bare metal), Oracle Cloud Infrastructure (Experimental) or Baremetal.
 
-**Kubernetes Cluster Federation** (Read it)
+Kubernetes Cluster Federation (IMPORTANT for Experts):
+- Project [Kubefed](https://github.com/kubernetes-sigs/kubefed)
+- [Kuberentes Federation Evolution](https://kubernetes.io/blog/2018/12/12/kubernetes-federation-evolution/)
 
-**Check out Netflix migrate to Microservice Roadmap YouTube**
+Check out Netflix migrate to Microservice [YouTube](https://www.youtube.com/watch?v=CZ3wIuvmHeM)
 
 Installing K8s using [Kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/):
 
