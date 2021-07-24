@@ -8,7 +8,8 @@
   - [Session 03 (YAML Intro + Pod)](#session-03-yaml-intro--pod)
     - [YAML Introduction](#yaml-introduction)
     - [POD](#pod)
-  - [Session 04](#session-04)
+  - [Session 04 (Extra Concepts for POD)](#session-04-extra-concepts-for-pod)
+  - [Session 05](#session-05)
 
 ## Session 00 (Basic Info)
 
@@ -441,4 +442,149 @@ Argument `--dry-run` modes:
 
 ---
 
-## Session 04
+## Session 04 (Extra Concepts for POD)
+
+Controller assign IPs to Pause containers from the range `--pod-network-cidr=20.16.0.0/12` and assign a subnet to each node when they join the cluster. We don't have a DHCP in K8s network.
+
+CNI tasks:
+- Internode Communication Connection
+- It makes sure each node gets an unique IP and they don't conflict with other nodes
+- For instance, Weave has better monitoring, Flannel doesn't have security, Calico has the best performance and flexibility, etc.
+- IP Range of each node: `kubectl get nodes -o json | grep podCIDR`
+
+Flow of API calls in K8s:
+- Kubectl --with manifest(s)--> API Server -> Scheduler -> Kubelet -> CRI -> CNI (have access to API Server) -> gives a range IP to your node -> CRI -> OCI (runC)
+
+CGroup is a resource limitation of containers + Namespace is for container isolation => makes a container
+
+Address of CNI configs `/etc/cni/net.d/`:
+- `10-calico.conflist`
+- `calico-kubeconfig`
+
+List of IP addresses of Nodes `/var/lib/cni/`:
+- `cache`
+- `networks`
+
+List of commands that calico uses for network management: `/opt/cni/bin`
+
+Labels are important for query nodes: `get pods --show-labels`
+- You can label every object!
+- Assign a label: `kubectl label pod POD_NAME KEY=VALUE`
+- Assign labels: `kubectl label pod POD_NAME KEY1=VALUE1 KEY2=VALUE2 KEY3=VALUE3`
+- Delete a label: `kubectl label pod POD_NAME KEY-`
+- Query: `kubectl get pods -l KEY=VALUE`
+
+Apply vs Create:
+- `kubectl create -f manifest.yml`
+- `kubectl apply -f manifest.yml`
+- If an object created with create command, you can't edit or change it!
+- We don't use _create_ command usually.
+- We edit objects like this:
+  - change manifest and apply (again).
+  - `kubectl edit pod POD_NAME`
+  - The name of a pod is not editable, but if you change it, a new manifest created in `/tmp` and you can apply it from that location.
+  - Imperative way to create a pod with configuration like restart which is not a metadata. It is in spec section: `kubectl run --image=IMAGE restart --restart POLICY`
+
+Container Restart Policy for Kubernetes:
+- Always (Default)
+- OnFailure
+- Never (Used for Jobs)
+
+Environment:
+- Linux:
+  - set: Local Environment
+  - env: Global Environment
+- Play with ENV variables:
+  - manifest:
+    ```yaml
+    apiVersion: v1
+    kind: Pod
+    metadata:
+      name: NAME
+      labels: {
+        "key1":"value1",
+        "key2":"value2"
+      }
+    specs:
+      containers:
+        - image: busybox:1.28
+          name: test-env
+          command:
+            - sleep
+            - "3600"
+          env:
+            - name: db_address
+              value: "10.10.1.1"
+            - name: db_port
+              value: "3306"
+    ```
+  - `kubectl exec NAME -- printenv`
+  - Imperative: `kubectl run --image=IMAGE:TAG NAME --command COMMAND --env=KEY=VALUE --env=KEY1=VALUE1 -o yaml --dry-run=client`
+
+Explain in manual/documentation: `kubectl explain OBJECT`
+
+Image Pull Policy (subset of spec.container in manifest):
+- IfNotPresent (Default)
+- Always
+
+Resource Limitation:
+- Every single pod must have Request or Limit!
+- Namespaces can have resource limitation too.
+- CGroup (Memory, CPU)
+  - RAM: Mi, Gi, ...
+  - CPU: Millicore (4 Cores = 4000 Millicore = 4000m = 4)
+- Request (Minimum Requirement)
+- Limit (Maximum Requirement)
+- In the future DISK IO will be added for limitation.
+
+QOS states:
+- BestEffort (It will be the first pod that will evict on that node, if another pod needed to deploy on the node)
+- Burstable (no limits)
+  - `kubectl run --image=IMAGE:TAG POD_NAME resource --requests=cpu=20m,memory=10Mi -o yaml --dry-run=client`
+- Guaranteed
+  - `kubectl run --image=IMAGE:TAG POD_NAME resource --requests=cpu=20m,memory=10Mi --limits=cpu=40m,memory=20Mi -o yaml --dry-run=client`
+
+Port Forward:
+- `kubectl port-forward --help`
+- `kubectl port-forward POD_NAME CLUSTER_PORT:APPLICATION_PORT`
+
+Proxy (It's just for a test and connect to that cluster):
+- `kubectl proxy --help`
+- `kubectl proxy PORT`
+
+initContainers in multi-container Pods:
+- Containers in single pod come up in parallel simultaneously.
+- Init-Container: It/They will be up until it finishes the job and then goes down and then the rest of the containers come up.
+  - In the manifest file, the initContainers must be written in order. If one of them fails, the rest of them won't run/execute, so the Pod will fail.
+  - All of containers must completely run successfully until the pod runs.
+  - When a pod stop working, the initContainer in the new pod will run.
+  - Examples:
+    - We want to connect a pod to a database and we want to make sure that this container connects successfully to the database; otherwise the pod will fail.
+    - We can create a initContainer with a single command such as `git pull` to get the latest version of the source code. (If we don't have any CI/CD or container registry)
+    - We can create a initContainer with sets of command to check network connectivity of the main container, like `nslookup`, `ping`, or `telnet`. If these commands executed successfully, then then the main container comes up.
+- Sample:
+  ```yaml
+  apiVersion: v1
+  kind: Pod
+  metadata:
+    name: NAME
+    labels: {
+      "key1":"value1",
+      "key2":"value2"
+    }
+  specs:
+    containers:
+      - image: nginx:latest
+        name: webserver
+    initContainers:
+      - image: busybox:1.28
+        name: test
+        command: ["/bin/sh"]
+        args: ["-c", "for i in $(seq 1 10); do echo hello; done"]
+  ```
+
+Check this link out if you are interested in the last topic: [Inject Data into Application](https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container)
+
+---
+
+## Session 05
