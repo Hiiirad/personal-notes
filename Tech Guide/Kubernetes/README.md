@@ -9,7 +9,12 @@
     - [YAML Introduction](#yaml-introduction)
     - [POD](#pod)
   - [Session 04 (Extra Concepts for POD)](#session-04-extra-concepts-for-pod)
-  - [Session 05](#session-05)
+  - [Session 05 (POD + Services)](#session-05-pod--services)
+    - [Services](#services)
+      - [ClusterIP](#clusterip)
+      - [Node Port](#node-port)
+      - [Load Balancer](#load-balancer)
+  - [Session 06](#session-06)
 
 ## Session 00 (Basic Info)
 
@@ -587,4 +592,197 @@ Check this link out if you are interested in the last topic: [Inject Data into A
 
 ---
 
-## Session 05
+## Session 05 (POD + Services)
+
+Technically, we run the commands in an imperative way to find the declarative way:
+```bash
+kubectl run --image=busybox:1.28 BUSY --command sleep 3600 -o yaml --dry-run=client > busy.yaml
+kubectl apply busy.yaml
+kubectl exec -it BUSY -- bash
+date -s "2020-11-24"
+# We are root, but we cannot change the date because of security policies!
+```
+
+Read these Security Context:
+- [Search Pod Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+- [Linux Capabilities and Security Best Practice](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+- [Pod Security Policy](https://kubernetes.io/docs/concepts/policy/pod-security-policy)
+- [Linux Capabilities](https://book.hacktricks.xyz/linux-unix/privilege-escalation/linux-capabilities)
+- Check the manual page of this linux command: `man 7 capabilities`
+
+Capabilities Levels Sample:
+1. Pod
+    ```yaml
+    apiVersion: v1
+    kind: Pod
+    metadata:
+      name: security-context-demo
+    spec:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 3000
+        fsGroup: 2000
+      volumes:
+      - name: sec-ctx-vol
+        emptyDir: {}
+      containers:
+      - name: sec-ctx-demo
+        image: busybox
+        command: [ "sh", "-c", "sleep 1h" ]
+        volumeMounts:
+        - name: sec-ctx-vol
+          mountPath: /data/demo
+        securityContext:
+          allowPrivilegeEscalation: false
+    ```
+2. Container
+    ```yaml
+    apiVersion: v1
+    kind: Pod
+    metadata:
+      name: security-context-demo-4
+    spec:
+      containers:
+      - name: sec-ctx-4
+        image: gcr.io/google-samples/node-hello:1.0
+        securityContext:
+          capabilities:
+            add: ["SYS_TIME"]
+    ```
+
+**PODS MUST NOT RUN BY ROOT USER.**
+
+- Run a container as a non-root user:
+  ```yaml
+  apiVersion: v1
+  kind: Pod
+  metadata:
+    labels:
+      run: nginx
+    name: nginx
+  spec:
+    containers:
+      - image: nginx
+        name: nginx
+        imagePullPolicy: IfNotPresent
+        securityContext:
+          runAsNonRoot: true
+  ```
+- You can't deploy the last manifest in your K8s cluster obviously. The pod won't create because the container wants to run as root, and the pod wants to run as non root. So this conflict won't let the pod to run.
+
+Kubectl's plugins:
+- `kubectl get pods BUSY -o yaml`
+- [Krew](https://krew.sigs.k8s.io/) -> This program must not install on the production! It's only for developers.
+- Check the installation: `kubectl krew`
+- Install Plugin: `kubectl krew install PLUGIN`
+- Sample Plugin usage: `kubectl get pods BUSY -o yaml | kubectl neat`
+
+### Services
+- Pods get IPs from CNI (calico, ...)
+- We want to expose some pods using a Load Balancer -> we create a new resource as a SERVICE
+  - IP will change if a pod kills/destroys
+  - Name of PODs can change (Depends on how you create/run a pod)
+  - Labels won't change under any circumstances
+- Service Types:
+  - ClusterIP: Only for internal communication (Default service type) (Example: Connect your backend to frontend)
+  - Node Port: Opens a random port between 30000 and 32767 on your node
+  - Load Balancer
+  - ExternalName
+  - Headless (Technically it's not a service type)
+    - When there is no need of load balancing or single-service IP addresses.We create a headless service which is used for creating a service grouping. That does not allocate an IP address or forward traffic. So you can do this by explicitly setting ClusterIP to “None” in the manifest file, which means no cluster IP is allocated.
+    - Kubernetes allows clients to discover pod IPs through DNS lookups. Usually, when you perform a DNS lookup for a service, the DNS server returns a single IP which is the service’s cluster IP. But if you don’t need the cluster IP for your service, you can set ClusterIP to None , then the DNS server will return the individual pod IPs instead of the service IP.Then client can connect to any of them.
+- Different Types of port:
+  - Port: Input port of a service
+  - Target port: Output port of service connects to different pods
+  - Node port: Port of a node that connects to input port of service
+- IP of service can change.
+- ClusterIP can change to NodePort, and NodePort can change to LoadBalancer
+
+#### ClusterIP
+```yaml
+kind: Service
+apiVersion: v1
+metadata:
+  # Unique key of the Service instance
+  name: service-example
+spec:
+  ports:
+    # Accept traffic sent to port 80
+    - name: http
+      port: 80
+      targetPort: 80
+  selector:
+    # Loadbalance traffic across Pods matching
+    # this label selector
+    app: nginx
+  # Create an HA proxy in the cloud provider
+  # with an External IP address - *Only supported
+  # by some cloud providers*
+  type: ClusterIP
+```
+
+Execute these commands for better understanding:
+- Run pods, then run service
+  ```bash
+  kubectl get service      # kubectl get svc
+  kubectl get endpoints    # kubectl get ep
+  kubectl get pods -o wide
+  kubectl get svc -o wide
+  ```
+- Go to busybox of the cluster and `nslookup SERVICE-NAME`
+- `kubectl exec -it BUSY -- nslookup SVC-NAME`
+- CoreDNS: `kubectl get svc -n kube-system` and `kubectl get ep -n kube-system`
+- `kubectl get pods -n kube-system -o wide`
+- Logs of components are VERY IMPORTANT!
+
+#### Node Port
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-service
+spec:
+  selector:
+    app: nginx
+  ports:
+      # By default and for convenience, the `targetPort` is set to the same value as the `port` field.
+    - port: 80 # mandatory
+      targetPort: 80
+      # Optional field
+      # By default and for convenience, the Kubernetes control plane will allocate a port from a range (default: 30000-32767)
+      nodePort: 32100
+  type: NodePort
+```
+
+Commands:
+- `kubectl get svc`
+- `kubectl get ep`
+- `kubectl describe svc kube-dns`
+- kube proxy nat your real IP and masquerade it. It creates a hub inside your network and more latency on the network. kube proxy has a feature called `externalTrafficPolicy=Cluster` and based on the health of pods, does its job as load balancing. It has `externalTrafficPolicy=Local` which makes the traffic imbalance traffic spreading. Local mode works based on the health of node. Cluster mode works based on the health of pod.
+- Maintenance cost is high in nodeport.
+- externalTrafficPolicy can only be assigned on NodePort and LoadBalancer
+
+#### Load Balancer
+- Cloud providers give us the loadbalancer.
+- Kubernetes by default doesn't have a network loadbalancer, so we can use programs like [MetalLB](metallb.universe.tf)
+  - Go to installation
+  - Go to configuration
+  - Select Layer 2 for test usage
+- `kubectl get svc --all-namespaces`
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-lb
+spec:
+  selector:
+    app: nginx
+  ports:
+    - port: 80
+  type: LoadBalancer
+```
+
+---
+
+## Session 06
