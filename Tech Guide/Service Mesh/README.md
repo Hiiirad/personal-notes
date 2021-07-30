@@ -45,6 +45,6 @@ Main Service Meshes:
 - Service Mesh Interface (SMI)
 
 Main Parts of Service Meshes on K8s:
-- CLI / Operator
+- CLI / Operator -> To Deploy Control-Plane + Inject Proxy + ...
 - CRDs (Custom Resource Definition)
 - Mutating Webhooks
