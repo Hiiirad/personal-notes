@@ -4,6 +4,8 @@
 
 ## Introduction
 
+A service mesh is a way to control how different parts of an application share data with one another. Unlike other systems for managing this communication, a service mesh is a dedicated infrastructure layer built right into an app. This visible infrastructure layer can document how well (or not) different parts of an app interact, so it becomes easier to optimize communication and avoid downtime as an app grows.
+
 Service Mesh is basically a proxy network with lots of features.
 
 Key Components of a Service Mesh:
@@ -40,6 +42,8 @@ Service Mesh Cons:
 
 Main Service Meshes:
 - Linkerd (Graduated CNCF Project)
+  - [Linkerd Official Website](https://linkerd.io/)
+  - [Deploying and Upgrading Linkerd using ArgoCD for GitOps](https://linkerd.io/2/tasks/gitops/)
 - Istio
 - Open Service Mesh
 - Service Mesh Interface (SMI)
