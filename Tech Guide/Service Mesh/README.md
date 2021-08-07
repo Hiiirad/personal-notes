@@ -44,8 +44,9 @@ Main Service Meshes:
 - Linkerd (Graduated CNCF Project)
   - [Linkerd Official Website](https://linkerd.io/)
   - [Deploying and Upgrading Linkerd using ArgoCD for GitOps](https://linkerd.io/2/tasks/gitops/)
-  - Linkerd Architecture ![Linkerd Architecture](https://linkerd.io/images/architecture/control-plane.png)
+  - Linkerd Architecture: ![Linkerd Architecture](https://linkerd.io/images/architecture/control-plane.png)
 - Istio
+  - [Istio Official Website](https://istio.io/)
 - Open Service Mesh
 - Service Mesh Interface (SMI)
 
@@ -53,3 +54,7 @@ Main Parts of Service Meshes on K8s:
 - CLI / Operator -> To Deploy Control-Plane + Inject Proxy + ...
 - CRDs (Custom Resource Definition)
 - Mutating Webhooks
+
+Useful tools for service mesh:
+- [Meshery: The Service Mesh Management Plane](https://meshery.io/)
+- [Fortio: Load Test / Stress Test](https://fortio.org/)
