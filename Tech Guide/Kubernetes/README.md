@@ -84,7 +84,7 @@ Semantic Versioning for Kubernetes: X.Y.Z
   - Kubelet -> Agent of kubernetes on worker nodes to talk to master node
   - kube-proxy -> Update IPtables of the system. Ports and everything
 
-All connections between different part of k8s are based on MTLS (Multi Layer TLS or Mutual TLS).
+All connections between different part of k8s are based on MTLS (Mutual-TLS).
 
 Split brain on cluster concept -> Must be an odd number
 
