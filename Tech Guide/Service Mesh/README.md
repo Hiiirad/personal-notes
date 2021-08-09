@@ -50,6 +50,9 @@ Main Service Meshes:
   - Istio Architecture ![Istio Architecture](images/istio-architecture.png)
 - Open Service Mesh
 - Service Mesh Interface (SMI)
+  - [SMI Official Website](https://smi-spec.io/)
+  - [SMI Spec](https://github.com/servicemeshinterface/smi-spec)
+  - The whole idea of the service mesh interface is to take the features that you get from a service mesh, and define them in generic ways. So rather than defining Linkerd resources, or Istio resources you define these kind of generic resources.
 
 Main Parts of Service Meshes on K8s:
 - CLI / Operator -> To Deploy Control-Plane + Inject Proxy + ...
