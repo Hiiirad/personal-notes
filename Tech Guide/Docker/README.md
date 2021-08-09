@@ -156,11 +156,12 @@ We can use Docker on Windows with these 2 options to run a Linux container on a 
   ```
   docker run SERVICE
   ```
-- List of containers with basic information. If you want to see the list of all containers (available, stopped and exited) use `-a`
+- List of containers with basic information. If you want to see the list of all containers (available, stopped, dead, and exited) use `-a`
   ```
   docker ps
   docker ps -a
   ```
+  - "dead" is used for a "defunct" container. For example, a container that you wanted to remove but it was only partially removed because resources were kept busy by an external process. Dead containers cannot be (re)started, they can only be removed. You can manually attempt to remove a dead container (if the problem causing it to not be removed in the first attempt failed), and the daemon will automatically attempt to remove dead containers when it's restarted.
 - Stop a container using container ID or NAME
   ```
   docker stop ID/NAME
@@ -272,7 +273,6 @@ We can use Docker on Windows with these 2 options to run a Linux container on a 
   docker ps -q | xargs docker stats
   ```
 
-
 ---
 ## Part 05 (Environment Variables)
 - An environment variable is a variable whose value is set outside the program, typically through a functionality built into the operating system or microservice. An environment variable is made up of a name/value pair, and any number may be created and available for reference at a point in time.
@@ -309,7 +309,6 @@ figlet "hello docker"
 ```
 
 You should see the words “hello docker” printed out in large ASCII characters on the screen.
-
 
 Now let us pretend this new figlet application is quite useful, and you want to share it with the rest of your team. You could tell them to do exactly what you did above and install figlet into their container, which is simple enough in this example. But if this was a real-world application where you had just installed several packages and run through many configuration steps, the process could get cumbersome and become entirely error-prone. Instead, it would be easier to create an image you can share with your team.
 
@@ -396,7 +395,6 @@ A wise man once said:
 > Give a sysadmin an image and their app will be up-to-date for a day, give a sysadmin a Dockerfile and their app will always be up-to-date.
 
 Hence, creating images for the complex applications is preferred to use Dockerfiles rather than committing into local volume and manipulating the result.
-
 
 ### Chapter 3 (Transfer Image to an Offline Server)
 
@@ -1045,7 +1043,6 @@ Well that's all we have for now—a quick introduction to Kubernetes and this ar
 - **Layers**: A Docker image built up from a series of layers. Each layer represents an instruction in the image’s Dockerfile. Each layer except the last one is read-only.
 - **Dockerfile**: A text file that contains all the commands, in order, needed to build a given image.
 - **Node**: An instance of the Docker Engine connected to the Swarm. Nodes are either managers or workers. Managers schedules which containers to run where. Workers execute the tasks. By default, Managers are also workers.
-
 
 ---
 ## Part 15 (References)
