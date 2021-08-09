@@ -44,9 +44,10 @@ Main Service Meshes:
 - Linkerd (Graduated CNCF Project)
   - [Linkerd Official Website](https://linkerd.io/)
   - [Deploying and Upgrading Linkerd using ArgoCD for GitOps](https://linkerd.io/2/tasks/gitops/)
-  - Linkerd Architecture: ![Linkerd Architecture](https://linkerd.io/images/architecture/control-plane.png)
+  - Linkerd Architecture: ![Linkerd Architecture](images/linkerd-architecture.png)
 - Istio
   - [Istio Official Website](https://istio.io/)
+  - Istio Architecture ![Istio Architecture](images/istio-architecture.png)
 - Open Service Mesh
 - Service Mesh Interface (SMI)
 
