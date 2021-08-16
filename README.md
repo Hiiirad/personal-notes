@@ -15,7 +15,7 @@ What I'm working on:
 - [ ] [Linux Troubleshooting](Tech%20Guide/Linux/README.md)
 - [ ] [Prometheus](Tech%20Guide/Prometheus/README.md)
 - [x] [Regex](Tech%20Guide/Regex/README.md)
-- [ ] [Service Mesh](Tech%20Guide/../Tech%20Guide/Service%20Mesh/README.md)
+- [x] [Service Mesh](Tech%20Guide/../Tech%20Guide/Service%20Mesh/README.md)
 - [x] [Shell/Bash Scripting](Tech%20Guide/Shell-Scripting/README.md)
 - [x] [Tmux](Tech%20Guide/Tmux/README.md)
 - [x] [Vim](Tech%20Guide/Vim/README.md)
