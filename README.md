@@ -9,7 +9,7 @@ I am not going to teach you details of that technology, but I categorize everyth
 What I'm working on:
 - [ ] [Ansible](Tech%20Guide/Ansible/README.md)
 - [x] [Docker](Tech%20Guide/Docker/README.md)
-- [ ] Docker Swarm
+- [ ] ~~Docker Swarm~~
 - [x] [Git](Tech%20Guide/Git/README.md)
 - [ ] [Kubernetes](Tech%20Guide/Kubernetes/README.md)
 - [ ] [Linux Troubleshooting](Tech%20Guide/Linux/README.md)
