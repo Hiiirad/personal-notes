@@ -181,7 +181,7 @@ Installing K8s using [Kubeadm](https://kubernetes.io/docs/setup/production-envir
 9. Configuring a cgroup driver is important because both CRI and containerd have a property called "cgroup driver". Configure your "cgroup driver" based on your CRI. [Link](https://kubernetes.io/docs/setup/production-environment/container-runtimes/)
 10. You can restart all the servers if you want :)
 11. Let's create cluster with kubeadm. [Kubeadm Commands](https://kubernetes.io/docs/reference/setup-tools/kubeadm/)
-12. It is recommended to run `kubeadm config images pull` prior to `kubeadm init` to verify connectivity to the [Google Container Registry](gcr.io) container image registry. You can also get the list of the packages with `kubeadm config images list` command.
+12. It is recommended to run `kubeadm config images pull` prior to `kubeadm init` to verify connectivity to the [Google Container Registry](https://gcr.io) container image registry. You can also get the list of the packages with `kubeadm config images list` command.
 13. Now we need to initialize the control-plane node (MASTER NODE). [Link](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/#initializing-your-control-plane-node). Based on what you want to do, you need to fill the arguments of the command below with care:
     ```bash
     kubeadm init <args>
