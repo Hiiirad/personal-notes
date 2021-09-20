@@ -17,6 +17,10 @@
   - [Session 06 (Services)](#session-06-services)
       - [Service without Selector](#service-without-selector)
       - [ExternalName](#externalname)
+  - [Session 07 (Services + StaticPodPath + Context + ReplicaSet)](#session-07-services--staticpodpath--context--replicaset)
+    - [Static Pod Path](#static-pod-path)
+    - [Context](#context)
+    - [ReplicaSet](#replicaset)
 
 ## Session 00 (Basic Info)
 
@@ -786,7 +790,6 @@ spec:
 ```
 
 ---
-
 ## Session 06 (Services)
 
 Services:
@@ -821,3 +824,97 @@ Kubernetes Dashboards/Visualizers:
 
 Imperative way of a service:
 - `kubectl create service TYPE --help`
+
+---
+## Session 07 (Services + StaticPodPath + Context + ReplicaSet)
+
+- ExternalName service doesn't have an Endpoint or selector. You give the service a name so that a long CNAME can be mapped to a service name. 
+- Example: `kubectl create service externalname --external-name=www.google.com test -o yaml --dry-run=client`
+- Activate IP Forwarding:
+  - Temporary: `echo 1 > /proc/sys/net/ipv4/ip_forward`
+  - Permanently:
+    - `sed "s/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/" /etc/sysctl.conf`
+    - `echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf && sysctl -p`
+- Example:
+  ```yaml
+  apiVersion: v1
+  kind: Service
+  metadata:
+    name: test
+    namespace: prod
+  specs:
+    externalName: www.google.com
+    type: ExternalName
+  ```
+
+The Keepalived service makes a lot of ARP, we can use a pacemaker instead.
+
+- ExternalIPs (one of the object that YOU have to manage instead of Kubernetes)
+  - You have to assign your Floating IP to externalIP.
+  - It can be used along side all services!
+  - It connects you to your nodes and pods.
+  - Example:
+    - Expose a simple pod: `kubectl expose pod nginx --port 80 --name NAME -o yaml --dry-run=client`
+    - Expose a pod with ExternalIP: `kubectl expose pod nginx --port 80 --name NAME --external-ip IP -o yaml --dry-run=client`
+
+<!-- Service Ends -->
+
+### Static Pod Path
+
+StaticPodPath:
+- Location: `/etc/kubernetes/manifests`
+- If you want to create a pod that always be up on specific nodes, you have add their manifests to the directory of kubelet, and that/those pod(s) will always be up and running.
+- Manifests are standard Pod definitions in JSON or YAML format in a specific directory. Use the *staticPodPath: /PATH/OF/CONFIGURATIONS/DIRECTORY* field in the kubelet configuration file, which periodically scans the directory and creates/deletes static Pods as YAML/JSON files appear/disappear there.
+- Note that the kubelet will ignore files starting with dots when scanning the specified directory.
+
+### Context
+- Kubectl configs: `kubectl config view` or `kubectl config view --raw`
+- Certificates: `/etc/kubernetes/pki`
+- Every CA encodes with Base64
+- `curl https://MASTERIP:6443/ --cacert ./K8S-CA.crt --cert ./USER-CRT --key ./USER-KEY`
+- Create a new cluster with system's CA: `kubectl config --kubeconfig=PATH_OF_NEW_CONFIG set-cluster CLUSTER_NAME --certificate-authority=PATH_OF_CA --server https://IP:6443 --embed-certs`
+- Add user to config file: `kubectl config --kubeconfig=PATH_OF_THIS_CONFIG set-credentials NAME_OF_CRED --client-key=PATH_OF_KEY --client-certificate=PATH_OF_CERT --user USERNAME --embed-certs`
+- Add Context: `kubectl config --kubeconfig=PATH_OF_CONFIG set-context CONTEXT_NAME --server https://IP:6443 --user USERNAME`
+- Add Current Context: `kubectl config --kubeconfig=PATH_OF_CONFIG use-context CONTEXT_NAME --cluster CLUSTER_NAME`
+- User this kubeconfig: `kubectl --kubeconfig=CONFIG_FILE get nodes`
+- Add config permanently:
+  - `cp CONFIG_FILE /root/.kube/`
+  - `echo "export KUBECONFIG=/root/.kube/config:/root/.kube/CONFIG_FILE" >> ~/.bashrc`
+  - `kubectl config get-contexts`
+  - `kubectl config use-context CONTEXT_NAME`
+
+### ReplicaSet
+- Another object in kubernetes.
+- It makes sure that the number of pods are correct. (current_state == desired_state)
+- Reconciliation Loop | Self-Healing
+- `kubectl api-resources`
+- `kubectl explain rs`
+- Example:
+  ```yaml
+  apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    name: testrs
+  spec:
+    replicas: 2
+    selector:
+      matchLables:
+        app: v1
+    template:
+      # metadata of POD
+      metadata:
+        name: pod1
+        labels:
+          app: v1
+      spec:
+        containers:
+          - name: test
+            image: nginx
+  ```
+- `kubectl apply -f rs.yaml`
+- `kubectl get rs`
+- IMPORTANT
+  - We don't do this in production: `kubectl scale replicaset --replicas=4 REPLICASET_NAME`
+  - We don't create a ReplicaSet in imperative way.
+
+---
