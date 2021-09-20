@@ -14,7 +14,9 @@
       - [ClusterIP](#clusterip)
       - [Node Port](#node-port)
       - [Load Balancer](#load-balancer)
-  - [Session 06](#session-06)
+  - [Session 06 (Services)](#session-06-services)
+      - [Service without Selector](#service-without-selector)
+      - [ExternalName](#externalname)
 
 ## Session 00 (Basic Info)
 
@@ -785,4 +787,37 @@ spec:
 
 ---
 
-## Session 06
+## Session 06 (Services)
+
+Services:
+1. ClusterIP (Internal)
+2. NodePort (External on Node Level)
+3. LoadBalancer (Metallb, ...)
+4. Service Without Selectors
+5. ExternalName
+
+- kubectl expose ?
+  - Deployment
+  - Pod
+  - ReplicaSet
+  - ReplicationController
+  - Service
+
+Kubernetes Dashboards/Visualizers:
+- [Kubernetes Visualizer](https://schoolofdevops.github.io/ultimate-kubernetes-bootcamp/kube_visualizer/)
+- [Kubernetes Dashboard](https://github.com/kubernetes/dashboard)
+- [Kubernetes Lens](https://k8slens.dev/)
+- [OpenShift](https://www.redhat.com/en/technologies/cloud-computing/openshift)
+- [Rancher](https://rancher.com/)
+
+#### Service without Selector
+- Accessing a Service without a selector works the same as if it had a selector. For instance, traffic is routed to the single endpoint defined in the YAML file.
+- We create a service without selector that connects to modified endpoint which let k8s to redirect service to that external server, db, etc.
+- Endpoints cannot be localhost or link-locals.
+- Endpoints cannot be a part of your cluster or system.
+
+#### ExternalName
+- An ExternalName Service is a special case of Service that does not have selectors and uses DNS names instead.
+
+Imperative way of a service:
+- `kubectl create service TYPE --help`
