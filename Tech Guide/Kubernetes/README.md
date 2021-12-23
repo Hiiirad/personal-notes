@@ -694,9 +694,10 @@ Kubectl's plugins:
   - Node Port: Opens a random port between 30000 and 32767 on your node
   - Load Balancer
   - ExternalName
-  - Headless (Technically it's not a service type)
-    - When there is no need of load balancing or single-service IP addresses.We create a headless service which is used for creating a service grouping. That does not allocate an IP address or forward traffic. So you can do this by explicitly setting ClusterIP to “None” in the manifest file, which means no cluster IP is allocated.
-    - Kubernetes allows clients to discover pod IPs through DNS lookups. Usually, when you perform a DNS lookup for a service, the DNS server returns a single IP which is the service’s cluster IP. But if you don’t need the cluster IP for your service, you can set ClusterIP to None , then the DNS server will return the individual pod IPs instead of the service IP.Then client can connect to any of them.
+  - Service without Selector
+  - Headless
+    - When there is no need of load balancing or single-service IP addresses. We create a headless service which is used for creating a service grouping. That does not allocate an IP address or forward traffic. So you can do this by explicitly setting ClusterIP to "None" in the manifest file, which means no cluster IP is allocated.
+    - Kubernetes allows clients to discover pod IPs through DNS lookups. Usually, when you perform a DNS lookup for a service, the DNS server returns a single IP which is the service’s cluster IP. But if you don’t need the cluster IP for your service, you can set ClusterIP to "None", then the DNS server will return the individual pod IPs instead of the service IP. Then client can connect to any of them.
 - Different Types of port:
   - Port: Input port of a service
   - Target port: Output port of service connects to different pods
@@ -798,6 +799,7 @@ Services:
 3. LoadBalancer (Metallb, ...)
 4. Service Without Selectors
 5. ExternalName
+6. Headless
 
 - kubectl expose ?
   - Deployment
