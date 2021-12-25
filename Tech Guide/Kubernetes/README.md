@@ -442,6 +442,8 @@ spec:
     image: nginx
 ```
 
+Important: If you apply/create a yaml file without specific namespace, it will create pod(s) in the current active namespace.
+
 Imperative Mode to run a Pod:
 - `kubectl run --image=IMAGE_NAME POD_NAME`
 - `kubectl run --image=IMAGE_NAME POD_NAME -o yaml --dry-run=client`
