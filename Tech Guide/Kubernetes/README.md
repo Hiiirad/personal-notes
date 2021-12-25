@@ -448,6 +448,8 @@ Imperative Mode to run a Pod:
 - `kubectl run --image=IMAGE_NAME POD_NAME`
 - `kubectl run --image=IMAGE_NAME POD_NAME -o yaml --dry-run=client`
 
+Important: Cross Namespace Communication will be discussed in the DNS section.
+
 Argument `--dry-run` modes:
 1. None: This was the default option, and it deprecated.
 2. Client: You can use the `--dry-run=client` flag to preview the object that would be sent to your cluster, without really submitting it.
