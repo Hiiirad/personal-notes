@@ -1,14 +1,14 @@
 # Notes
 
-> This repository is going to be outdated over time. I appreciate it if anyone helps me keep it up-to-date.
+> This repository is going to be outdated over time. I would appreciate it if anyone could help me keep it up-to-date.
 
-I believe technology helps us to think differently in every way. So I believe everyone deserves to learn things. Sometimes the hardest part of starting something is the first step in that direction so that these notes will help you with that very first step, and I hope you do the rest.
+I believe technology helps us to think differently in every way. So I believe everyone deserves to learn things. Sometimes the most challenging part of starting something is the first step in that direction, so these notes will help you with that very first step, and I hope you do the rest.
 
 I am not going to teach you details of that technology, but I categorize everything so that you can quickly find what you need.
 
 What I'm working on:
 - [ ] [Ansible](Tech%20Guide/Ansible/README.md)
-- [x] [Docker](Tech%20Guide/Docker/README.md)
+- [ ] [Docker](Tech%20Guide/Docker/README.md)
 - [ ] ~~Docker Swarm~~
 - [x] [Git](Tech%20Guide/Git/README.md)
 - [ ] [Kubernetes](Tech%20Guide/Kubernetes/README.md)
@@ -21,7 +21,7 @@ What I'm working on:
 - [x] [Vim](Tech%20Guide/Vim/README.md)
 
 ## Contributing
-Pull requests are welcome. For significant changes, please open an issue first to discuss what you would like to change or add.
+Pull requests are welcome. Please open an issue first to discuss what you would like to change or add for significant changes.
 - Don't change this file.
 - Please break your PR into different commits.
 - Write good commit messages.
