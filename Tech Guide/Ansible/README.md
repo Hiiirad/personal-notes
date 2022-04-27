@@ -269,16 +269,14 @@ Example:
 ```
 Example:
 ```yaml
--
-  name: Test1
+- name: Test1
   hosts: localhost
   tasks:
       - name: Execute command 'date'
         command: date
       - name: Execute script on server
         script: test_script.sh
--
-  name: Test2
+- name: Test2
   hosts: localhost
   tasks:
       - name: Install web service
@@ -399,8 +397,7 @@ If the variable is in the middle of a sentence, a single quote around the double
 
 Example of defining variables:
 ```yaml
--
-  name: add DNS server to resolv.conf
+- name: add DNS server to resolv.conf
   hosts: localhost
   vars:
     dns_server: 8.8.8.8
@@ -433,8 +430,7 @@ Conditional statements in Ansible is like programming languages. You can use *an
 
 Example 1:
 ```yaml
--
-  name: Start Services
+- name: Start Services
   hosts: all_servers
   tasks:
     - service: name=mysql state=started
@@ -446,8 +442,7 @@ Example 1:
 
 Example 2:
 ```yaml
--
-  name: Check status of service and email if it's down
+- name: Check status of service and email if it's down
   hosts: localhost
   tasks:
     - command: service https status
@@ -464,8 +459,7 @@ Example 2:
 
 Example:
 ```yaml
--
-  name: Install Packages
+- name: Install Packages
   hosts: localhost
   tasks:
     - yum: name='{{ item }}' state=present
@@ -505,8 +499,7 @@ Note that, we can include tasks and variables in a different files as well.
 It is recommended that we make a *roles* directory inside our Ansible directory and follow *Role Directory Structure*, because ansible can understand and extract every data that it needs to complete the tasks.
 
 ```yaml
--
-  name: Set Firewall Configuration
+- name: Set Firewall Configuration
   hosts: web
   roles:
     - webservers
