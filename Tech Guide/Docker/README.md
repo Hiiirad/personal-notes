@@ -27,8 +27,9 @@
   - [Part 13 (Docker Orchestration)](#part-13-docker-orchestration)
     - [Chapter 1 (Docker Swarm)](#chapter-1-docker-swarm)
     - [Chapter 2 (Kubernetes)](#chapter-2-kubernetes)
-  - [Part 14 (Terminology)](#part-14-terminology)
-  - [Part 15 (References)](#part-15-references)
+  - [Part 14 (Multi-Stage Builds)](#part-14-multi-stage-builds)
+  - [Part 15 (Terminology)](#part-15-terminology)
+  - [Part 16 (References)](#part-16-references)
 
 ---
 ## Part 01 (Introduction)
@@ -1034,7 +1035,12 @@ kubectl run MY-APP --image=MY-APP --replicas=500
 Well that's all we have for now—a quick introduction to Kubernetes and this architecture. You can find a complete course on this repository.
 
 ---
-## Part 14 (Terminology)
+## Part 14 (Multi-Stage Builds)
+
+> Will be updated!
+
+---
+## Part 15 (Terminology)
 
 - **Images**: The file system and configuration of our application which used to create containers.
 - **Containers**: Running instances of Docker images.
@@ -1045,7 +1051,7 @@ Well that's all we have for now—a quick introduction to Kubernetes and this ar
 - **Node**: An instance of the Docker Engine connected to the Swarm. Nodes are either managers or workers. Managers schedules which containers to run where. Workers execute the tasks. By default, Managers are also workers.
 
 ---
-## Part 15 (References)
+## Part 16 (References)
 
 1. [Docker Documentation Samples](https://docs.docker.com/samples/)
 2. [Play with Docker](https://training.play-with-docker.com/)
