@@ -1,6 +1,8 @@
 set number
 set encoding=utf-8
 syntax on
+set ignorecase
+set smartcase
 set wrap linebreak nolist
 set hlsearch
 set autoindent
