@@ -2479,6 +2479,40 @@ You can encapsulate your shell script code into a function, which you can then u
     Line 5
     Line 6
     ```
+- Appending Lines
+  - If you need to append a line to a text stream, there's the append command, `a`.
+  - Example:
+    ```bash
+    # Append A Line
+    $ sed 'a\This is a new line' data1
+    The quick brown fox jumps over the lazy dog
+    This is a new line
+    ```
+  - You can also append a range of lines using two text patterns, but be careful if you do this. The first pattern you specify "turns on" the line append, and the second pattern "turns off" the line append. The sed editor appends any lines between the two specified lines (including the specified lines):
+    ```bash
+    $ sed '/1/,/3/a\This is a new line' data1
+    The quick brown fox jumps over the lazy dog
+    This is a new line
+    This is a new line
+    This is a new line
+    ```
+- Insert text at specific lines
+  - If you need to insert text at specific lines of a text stream, there's the insert command, `i`.
+  - Example:
+    ```bash
+    # Insert A Line
+    $ sed 'i\This is a new line' data1
+    This is a new line
+    The quick brown fox jumps over the lazy dog
+    ```
+  - You can also insert a range of lines using two text patterns, but be careful if you do this. The first pattern you specify "turns on" the line insert, and the second pattern "turns off" the line insert. The sed editor inserts any lines between the two specified lines (including the specified lines):
+    ```bash
+    $ sed '/1/,/3/i\This is a new line' data1
+    This is a new line
+    The quick brown fox jumps over the lazy dog
+    This is a new line
+    This is a new line
+    ```
 
 ### GAWK
 - GAWK is the GNU implementation of AWK. The awk program takes stream editing one step further than the sed editor by providing a programming language instead of just editor commands. Within the programming language you can:
