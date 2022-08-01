@@ -558,6 +558,24 @@ QOS states:
   - `kubectl run --image=IMAGE:TAG POD_NAME resource --requests=cpu=20m,memory=10Mi -o yaml --dry-run=client`
 - Guaranteed
   - `kubectl run --image=IMAGE:TAG POD_NAME resource --requests=cpu=20m,memory=10Mi --limits=cpu=40m,memory=20Mi -o yaml --dry-run=client`
+<details>
+  <summary>Avoiding CPU Throttling in a Containerized Environment</summary>
+  <p>
+  In order to use cpusets, containers must be bound to cores. Allocating cores correctly requires a bit of background on how modern CPU architectures work since the wrong allocation can cause significant performance degradations.
+
+  A CPU is typically structured around:
+  - A physical machine can have multiple CPU sockets
+  - Each socket has an independent L3 cache
+  - Each CPU has multiple cores
+  - Each core has independent L2/L1 caches
+  - Each core can have hyperthreads
+  - Hyperthreads are often regarded as cores, but allocating 2 hyperthreads instead of 1 might only increase performance by 1.3x
+  </p>
+  <p>
+    <a href="https://eng.uber.com/avoiding-cpu-throttling-in-a-containerized-environment/">
+      Source
+    </a>
+</details>
 
 Port Forward:
 - `kubectl port-forward --help`
