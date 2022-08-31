@@ -1,4 +1,5 @@
 set number
+set laststatus=2
 set encoding=utf-8
 syntax on
 set ignorecase
@@ -11,3 +12,5 @@ set shiftwidth=4
 set expandtab
 set history=1000
 set undolevels=1000
+set nocompatible
+set showmatch
