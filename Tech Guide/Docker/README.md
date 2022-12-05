@@ -53,14 +53,21 @@ What are containers?
 
 With docker you'll be able to run each component in a separate container with its own dependencies and its own libraries. All on same VM/OS but within separate env./container. -> build docker configuration once
 
-Public Docker Repository = [DockerHub](https://hub.docker.com)
+Public Container Registries:
+- [DockerHub](https://hub.docker.com)
+- [Amazon ECR](https://aws.amazon.com/ecr/)
+- [Azure Container Registry](https://azure.microsoft.com/en-au/services/container-registry/)
+- [Google Container Registry](https://cloud.google.com/container-registry/)
+- [GitHub Container Registry](https://ghcr.io)
+- [RedHat Quay](https://www.redhat.com/en/technologies/cloud-computing/quay)
+- [JFrog Container Registry](https://jfrog.com/container-registry/)
 
 How is it done?
 - `$ docker run IMAGE_NAME`
 - You can run images as many instances as you want. (For load balancing, backup or alternative, ...)
 
 Container vs Image:
-- Containers are running instances of images that are isolated and have their env. and sets of processes.
+- Containers are running instances of images that are isolated and have their environment and sets of processes.
 - Images (Package + Template + Plan) -> It is used to create one or more containers
 
 ---
