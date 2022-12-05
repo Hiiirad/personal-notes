@@ -17,19 +17,20 @@
   - [Part 08 (Networking)](#part-08-networking)
     - [Chapter 1 (Creating Network Between Containers Using Links)](#chapter-1-creating-network-between-containers-using-links)
     - [Chapter 2 (Creating Network Between Containers Using Networks)](#chapter-2-creating-network-between-containers-using-networks)
-  - [Part 09 (Storage)](#part-09-storage)
-  - [Part 10 (Compose)](#part-10-compose)
+  - [Part 09 (Volume)](#part-09-volume)
+  - [Part 10 (Storage)](#part-10-storage)
+  - [Part 11 (Compose)](#part-11-compose)
     - [Chapter 1 (Docker-Compose Introduction Using an Example)](#chapter-1-docker-compose-introduction-using-an-example)
     - [Chapter 2 (Docker-Compose Management Commands)](#chapter-2-docker-compose-management-commands)
     - [Chapter 3 (Docker-Compose Scale Up)](#chapter-3-docker-compose-scale-up)
-  - [Part 11 (Registry)](#part-11-registry)
-  - [Part 12 (Engine)](#part-12-engine)
-  - [Part 13 (Docker Orchestration)](#part-13-docker-orchestration)
+  - [Part 12 (Registry)](#part-12-registry)
+  - [Part 13 (Engine)](#part-13-engine)
+  - [Part 14 (Docker Orchestration)](#part-14-docker-orchestration)
     - [Chapter 1 (Docker Swarm)](#chapter-1-docker-swarm)
     - [Chapter 2 (Kubernetes)](#chapter-2-kubernetes)
-  - [Part 14 (Multi-Stage Builds)](#part-14-multi-stage-builds)
-  - [Part 15 (Terminology)](#part-15-terminology)
-  - [Part 16 (References)](#part-16-references)
+  - [Part 15 (Multi-Stage Builds)](#part-15-multi-stage-builds)
+  - [Part 16 (Terminology)](#part-16-terminology)
+  - [Part 17 (References)](#part-17-references)
 
 ---
 ## Part 01 (Introduction)
@@ -228,7 +229,7 @@ We can use Docker on Windows with these 2 options to run a Linux container on a 
   docker run SERVICE:TAG
   docker run redis:4.0
   ```
-- Run with STDIN (Standard Input). Docker container doesn't listen to STDIN even though you are attached to its console. If we want to run a container on interactive mode, we should use `-i` (interactive). However, we can't see the application's prompt on the terminal because we haven't attached to the container's terminal. To solve this, we should use `-t` (terminal).
+- Run with STDIN (Standard Input). Docker container doesn't listen to STDIN even though you are attached to its console. If we want to run a container on interactive mode, we should use `-i` (interactive). However, we can't see the application's prompt on the terminal because we haven't attached to the container's terminal. To solve this, we should use `-t` (TTY / TeleTYpewriter).
   ```
   docker run -it SERVICE:TAG
   ```
@@ -242,28 +243,12 @@ We can use Docker on Windows with these 2 options to run a Linux container on a 
   - **`always`**: Always restart the container if it stops. If it is manually stopped, it is restarted only when Docker daemon restarts or the container itself is manually restarted.
   - **`unless-stopped`**: Similar to always, except that when the container is stopped (manually or otherwise), it is not restarted even after Docker daemon restarts.
 - Port Mapping / Port Publishing. Every docker container gets an IP assigned by default. Docker container IP is 172.17.1.2:3000 and Docker host IP is 192.168.1.25 so, you can map their port like below. You can even run multiple instances of your application and map them to different ports on the Docker host or you can run your application on a single port and map them to a different port. Remember, you cannot map to the same port on the Docker host more than once.
-  ```
+  ```bash
   docker run -p USER_PORT:CONTAINER_PORT SERVICE
   docker run -p 80:3000 redis
   docker run -p 443:3001 redis
   docker run -p 8080:3001 redis
   ```
-- Volume Mapping. The docker container has its own isolated filesystem and any changes to any files happen within the container. Sometimes we need a persistent data, so we need to map a directory outside the container on the docker host to a directory inside the container. We use `-v` (Volume) option. `DIR_HOST` is a directory outside docker host which docker mount it inside docker host which we call it `DIR_CONTAINER`.
-  1. Host Volumes
-      ```
-      docker run -v DIR_HOST:DIR_CONTAINER SERVICE
-      docker run -v /opt/sql/data:/var/lib/mysql mysql
-      ```
-  2. Anonymous Volumes: The host directory will automatically created by Docker at `/var/lib/docker/volumes/random-hash/_data`
-      ```
-      docker run -v DIR_CONTAINER SERVICE
-      docker run -v /var/lib/mysql mysql
-      ```
-  3. Named Volumes: This is the upgraded version of Anonymous Volumes, which we named a volume on our host machine. In this format, you can assign single data for multiple instances of a container to share the same data. **(Recommended, even in docker-compose)**
-      ```
-      docker run -v NAME:DIR_CONTAINER SERVICE
-      docker run -v customer_mysql:/var/lib/mysql mysql
-      ```
 - Inspect Container. If you would like to see additional details about a specific container use inspect command. It will give you more information than `docker ps` command. This command will give you all details of a container in a JSON format.
   ```
   docker inspect NAME/ID
@@ -292,7 +277,7 @@ We can use Docker on Windows with these 2 options to run a Linux container on a 
     - Python3: `var = os.environ.get('VARIABLE') = value`
     - C++: `DATATYPE VARIABLE=value; putenv(VARIABLE);`
 
-```
+```bash
 docker run -e VARIABLE=value NAME/ID
 ```
 - To deploy multiple containers with different Environment Variable, you should run docker command multiple times and set different Environment Variables each time.
@@ -502,6 +487,8 @@ docker inspect NAME/ID
 So how does Docker implement networking? What's the technology behind it? Like how the containers isolated within the host?<br>
 Docker uses network namespaces that create a separate namespace for each container. It then uses virtual Ethernetpairs to connect containers together.
 
+Check [All Network Drivers](https://docs.docker.com/network/)
+
 ### Chapter 1 (Creating Network Between Containers Using Links)
 
 > Note: Using links like what I'm going to tell you is going to be deprecated, and the support may be removed in the future by the Docker support team. This is because, as we will see in some time, advanced and newer concepts in Docker Swarm and networking, support better ways of achieving what we are going to do here with links. But I'm going to tell you about it so that you can understand the concept of it.
@@ -577,7 +564,30 @@ docker run -d -p 3000:3000 --net=FRONTEND-NETWORK CENTOS/NODEJS-4-CENTOS7
 We just created a separate network with a _Node.js_ application that communicates with our existing _Redis_ instance which you can test it using `curl localhost:3000`
 
 ---
-## Part 09 (Storage)
+## Part 09 (Volume)
+
+The docker container has its own isolated filesystem and any changes to any files happen within the container. Sometimes we need a persistent data, so we need to map a directory outside the container on the docker host to a directory inside the container. We use `-v` (Volume) option. `DIR_HOST` is a directory outside docker host which docker mount it inside docker host which we call it `DIR_CONTAINER`.
+
+![Volume Types](Images/docker-types-of-mounts-volume.png)
+
+1. Host Volumes
+    ```
+    docker run -v DIR_HOST:DIR_CONTAINER SERVICE
+    docker run -v /opt/sql/data:/var/lib/mysql mysql
+    ```
+2. Anonymous Volumes: The host directory will automatically created by Docker at `/var/lib/docker/volumes/random-hash/_data`
+    ```
+    docker run -v DIR_CONTAINER SERVICE
+    docker run -v /var/lib/mysql mysql
+    ```
+3. Named Volumes: This is the upgraded version of Anonymous Volumes, which we named a volume on our host machine. In this format, you can assign single data for multiple instances of a container to share the same data. **(Recommended, even in docker-compose)**
+    ```
+    docker run -v NAME:DIR_CONTAINER SERVICE
+    docker run -v customer_mysql:/var/lib/mysql mysql
+    ```
+
+---
+## Part 10 (Storage)
 > This part (Storage) is an advanced topic. You can skip it if you want to learn the basics.
 
 We're going to talk about Docker storage drivers and file systems. We're going to see where and how Docker stores data and how it manages file systems of the container.
@@ -648,7 +658,7 @@ The selection of the storage driver depends on the underlying OS being used. For
 - If you use `--mount` to bind-mount a **file** or **directory** that does not yet exist on the Docker host, Docker does not automatically create it for you, but generates an error.
 
 ---
-## Part 10 (Compose)
+## Part 11 (Compose)
 > In this section, we're going to work with YAML file (.yml or .yaml extension). It's essential to understand YAML before start reading this part.
 
 If we needed to setup a complex application running multiple services, a better way to it is to use Docker Compose. With Docker compose, we could create a configuration file in YAML format called **`docker-compose.yml`** and put together the different services and the options specific to this to running them in this file. Then we could simply run `docker-compose up` command to bring up the entire application stack. This is easier to implement run and maintain as all changes always stored in the Docker compose configuration file. However, this is all only applicable to running containers on a single Docker host.
@@ -838,7 +848,7 @@ The scale option allows you to specify the service and then the number of instan
   ```
 
 ---
-## Part 11 (Registry)
+## Part 12 (Registry)
 
 What is a registry?<br>
 It's the central repository of all Docker images.
@@ -889,7 +899,7 @@ docker pull IP:5000/MY-IMAGE
 ```
 
 ---
-## Part 12 (Engine)
+## Part 13 (Engine)
 > This part is an advanced topic. You can skip it if you want to learn the basics because we're going to look at Docker's architecture in detail.
 
 We're going to find out about how Docker actually runs an application in isolated containers and how it works.
@@ -934,7 +944,7 @@ docker run --memory=100m SERVICE
 ```
 
 ---
-## Part 13 (Docker Orchestration)
+## Part 14 (Docker Orchestration)
 
 Let's understand what container orchestration is. So far, in this course, we've seen that with Docker, you can run a single instance of the application with a simple `docker run` command. In this case, to run a node.js based application, you're on the `docker run nodejs` command, but that's just one instance of your application on one Docker host. What happens when the number of users increases, and that instance is no longer able to handle the load?<br>
 You deploy additional instances of your application by running the `docker run` command multiple times. So, that's something you have to do yourself. You have to keep a close watch on the load and performance of your application and deploy additional instances yourself. And not just that, you have to keep a close watch on the health of these applications. And if a container was to fail, you should be able to detect that and run the `docker run` command again to deploy another instance of that application. What about the health of the Docker host itself? What if the host crashes and is inaccessible? The containers hosted on that host become inaccessible too. So what do you do to solve these issues? You need a dedicated engineer who can sit and monitor the state performance and health of the containers and take necessary actions to remediate the situation. But when you have large applications deployed with tens of thousands of containers, that's not a practical approach. So you can build your scripts, and that helps you tackle these issues to some extent.<br>
@@ -1042,12 +1052,12 @@ kubectl run MY-APP --image=MY-APP --replicas=500
 Well that's all we have for now—a quick introduction to Kubernetes and this architecture. You can find a complete course on this repository.
 
 ---
-## Part 14 (Multi-Stage Builds)
+## Part 15 (Multi-Stage Builds)
 
 > Will be updated!
 
 ---
-## Part 15 (Terminology)
+## Part 16 (Terminology)
 
 - **Images**: The file system and configuration of our application which used to create containers.
 - **Containers**: Running instances of Docker images.
@@ -1058,7 +1068,9 @@ Well that's all we have for now—a quick introduction to Kubernetes and this ar
 - **Node**: An instance of the Docker Engine connected to the Swarm. Nodes are either managers or workers. Managers schedules which containers to run where. Workers execute the tasks. By default, Managers are also workers.
 
 ---
-## Part 16 (References)
+## Part 17 (References)
 
-1. [Docker Documentation Samples](https://docs.docker.com/samples/)
-2. [Play with Docker](https://training.play-with-docker.com/)
+1. [Docker Documentation](https://docs.docker.com/)
+2. [Docker Documentation Samples](https://docs.docker.com/samples/)
+3. [Play with Docker](https://training.play-with-docker.com/)
+ 
