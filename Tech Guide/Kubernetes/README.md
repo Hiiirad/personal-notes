@@ -100,7 +100,7 @@ Some Useful Ports:
 - API Server: 6443
 - etcd: 2379
 
-Config file of kubectl: `~/.config/.kube/config`
+Config file of kubectl: `~/.kube/config`
 
 ---
 

@@ -1073,4 +1073,3 @@ Well that's all we have for now—a quick introduction to Kubernetes and this ar
 1. [Docker Documentation](https://docs.docker.com/)
 2. [Docker Documentation Samples](https://docs.docker.com/samples/)
 3. [Play with Docker](https://training.play-with-docker.com/)
- 
