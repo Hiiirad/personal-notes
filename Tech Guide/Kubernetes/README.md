@@ -9,7 +9,7 @@
     - [YAML Introduction](#yaml-introduction)
     - [POD](#pod)
   - [Session 04 (Extra Concepts for POD)](#session-04-extra-concepts-for-pod)
-  - [Session 05 (POD + Services)](#session-05-pod--services)
+  - [Session 05 (POD + Services Intro)](#session-05-pod--services-intro)
     - [Services](#services)
       - [ClusterIP](#clusterip)
       - [Node Port](#node-port)
@@ -17,10 +17,12 @@
   - [Session 06 (Services)](#session-06-services)
       - [Service without Selector](#service-without-selector)
       - [ExternalName](#externalname)
-  - [Session 07 (Services + StaticPodPath + Context + ReplicaSet)](#session-07-services--staticpodpath--context--replicaset)
+  - [Session 07 (StaticPodPath + Context)](#session-07-staticpodpath--context)
     - [Static Pod Path](#static-pod-path)
     - [Context](#context)
+  - [Session 08 (ReplicaSet + Advance Labeling + Replication Controller)](#session-08-replicaset--advance-labeling--replication-controller)
     - [ReplicaSet](#replicaset)
+    - [Advanced Scheduling \& Session/Node Affinity](#advanced-scheduling--sessionnode-affinity)
 
 ## Session 00 (Basic Info)
 
@@ -150,6 +152,7 @@ Pause Container:
 CNI (Container Network Interface): Instead of Routing Table of the OS. It helps inter node communication. Cluster Networking have some of network plugins to handle networking. (Weave-net, Calico and Flannel are more famous than the others)
 
 ---
+
 ## Session 02 (Installation)
 
 Don't use docker export -> It removes entrypoint and compress all layers to one single layer.
@@ -498,7 +501,7 @@ Apply vs Create:
   - change manifest and apply (again).
   - `kubectl edit pod POD_NAME`
   - The name of a pod is not editable, but if you change it, a new manifest created in `/tmp` and you can apply it from that location.
-  - Imperative way to create a pod with configuration like restart which is not a metadata. It is in spec section: `kubectl run --image=IMAGE restart --restart POLICY`
+  - Imperative way to create a pod with configuration like restart which is not a metadata. It is in spec section: `kubectl run --image=IMAGE:TAG restart --restart POLICY`
 
 Container Restart Policy for Kubernetes:
 - Always (Default)
@@ -620,7 +623,7 @@ Check this link out if you are interested in the last topic: [Inject Data into A
 
 ---
 
-## Session 05 (POD + Services)
+## Session 05 (POD + Services Intro)
 
 Technically, we run the commands in an imperative way to find the declarative way:
 ```bash
@@ -813,6 +816,7 @@ spec:
 ```
 
 ---
+
 ## Session 06 (Services)
 
 Services:
@@ -849,15 +853,12 @@ Kubernetes Dashboards/Visualizers:
 Imperative way of a service:
 - `kubectl create service TYPE --help`
 
----
-## Session 07 (Services + StaticPodPath + Context + ReplicaSet)
-
 - ExternalName service doesn't have an Endpoint or selector. You give the service a name so that a long CNAME can be mapped to a service name. 
 - Example: `kubectl create service externalname --external-name=www.google.com test -o yaml --dry-run=client`
 - Activate IP Forwarding:
   - Temporary: `echo 1 > /proc/sys/net/ipv4/ip_forward`
   - Permanently:
-    - `sed "s/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/" /etc/sysctl.conf`
+    - `sed "s/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/" /etc/sysctl.conf && sysctl -p`
     - `echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf && sysctl -p`
 - Example:
   ```yaml
@@ -881,7 +882,50 @@ The Keepalived service makes a lot of ARP, we can use a pacemaker instead.
     - Expose a simple pod: `kubectl expose pod nginx --port 80 --name NAME -o yaml --dry-run=client`
     - Expose a pod with ExternalIP: `kubectl expose pod nginx --port 80 --name NAME --external-ip IP -o yaml --dry-run=client`
 
-<!-- Service Ends -->
+Session Affinity:
+- `kubectl describe svc SERVICE_NAME`
+- `kubectl explain svc.spec`
+- Persistent Session for a pod is mandatory in production environment.
+- Default: None
+- Default Timeout: 10800s (3 Hours)
+- Example 1:
+  ```yaml
+  apiVersion: v1
+  kind: Service
+  metadata:
+    name: my-service
+  spec:
+    selector:
+      app: my-app
+    ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 80
+    sessionAffinity: ClientIP
+  ```
+- Example 2:
+  ```yaml
+  apiVersion: v1
+  kind: Service
+  metadata:
+    name: my-service
+  spec:
+    selector:
+      app: my-app
+    ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 80
+    sessionAffinity:
+      clientIP:
+        timeoutSeconds: 300
+  ```
+
+---
+
+## Session 07 (StaticPodPath + Context)
 
 ### Static Pod Path
 
@@ -906,6 +950,16 @@ StaticPodPath:
   - `echo "export KUBECONFIG=/root/.kube/config:/root/.kube/CONFIG_FILE" >> ~/.bashrc`
   - `kubectl config get-contexts`
   - `kubectl config use-context CONTEXT_NAME`
+
+---
+
+## Session 08 (ReplicaSet + Advance Labeling + Replication Controller)
+
+- Extra Topics/Tools:
+  - CD (Continuous Deployment) => Solutions: ArgoCD / Flux => [Gitops Website](https://gitops.tech)
+  - Load-Balancer (Better than others, but it has a bad documentation) => [Porter](https://github.com/kubesphere/porter)
+  - Sample Server Load Balancer named [PureLB](https://gitlab.com/purelb/purelb)
+  - CoreDNS IP: `kubectl get svc -n kube-system`
 
 ### ReplicaSet
 - Another object in kubernetes.
@@ -937,8 +991,31 @@ StaticPodPath:
   ```
 - `kubectl apply -f rs.yaml`
 - `kubectl get rs`
-- IMPORTANT
+- IMPORTANT:
   - We don't do this in production: `kubectl scale replicaset --replicas=4 REPLICASET_NAME`
-  - We don't create a ReplicaSet in imperative way.
+  - We don't create a ReplicaSet in imperative way. (Best Practice)
+- When you check the output of the `kubectl api-resources` command, you can see that there's a column name **NAMESPACED** which describes if an object's namespace is **True**, it can change action in different namespaces, and it won't be global. But if it is **False**, it means that the resource isn't limited by any namespaces and is globally used in the cluster.
+- *Kubeproxy* setting allows you to change IPtables for assigning virtual IPs. IPVS is more flexible than IPtables. But it is more complex and sometimes makes more latency, and maybe you lose some features. (Check service in Kubernetes) -> we want to access all the backend and services (not randomly), so we change the backend networking to IPVS to access pods/services with different mechanisms/algorithms.
+- Example:
+  - `kubectl run --image=IMAGE:TAG --labels x=y,ver=v5 POD_NAME -o yaml --dry-run=client`
+  - ImagePullPolicy: never
+    ```yaml
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    metadata:
+      name: rs-vote
+    spec:
+      replicas: 3
+      selector:
+        matchLables:
+          app: vote
+          ver: v3
+      template:
+        # metadata and spec of POD
+    ```
+  - `kubectl apply -f rs-sample.yaml`
+  - `kubectl expose replicaset rs-sample --port=80 --name=rs-sample --external-ip=WORKER_IP -o yaml --dry-run=client > svc-sample.yaml`
+  - You can't edit fundamental configurations of a replicaset after creation. Replicaset only handles replication, not editing. -> Check it for yourself `kubectl edit pod POD_OF_REPLICASET`
+  - When we decrease the number of replicas, it removes pod(s) RANDOMLY.
 
----
+### Advanced Scheduling & Session/Node Affinity
