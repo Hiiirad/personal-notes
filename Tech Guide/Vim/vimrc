@@ -1,10 +1,15 @@
+filetype plugin indent on
 set autoindent
 set backspace=indent,eol,start
 set encoding=utf-8
 set expandtab
+set ffs=unix,dos,mac
+set fileencoding=utf-8
+set hidden
 set history=1000
 set hlsearch
 set ignorecase
+set incsearch
 set laststatus=2
 set modeline
 set nocompatible
@@ -12,11 +17,13 @@ set number
 set ruler
 set shiftround
 set shiftwidth=4
+set showcmd
 set showmatch
 set showmode
 set smartcase
 set softtabstop=4
 set tabstop=4
+set termbidi
 set title
 set undolevels=1000
 set wrap linebreak nolist
