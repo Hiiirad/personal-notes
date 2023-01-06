@@ -4,64 +4,64 @@
 - Personal configuration of VIM: `~/.vimrc` -> Check Chapter 7
 - There are 3 stages in VIM:
   1. Command
-  2. Insert = `i`
-  3. View = `v`
-- You can escape from each stage with `esc` button.
+  2. Insert = <kbd>i</kbd>
+  3. View = <kbd>v</kbd>
+- You can escape from each stage with <kbd>esc</kbd> button.
 - Move cursor in command mode:
-  - Left arrow = `h`
-  - Right Arrow = `l`
-  - Up Arrow = `k`
-  - Down Arrow = `j`
+  - Left arrow = <kbd>h</kbd>
+  - Right Arrow = <kbd>l</kbd>
+  - Up Arrow = <kbd>k</kbd>
+  - Down Arrow = <kbd>j</kbd>
 - `Ctrl+b` = Page up
 - `Ctrl+f` = Page down
 - `:q` = [quit]
-- `:q!` = [quit] without save
+- `:q!` = [quit] without write/save
 - `:qw` = [quit] with save
 - `:w` = [write] save
-- `:x` = `:wq` = Write and Exit
+- `:x` = `:wq` = <kbd>Z</kbd><kbd>Z</kbd> = Write and Exit
 
 ## Chapter 1
-- `a` = [append] -> Start from a character 
-- `A` = [Append] -> Go to end of line and append
-- `x` = Delete a character under the cursor
-  - `xp` = Substitute character under cursor with next character
-- `X` = Delete a character backward
+- <kbd>a</kbd> = [append] -> Start from a character 
+- <kbd>A</kbd> = [Append] -> Go to end of line and append
+- <kbd>x</kbd> = Delete a character under the cursor
+  - <kbd>x</kbd><kbd>p</kbd> = Substitute character under cursor with next character
+- <kbd>X</kbd> = Delete a character backward
 
 ## Chapter 2
-- `d` = [Delete] + KEYWORD
-  - `w` = [Word] + space
-  - `e` = [End] -> from place of cursor to the end of word
+- <kbd>d</kbd> = [Delete] + KEYWORD
+  - <kbd>w</kbd> = [Word] + space
+  - <kbd>e</kbd> = [End] -> from place of cursor to the end of word
   - `$` = to the end of line
-- `w` = [Word] -> Go to next word
-- `e` = [End] -> Go to end of word
-- `0` or `^` = Go to beginning of line
+- <kbd>w</kbd> = [Word] -> Go to next word
+- <kbd>e</kbd> = [End] -> Go to end of word
+- <kbd>0</kbd> or `^` = Go to beginning of line
 - `$` = Go to end of line
 - Combination (Operator[number]motion):
-  - `d3w` = Delete next 3 words
+  - <kbd>d</kbd><kbd>3</kbd><kbd>w</kbd> = Delete next 3 words
   - `d$` = Delete whole line from cursor's position to the end of line
-  - `ce` = [change] until the end of word + enter Insert mode
-- `dd` = delete whole line without consideration of cursor's position
-  - `yy` = [Yank Yank] paste the deleted line in place of cursor
-- `u` = [undo] undo a single character
-- `U` = [Undo] undo a whole line changes
+  - <kbd>c</kbd><kbd>e</kbd> = [change] until the end of word + enter Insert mode
+- <kbd>d</kbd><kbd>d</kbd> = delete whole line without consideration of cursor's position
+  - <kbd>y</kbd><kbd>y</kbd> = [Yank Yank] paste the deleted line in place of cursor
+- <kbd>u</kbd> = [undo] undo a single character
+- <kbd>U</kbd> = [Undo] undo a whole line changes
 - `Ctrl+r` = [redo]
 
 ## Chapter 3
-- `P` = [Put] previously deleted text under/after the cursor
-- `rX` = [replace] replace the character under cursor with X
+- <kbd>P</kbd> = [Put] previously deleted text under/after the cursor
+- <kbd>r</kbd><kbd>X</kbd> = [replace] replace the character under cursor with X
 
 ## Chapter 4
 - `Ctrl+g` = Show line numbers and your cursor's position
-- `gg` = Go to top of file
-- `G` = Go to end of file
+- <kbd>g</kbd><kbd>g</kbd> = Go to top of file
+- <kbd>G</kbd> = Go to end of file
 - `NUM+G` = Go to line number NUM
 - `NUM+H` = Go to NUMth line from top of screen
 - `NUM+L` = Go to NUMth line from bottom of screen
 - Search
-  - `/` = Forward search
-  - `?` = Backward search
-  - `n` = Go to next word in search
-  - `N` = Go to previous word in search
+  - <kbd>/</kbd> = Forward search
+  - <kbd>?</kbd> = Backward search
+  - <kbd>n</kbd> = Go to next word in search
+  - <kbd>N</kbd> = Go to previous word in search
   - `Ctrl+O` = Go backward to where you came from
   - `Ctrl+I` = Go forward from where you went with `Ctrl+O`
   - `/KEYWORD\c` = `\c` will ignore case sensitivity search for just a single time
@@ -71,38 +71,38 @@
   - `:s/OLD/NEW/g` = To substitute NEW for all 'OLD's on a line
   - `:#,#s/OLD/NEW/g`
     - `#,#` = are line numbers. From line # to line #
-    - `g` = Globally (change all occurrences) in line
+    - <kbd>g</kbd> = Globally (change all occurrences) in line
   - `:%s/OLD/NEW/g`
     - `%` = Whole file without considering specific line numbers
   - `:%s/OLD/NEW/gc`
-    - `c` = Ask for confirmation whether to change it or not
+    - <kbd>c</kbd> = Ask for confirmation whether to change it or not
 
 ## Chapter 5
 - `:! COMMAND` = Execute the COMMAND with shell and show the result
 - `:.! COMMAND` = Execute the command and import command's output in VIM
 - `:w FILENAME` = Save this file to another file named FILENAME
-- `v` = Visual mode for selecting -> press `v` and select what you want with arrow keys, then press `:` and you can see `:'<,'>` on bottom. Finally you can decide what to do with your selection. For instance, you can save the selected part to another file and name it TEST. -> `:'<,'>w TEST`
-- `V` = Visual mode with line selection
-- `v >` = Forward indent for selected line(s)
-- `v <` = Backward indent for selected line(s)
+- <kbd>v</kbd> = Visual mode for selecting -> press <kbd>v</kbd> and select what you want with arrow keys, then press <kbd>:</kbd> and you can see `:'<,'>` on bottom. Finally you can decide what to do with your selection. For instance, you can save the selected part to another file and name it TEST. -> `:'<,'>w TEST`
+- <kbd>V</kbd> = Visual mode with line selection
+- <kbd>v</kbd><kbd>></kbd> = Forward indent for selected line(s)
+- <kbd>v</kbd><kbd><</kbd> = Backward indent for selected line(s)
 - `Ctrl+v` = Visual mode with block selection
-- `:r FILENAME` = Retrieves file FILENAME from your hard disk and puts it below the cursor position.
+- `:r FILENAME` = Retrieves file FILENAME from your hard disk and puts the FILENAME content below the cursor position.
 - `:r !COMMAND` = Reads the output of your COMMAND and puts it below the cursor position.
 
 ## Chapter 6
-- `o` = [open] a line below the cursor + Enter Insert mode
-- `O` = [Open] a line above the cursor + Enter Insert mode
+- <kbd>o</kbd> = [open] a line below the cursor + Enter Insert mode
+- <kbd>O</kbd> = [Open] a line above the cursor + Enter Insert mode
 - Append commands
-  - `a` = [append] from next character of cursor
-  - `A` = [Append] from end of line
-  - `i` = [insert] exactly at the place of cursor
-- `R` = [Replace] mode is like insert mode, but every typed character deletes an existing character.
+  - <kbd>a</kbd> = [append] from next character of cursor
+  - <kbd>A</kbd> = [Append] from end of line
+  - <kbd>i</kbd> = [insert] exactly at the place of cursor
+- <kbd>R</kbd> = [Replace] mode is like insert mode, but every typed character deletes an existing character.
 - Copy and Paste
   1. Select your text in visual mode (v)
-  2. `y` = [yank] copy your selected text
-     - `yw` = [Yank Word] Copy the word under the cursor
-     - `yy` = [Yank Yank] Copy the whole line including the newline character at the end of the line.
-  3. `p` = [paste] wherever you want
+  2. <kbd>y</kbd> = [yank] copy your selected text
+     - <kbd>y</kbd><kbd>w</kbd> = [Yank Word] Copy the word under the cursor
+     - <kbd>y</kbd><kbd>y</kbd> = [Yank Yank] Copy the whole line including the newline character at the end of the line.
+  3. <kbd>p</kbd> = [paste] wherever you want
      
 ## Chapter 7
 - `:help`
@@ -123,7 +123,7 @@
   - `:set noX` = You can disable set `X`
 - Completion
   - `:set nocp` = To make sure Vim is not in compatible mode
-  - Use `:` and choose a character, then press `Ctrl+d` to show a list of commands that start with your chosen character. You can even complete your command with `tab` button if it's unique.
+  - Use <kbd>:</kbd> and choose a character, then press `Ctrl+d` to show a list of commands that start with your chosen character. You can even complete your command with <kbd>TAB</kbd> button if it's unique.
   - It's pretty helpful in `:help` or large files which you need different commands to complete your work.
 
 ## Extended Chapter
@@ -131,8 +131,8 @@
 - Soft text wrapping: `:set wrap linebreak nolist`
 - Activate syntax highlighting: `syntax on`
 - Set tab for X spaces: `:set shiftwidth=X`
-- `J` = [Join] this line with the next line
-- `.` = Repeat the latest command
+- <kbd>J</kbd> = [Join] this line with the next line
+- <kbd>.</kbd> = Repeat the latest command
 - `%` = Go to the other side of bracket, curly bracket, or parenthesis in command mode.
 - `:Explore` = Access file manager from inside VIM
 - `:Vexplore` = Vertically split window and access file manager
