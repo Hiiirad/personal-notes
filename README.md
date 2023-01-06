@@ -7,18 +7,18 @@ I believe technology helps us to think differently in every way. So I believe ev
 I am not going to teach you details of that technology, but I categorize everything so that you can quickly find what you need.
 
 What I'm working on:
-- [ ] [Ansible](Tech%20Guide/Ansible/README.md)
-- [ ] [Docker](Tech%20Guide/Docker/README.md)
+- [ ] [Ansible](Tech-Guide/Ansible/README.md)
+- [ ] [Docker](Tech-Guide/Docker/README.md)
 - [ ] ~~Docker Swarm~~
-- [x] [Git](Tech%20Guide/Git/README.md)
-- [ ] [Kubernetes](Tech%20Guide/Kubernetes/README.md)
-- [ ] [Linux Troubleshooting](Tech%20Guide/Linux/README.md)
-- [ ] [Prometheus](Tech%20Guide/Prometheus/README.md)
-- [x] [Regex](Tech%20Guide/Regex/README.md)
-- [x] [Service Mesh](Tech%20Guide/../Tech%20Guide/Service%20Mesh/README.md)
-- [x] [Shell/Bash Scripting](Tech%20Guide/Shell-Scripting/README.md)
-- [x] [Tmux](Tech%20Guide/Tmux/README.md)
-- [x] [Vim](Tech%20Guide/Vim/README.md)
+- [x] [Git](Tech-Guide/Git/README.md)
+- [ ] [Kubernetes](Tech-Guide/Kubernetes/README.md)
+- [ ] [Linux Troubleshooting](Tech-Guide/Linux/README.md)
+- [ ] [Prometheus](Tech-Guide/Prometheus/README.md)
+- [x] [Regex](Tech-Guide/Regex/README.md)
+- [x] [Service Mesh](Tech-Guide/Service%20Mesh/README.md)
+- [x] [Shell/Bash Scripting](Tech-Guide/Shell-Scripting/README.md)
+- [x] [Tmux](Tech-Guide/Tmux/README.md)
+- [x] [Vim](Tech-Guide/Vim/README.md)
 
 ## Contributing
 Pull requests are welcome. Please open an issue first to discuss what you would like to change or add for significant changes.
