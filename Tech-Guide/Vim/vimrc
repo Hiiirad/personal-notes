@@ -18,13 +18,13 @@ set nocompatible
 set number
 set ruler
 set shiftround
-set shiftwidth=4
+set shiftwidth=2
 set showcmd
 set showmatch
 set showmode
 set smartcase
-set softtabstop=4
-set tabstop=4
+set softtabstop=0
+set tabstop=2
 set termbidi
 set title
 set undolevels=1000
