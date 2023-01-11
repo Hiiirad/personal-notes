@@ -12,8 +12,11 @@
   - Right Arrow = <kbd>l</kbd>
   - Up Arrow = <kbd>k</kbd>
   - Down Arrow = <kbd>j</kbd>
-- `Ctrl+b` = Page up
-- `Ctrl+f` = Page down
+- Moving between pages:
+  - `Ctrl+b` = Move a full Page up/back
+  - `Ctrl+f` = Move a full Page down/front
+  - `Ctrl+u` = Move a half Page up
+  - `Ctrl+d` = Move a half Page down
 - `:q` = [quit]
 - `:q!` = [quit] without write/save
 - `:qw` = [quit] with save
